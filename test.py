@@ -160,7 +160,7 @@ class ShapeListTester(unittest.TestCase):
 
     def test_type_error(self):
         sl = ShapeList()
-        with self.assertRaises(TypeError, msg="Test dupy nie przechodzi"):
+        with self.assertRaises(TypeError, msg="Test dupy się nie powiódł ;("):
             sl.add_shape("dupa")
 
     def test_shapes_table(self):
