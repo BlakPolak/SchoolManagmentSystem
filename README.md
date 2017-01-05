@@ -127,6 +127,7 @@ This is a triangle that has all sides equal.
 #### Parent class
 Triangle
 #### Attributes
+Hint: check if you can reuse attributes from the parent class
 * `a`
   * data: float
   * description: side's length of a triangle
@@ -164,6 +165,7 @@ This is a rectangle that has all sides equal.
 #### Parent class
 Rectangle
 #### Attributes
+Hint: check if you can reuse attributes from the parent class
 * `a`
   * data: float
   * description: side's length of the square
