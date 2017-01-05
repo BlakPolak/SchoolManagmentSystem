@@ -3,7 +3,16 @@ class Shape:
     This is a abstract class representing geometrical shape.
     """
 
-    def get_area():
+    def __init__(self):
+        """
+        Constructs Shape object
+
+        Raises:
+            ValueError: If any of the parameters is below 0.
+        """
+        pass
+
+    def get_area(self):
         """
         Calculates shape's area.
 
@@ -12,7 +21,7 @@ class Shape:
         """
         pass
 
-    def get_perimeter():
+    def get_perimeter(self):
         """
         Calculates shape's perimeter.
 
@@ -21,7 +30,7 @@ class Shape:
         """
         pass
 
-    def __str__():
+    def __str__(self):
         """
         Returns information about the shape as string.
 
