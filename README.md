@@ -10,6 +10,7 @@ In order to help Zigy you have to:
 * Implement 6 classes in `geometry.py` module
 * Implement `main.py` module
 * Explain why Linus designed some methods to be class methods instead of instance methods.
+* Remember about comments and docstrings
 * All tests must pass
 
 # Specifications
