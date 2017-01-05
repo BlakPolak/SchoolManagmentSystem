@@ -221,12 +221,12 @@ This method returns shapes list as string formatted into table. This is sample o
 `string` object
 
 ##### `get_largest_shape_by_perimeter(self)`
-Returns shape with largest perimeter.
+Returns shape with largest perimeter. Hint: have a look at [comparison methods]( https://docs.python.org/3/reference/datamodel.html#object.__lt__)
 ###### Return value
 `Shape` object
 
 ##### `get_largest_shape_by_area(self)`
-Returns shape with largest area.
+Returns shape with largest area. Hint: have a look at [comparison methods]( https://docs.python.org/3/reference/datamodel.html#object.__lt__) 
 ###### Return value
 `Shape` object
 
