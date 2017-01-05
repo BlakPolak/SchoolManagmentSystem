@@ -8,10 +8,11 @@ You'll write a Object Oriented Python Application to teach him geometry. Don't w
 # Requirements
 In order to help Zigy you have to:
 * Implement 6 classes in `geometry.py` module
-* Implement `main.py` module
+* Implement `main.py` module.
+* You are allowed to implement your own modules. Remember about clean code.
 * Explain why Linus designed some methods to be class methods instead of instance methods.
-* Remember about comments and docstrings
-* All tests must pass
+* Remember about comments and docstrings.
+* All tests must pass.
 
 # Specifications
 Here you can find information what you have to implement.
