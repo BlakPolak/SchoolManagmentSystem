@@ -66,9 +66,9 @@ Returns the perimeter of the shape.
 Returns information about given shape as string.
 
 #### Class methods
-##### ```get_area_formula()```
+##### ```get_area_formula(cls)```
 Returns formula for the area of the shape as a string.
-##### ```get_perimeter_formula()```
+##### ```get_perimeter_formula(cls)```
 Returns formula for the perimeter of the shape.
 
 Why this methods should be class methods? Edit this readme and give answer below:  
@@ -226,7 +226,7 @@ Returns shape with largest perimeter. Hint: have a look at [comparison methods](
 `Shape` object
 
 ##### `get_largest_shape_by_area(self)`
-Returns shape with largest area. Hint: have a look at [comparison methods]( https://docs.python.org/3/reference/datamodel.html#object.__lt__) 
+Returns shape with largest area. Hint: have a look at [comparison methods]( https://docs.python.org/3/reference/datamodel.html#object.__lt__)
 ###### Return value
 `Shape` object
 
@@ -235,3 +235,5 @@ Returns shape with largest area. Hint: have a look at [comparison methods]( http
 If you've fulfilled all the basic requirements and you're ambitious enough to continue, here's idea what you can do.
 
 Help Zigy even more and implement quiz feature. This feature should generate random shape. Tell the user the type of shape and it's attributes. The user should calculate the perimeter and area. The program should check users answer.
+
+You can also add more shapes to the geometry class.
