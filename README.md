@@ -13,6 +13,7 @@ In order to help Zigy you have to:
 * Explain why Linus designed some methods to be class methods instead of instance methods.
 * Remember about comments and docstrings.
 * All tests must pass.
+* Focus most on the OOP not the ui.
 
 Hint: you can reuse code from the previous assignments.
 
