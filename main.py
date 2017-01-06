@@ -1,11 +1,12 @@
 import sys
 from geometry import *
 
+
 def main():
 
-    shapes = ShapeList() # object containing all shapes added by the user
+    shapes = ShapeList()  # object containing all shapes added by the user
     while True:
-        #TODO: implement user interaction here. You can change the code below
+        # TODO: implement user interaction here. You can change the code below
         option = input("Select an option: ")
         if option == "1":
             # Add new shape

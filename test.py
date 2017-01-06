@@ -2,14 +2,16 @@ import unittest
 import math
 from geometry import *
 
+
 class CircleTester(unittest.TestCase):
 
     def test_constructor(self):
         c = Circle(3)
-        self.assertEqual(c.r,3, "Wrong radius")
+        self.assertEqual(c.r, 3, "Wrong radius")
 
     def test_value_error(self):
-        with self.assertRaises(ValueError, msg="Circle cannot have negative radius"):
+        with self.assertRaises(ValueError,
+                               msg="Circle cannot have negative radius"):
             Circle(-1)
 
     def test_area(self):
@@ -28,8 +30,8 @@ class CircleTester(unittest.TestCase):
 class TriangleTester(unittest.TestCase):
 
     def test_constructor(self):
-        t = Triangle(2,4,5)
-        self.assertEqual((t.a, t.b, t.c),(2,4,5))
+        t = Triangle(2, 4, 5)
+        self.assertEqual((t.a, t.b, t.c), (2, 4, 5))
 
     def test_value_error(self):
         with self.assertRaises(ValueError):
@@ -39,7 +41,7 @@ class TriangleTester(unittest.TestCase):
         a = 2
         b = 4
         c = 5
-        t = Triangle(a,b,c)
+        t = Triangle(a, b, c)
         s = (a+b+c)/2
         area = math.sqrt(s*(s-a)*(s-b)*(s-c))
         self.assertEqual(t.get_area(), area)
@@ -48,15 +50,16 @@ class TriangleTester(unittest.TestCase):
         a = 2
         b = 4
         c = 5
-        t = Triangle(a,b,c)
+        t = Triangle(a, b, c)
         perimeter = a + b + c
         self.assertEqual(t.get_perimeter(), perimeter)
+
 
 class EquilateralTriangleTester(unittest.TestCase):
 
     def test_constructor(self):
         t = EquilateralTriangle(2)
-        self.assertEqual((t.a, t.b, t.c),(2,2,2))
+        self.assertEqual((t.a, t.b, t.c), (2, 2, 2))
 
     def test_value_error(self):
         with self.assertRaises(ValueError):
@@ -75,35 +78,37 @@ class EquilateralTriangleTester(unittest.TestCase):
         perimeter = 3*a
         self.assertEqual(t.get_perimeter(), perimeter)
 
+
 class RectangleTester(unittest.TestCase):
 
     def test_constructor(self):
         r = Rectangle(2, 3)
-        self.assertEqual((r.a, r.b),(2,3))
+        self.assertEqual((r.a, r.b), (2, 3))
 
     def test_value_error(self):
         with self.assertRaises(ValueError):
-            Rectangle(-1,1)
+            Rectangle(-1, 1)
 
     def test_area(self):
         a = 2
         b = 3
-        r = Rectangle(a,b)
+        r = Rectangle(a, b)
         area = a * b
         self.assertEqual(r.get_area(), area)
 
     def test_perimeter(self):
         a = 2
         b = 3
-        r = Rectangle(a,b)
+        r = Rectangle(a, b)
         perimeter = 2*a + 2*b
         self.assertEqual(r.get_perimeter(), perimeter)
+
 
 class SquareTester(unittest.TestCase):
 
     def test_constructor(self):
         s = Square(2)
-        self.assertEqual((s.a, s.b),(2,2))
+        self.assertEqual((s.a, s.b), (2, 2))
 
     def test_value_error(self):
         with self.assertRaises(ValueError):
@@ -122,11 +127,12 @@ class SquareTester(unittest.TestCase):
         perimeter = a*4
         self.assertEqual(s.get_perimeter(), perimeter)
 
+
 class RegularPentagonTester(unittest.TestCase):
 
     def test_constructor(self):
         p = RegularPentagon(2)
-        self.assertEqual(p.a,2)
+        self.assertEqual(p.a, 2)
 
     def test_value_error(self):
         with self.assertRaises(ValueError):
@@ -145,6 +151,7 @@ class RegularPentagonTester(unittest.TestCase):
         perimeter = 5*a
         self.assertEqual(p.get_perimeter(), perimeter)
 
+
 class ShapeListTester(unittest.TestCase):
 
     def test_constructor(self):
@@ -155,7 +162,7 @@ class ShapeListTester(unittest.TestCase):
         sl = ShapeList()
         c = Circle(2)
         sl.add_shape(c)
-        self.assertEqual(sl.shapes[0],c)
+        self.assertEqual(sl.shapes[0], c)
 
     def test_type_error(self):
         sl = ShapeList()
@@ -172,7 +179,7 @@ class ShapeListTester(unittest.TestCase):
         sl = ShapeList()
         p = RegularPentagon(3)
         s = Square(4)
-        t = Triangle(1,2,3)
+        t = Triangle(1, 2, 3)
         c = Circle(3)
         sl.add_shape(p)
         sl.add_shape(s)
@@ -184,7 +191,7 @@ class ShapeListTester(unittest.TestCase):
         sl = ShapeList()
         p = RegularPentagon(3)
         s = Square(4)
-        t = Triangle(2,4,5)
+        t = Triangle(2, 4, 5)
         c = Circle(3)
         sl.add_shape(p)
         sl.add_shape(s)

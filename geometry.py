@@ -59,23 +59,30 @@ class Shape:
         """
         pass
 
+
 class Circle(Shape):
     pass
+
 
 class Triangle(Shape):
     pass
 
+
 class EquilateralTriangle(Triangle):
     pass
+
 
 class Rectangle(Shape):
     pass
 
+
 class Square(Rectangle):
     pass
 
+
 class RegularPentagon(Shape):
     pass
+
 
 class ShapeList:
     pass
