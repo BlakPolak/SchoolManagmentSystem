@@ -118,10 +118,9 @@ class SquareTester(unittest.TestCase):
 
     def test_perimeter(self):
         a = 2
-        b = 3
-        r = Rectangle(a,b)
-        perimeter = a+b
-        self.assertEqual(r.get_perimeter(), perimeter)
+        s = Square(a)
+        perimeter = a*4
+        self.assertEqual(s.get_perimeter(), perimeter)
 
 class RegularPentagonTester(unittest.TestCase):
 
