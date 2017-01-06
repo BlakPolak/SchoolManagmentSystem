@@ -96,7 +96,7 @@ class RectangleTester(unittest.TestCase):
         a = 2
         b = 3
         r = Rectangle(a,b)
-        perimeter = a+b
+        perimeter = 2*a + 2*b
         self.assertEqual(r.get_perimeter(), perimeter)
 
 class SquareTester(unittest.TestCase):
