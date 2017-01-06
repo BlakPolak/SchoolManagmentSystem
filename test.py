@@ -194,7 +194,7 @@ class ShapeListTester(unittest.TestCase):
 
 
 def main():
-    unittest.main()
+    unittest.main(verbosity=2)
 
 if __name__ == '__main__':
     main()
