@@ -14,6 +14,8 @@ In order to help Zigy you have to:
 * Remember about comments and docstrings.
 * All tests must pass.
 
+Hint: you can reuse code from the previous assignments.
+
 # Specifications
 Here you can find information what you have to implement.
 
