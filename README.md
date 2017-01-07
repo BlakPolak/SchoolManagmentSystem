@@ -194,7 +194,7 @@ Shape
 Override (implement) other methods inherited from the parent class.      
 Required formulas:  
 Perimeter = 5a  
-Area = (a<sup>2</sup> sqrt(5(5+2sqrt(5))))/2 (see image above)
+Area = (a<sup>2</sup> sqrt(5(5+2sqrt(5))))/4 (see image above)
 
 ### ShapeList Class
 This class is meant to hold geometrical shapes (objects that inherit from Shape class).
