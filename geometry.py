@@ -70,7 +70,7 @@ class Circle(Shape):
     def __init__(self, r):
         """
         Constructs Circle object
-
+        :param r: circle radius length
         Raises:
             ValueError: If any of the parameters is below 0.
         """
@@ -139,7 +139,9 @@ class Triangle(Shape):
     def __init__(self, a, b, c):
         """
         Constructs triangle object
-
+        :param a: one side's length of a triangle
+        :param b: second side's length of a triangle
+        :param c: third side's length of a triangle
         Raises:
             ValueError: If any of the parameters is below 0.
         """
@@ -204,27 +206,27 @@ class Triangle(Shape):
 
 
 class EquilateralTriangle(Triangle):
+    """ This is a class representing EquilateralTriangle. """
 
     def __init__(self, a):
         """
-        Constructs triangle object
-
-        Raises:
-            ValueError: If any of the parameters is below 0.
+        Constructs Equilateral triangle object
+        :param a: side's length of a triangle
         """
         Triangle.__init__(self, a, a, a)
 
 
 
 class Rectangle(Shape):
-
+    """This is a class representing Rectangle."""
     area_formula = 'a * b'
     perimeter_formula = '2a + 2b'
 
     def __init__(self, a, b):
         """
         Constructs rectangle object
-
+        :param a: one side length
+        :param b: second side length
         Raises:
             ValueError: If any of the parameters is below 0.
         """
@@ -284,14 +286,14 @@ class Rectangle(Shape):
 
 
 class Square(Rectangle):
-
+    """ This is a class representing Square. """
     area_formula = 'a^2'
     perimeter_formula = '4a'
 
     def __init__(self, a):
         """
         Constructs triangle object
-
+        :param a: side's length of the square
         Raises:
             ValueError: If any of the parameters is below 0.
         """
@@ -325,14 +327,14 @@ class Square(Rectangle):
 
 
 class RegularPentagon(Shape):
-
+    """ This is a class representing RegularPentagon. """
     area_formula = '(a^2*sqrt(5(5+2sqrt(5))))/4'
     perimeter_formula = '5a'
 
     def __init__(self, a):
         """
         Constructs RegularPentagon object
-
+        :param a:  side's length of the pentagon
         Raises:
             ValueError: If any of the parameters is below 0.
         """
@@ -389,8 +391,10 @@ class RegularPentagon(Shape):
 
 
 class ShapeList:
+    """This class is meant to hold geometrical shapes (objects that inherit from Shape class)."""
 
     def __init__(self, shapes=None):
+        """ Constructs ShapeList object. """
         if shapes is None:
             shapes = []
         if type(shapes) != list:
@@ -398,12 +402,21 @@ class ShapeList:
         self.shapes = shapes
 
     def add_shape(self, shape):
+        """
+        Adds shape to shapes list.
+        :param shape: object class Shape
+        """
+
         if isinstance(shape, Shape):
             self.shapes.append(shape)
         else:
             raise TypeError('{} has not Shape class as it\'s ancestor.'.format(shape))
 
     def get_shapes_table(self):
+        """
+        Returns table with objects as a string.
+        :return str: table with objects
+        """
         title_list = ['idx', 'Class', '__str__', 'Perimeter', 'Formula', 'Area', 'Formula']
         column_width = list()
         new_table = ''

@@ -78,7 +78,8 @@ Returns formula for the area of the shape as a string.
 Returns formula for the perimeter of the shape.
 
 Why this methods should be class methods? Edit this readme and give answer below:  
-...........................
+
+They work on class objects instead of instances objects.
 
 ### Circle Class
 This class represents circle shape.   
