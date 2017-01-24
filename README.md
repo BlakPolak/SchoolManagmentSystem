@@ -246,3 +246,4 @@ If you've fulfilled all the basic requirements and you're ambitious enough to co
 Help Zigy even more and implement quiz feature. This feature should generate random shape. Tell the user the type of shape and it's attributes. The user should calculate the perimeter and area. The program should check users answer.
 
 You can also add more shapes to the geometry class.
+# python-ccms-jakkolwiek
