@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-#python-ccms-jakkolwieks
-=======
 # The story
 Do you love geometry? Our young friend Zigy (Zygfryd) loves it too. Unfortunately it's one-sided love. He's studying hard for his high-school exam, but with minor success. You've got to help him!
 
