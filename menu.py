@@ -18,6 +18,14 @@ class Menu:
             menu.handle_menu()
             if menu.option == "1":
                 user_signed_in.list_mentors(organisation)
+            elif menu.option == "2":
+                user_signed_in.list_students(organisation)
+            elif menu.option == "3":
+                user_signed_in.add_mentor(organisation)
+            elif menu.option == "4":
+                user_signed_in.remove_mentor(organisation)
+            elif menu.option == "5":
+                user_signed_in.edit_mentor(organisation)
         elif type(user_signed_in) == user.Mentor:
             MenuMentor()
         return menu
