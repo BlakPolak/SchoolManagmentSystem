@@ -70,6 +70,18 @@ class Ui:
         return option
 
     @staticmethod
+    def handle_employee_menu():
+        print("""
+               Welcome
+               What would you like to do:
+               (1) List students
+               (2) View students details
+               (0) Exit CcMS
+            """)
+        option = input("Your choice: ")
+        return option
+
+    @staticmethod
     def get_inputs(list_labels, title):
         inputs = []
         print(title)

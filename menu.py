@@ -17,7 +17,12 @@ class Menu:
             elif menu.option == "2":
                 user_signed_in.submit_assignment()
         elif type(user_signed_in) == user.Employee:
-            MenuEmployee()
+            menu = MenuEmployee()
+            menu.handle_menu()
+            if menu.option == "1":
+                user_signed_in.list_students(organisation)
+            elif menu.option == "2":
+                user_signed_in.view_student_details(organisation)
         elif type(user_signed_in) == user.Manager:
             menu = MenuManager()
             menu.handle_menu()
@@ -83,5 +88,9 @@ class MenuManager(Menu):
 
 
 class MenuEmployee(Menu):
-    def print_menu(self):
-        pass
+    def __init__(self):
+        self.option = None
+
+    def handle_menu(self):
+        while not self.option:
+            self.option = ui.Ui.handle_employee_menu()
