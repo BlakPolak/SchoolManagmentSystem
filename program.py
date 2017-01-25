@@ -1,22 +1,27 @@
 import user
 import assignment
 import submission
+import attendance
+import datetime
 
 class Program:
 
-    def __init__(self, employee_csv, students_csv, mentors_csv, managers_csv, assignments_csv, submissions_csv):
+    def __init__(self, employee_csv, students_csv, mentors_csv, managers_csv, assignments_csv,
+                 submissions_csv, attendance_csv):
         self.employee_table = self.import_csv(employee_csv)
         self.students_table = self.import_csv(students_csv)
         self.mentors_table = self.import_csv(mentors_csv)
         self.managers_table = self.import_csv(managers_csv)
         self.assignments_table = self.import_csv(assignments_csv)
         self.submissions_table = self.import_csv(submissions_csv)
+        self.attendance_table = self.import_csv(attendance_csv)
         self.employee_list = []
         self.students_list = []
         self.mentors_list = []
         self.managers_list = []
         self.assignments_list = []
         self.submissions_list = []
+        self.attendance_list = []
         self.initialize_objects()
 
 
@@ -98,6 +103,19 @@ class Program:
             new_submission = submission.Submission(assignment_related, submission_date, result, grade)
             self.submissions_list.append(new_submission)
 
+        for row in self.attendance_table:
+            student_name_related = row[0]
+            student_surname_related = row[1]
+            for student in self.students_list:
+                if student.name == student_name_related:
+                    if student.surname == student_surname_related:
+                        student_related = student
+                        break
+            date = row[2]
+            was_present = row[3]
+            new_attendance = attendance.Attendance(student_related, date, was_present)
+            self.attendance_list.append(new_attendance)
+
 
     def export_data(self):
         employee_table = []
@@ -106,6 +124,7 @@ class Program:
         managers_table = []
         assignments_table = []
         submissions_table = []
+        attendance_table = []
 
         for employee in self.employee_list:
             row = [employee.name, employee.surname, employee.gender, employee.birth_date, employee.email,
@@ -135,9 +154,14 @@ class Program:
             row = [submission.assignment.name, str(submission.submission_date), str(submission.result), str(submission.grade)]
             submissions_table.append(row)
 
+        for attendance in self.attendance_list:
+            row = [attendance.student.name, attendance.student.surname, str(attendance.date), attendance.was_present]
+            attendance_table.append(row)
+
         self.write_csv("csv_lists/employee_list.csv", employee_table)
         self.write_csv("csv_lists/students_list.csv", students_table)
         self.write_csv("csv_lists/mentors_list.csv", mentors_table)
         self.write_csv("csv_lists/managers_list.csv", managers_table)
         self.write_csv("csv_lists/assignments_list.csv", assignments_table)
         self.write_csv("csv_lists/submissions_list.csv", submissions_table)
+        self.write_csv("csv_lists/attendance_list.csv", attendance_table)

@@ -1,6 +1,7 @@
 import ui
 import assignment
 import submission
+import datetime
 
 class User:
     def __init__(self, name, surname, gender, birth_date, email, login, password):
@@ -31,6 +32,9 @@ class Student(User):
         super().__init__(name, surname, gender, birth_date, email, login, password)
         self.my_submissions_list = []
 
+    def __str__(self):
+        return self.name+self.surname
+
     def view_my_grades(self):
         pass
 
@@ -57,6 +61,19 @@ class Mentor(Employee):
                             options[6])
         organisation.students_list.append(new_student)
         print("Student was added.")
+
+    def check_attendance(self, organisation):
+        students_list = []
+        attendance_list = []
+        i = 0
+        for student in organisation.students_list:
+            students_list.append(student.surname+" "+student.name)
+        options = ui.Ui.get_inputs(students_list, "Starting attendance check (mark 0 for absence, Enter otherwise")
+        for student in organisation.students_list:
+            attendance_list.append([student, str(datetime.date.today()), options[i]])
+            #attendance_list.append([student.name, student.surname, str(datetime.date.today()), options[i]])
+            i += 1
+
 
     def remove_student(self):
         pass

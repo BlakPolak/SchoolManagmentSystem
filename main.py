@@ -11,7 +11,8 @@ def main():
                                "csv_lists/mentors_list.csv",
                                "csv_lists/managers_list.csv",
                                "csv_lists/assignments_list.csv",
-                               "csv_lists/submissions_list.csv"
+                               "csv_lists/submissions_list.csv",
+                               "csv_lists/attendance_list.csv"
                                )
 
     user_signed_in = None
