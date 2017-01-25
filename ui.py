@@ -41,6 +41,35 @@ class Ui:
         return option
 
     @staticmethod
+    def handle_mentor_menu():
+        print("""
+               Welcome
+               What would you like to do:
+               (1) Check attendance
+               (2) List students
+               (3) View students details
+               (4) Add student
+               (5) Edit student
+               (6) Submit assignment
+               (7) Grade assignment
+               (0) Exit CcMS
+            """)
+        option = input("Your choice: ")
+        return option
+
+    @staticmethod
+    def handle_student_menu():
+        print("""
+                   Welcome
+                   What would you like to do:
+                   (1) View my grades
+                   (2) Submit assignment
+                   (0) Exit CcMS
+                """)
+        option = input("Your choice: ")
+        return option
+
+    @staticmethod
     def get_inputs(list_labels, title):
         inputs = []
         print(title)

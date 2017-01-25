@@ -41,14 +41,32 @@ class Mentor(Employee):
     def __init__(self, name, surname, gender, birth_date, email, login, password):
         super().__init__(name, surname, gender, birth_date, email, login, password)
 
-    def add_student(self):
-        pass
+    def add_student(self, organisation):
+        options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
+                                    "Password"], "Provide information about new student")
+        new_student = Student(options[0], options[1], options[2], options[3], options[4], options[5],
+                            options[6])
+        organisation.students_lists.append(new_student)
+        print("Student was added.")
 
     def remove_student(self):
         pass
 
-    def edit_student(self):
-        pass
+    def edit_student(self, organisation):
+        self.list_students(organisation)
+        options = ui.Ui.get_inputs([""], "Enter number to edit student's data")
+        student = organisation.students_list[int(options[0]) - 1]
+        options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
+                                    "Password"], "Edit information about student")
+        student.name = options[0]
+        student.surname = options[1]
+        student.gender = options[2]
+        student.birth_date = options[3]
+        student.email = options[4]
+        student.login = options[5]
+        student.password = options[6]
+        print("Update completed")
+        self.list_students(organisation)
 
     def grade_submission(self):
         pass
