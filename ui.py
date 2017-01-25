@@ -2,8 +2,8 @@ class Ui:
 
     @staticmethod
     def get_login(organisation):
-        login = input("Type login: ")
-        password = input("Type password: ")
+        login = input("login: ")
+        password = input("password: ")
         for manager in organisation.managers_list:
             if login == manager.login:
                 if password == manager.password:
@@ -97,6 +97,10 @@ class Ui:
             print('  ({}) {}'.format(i + 1, list_options[i]))
         print('  (0) ' + exit_message)
 
+    # @staticmethod
+    # def print_list(organisation):
+    #     for assignment in organisation.assignments_list:
+    #         print(assignment)
 
     def print_table(table, title_list):
         table.insert(0, title_list)

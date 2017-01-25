@@ -10,12 +10,15 @@ class Menu:
     @staticmethod
     def create_menu(user_signed_in, organisation):
         if type(user_signed_in) == user.Student:
-            menu = MenuStudent()
-            menu.handle_menu()
-            if menu.option == "1":
-                user_signed_in.view_my_grades(organisation)
-            elif menu.option == "2":
-                user_signed_in.submit_assignment()
+            while True:
+                menu = MenuStudent()
+                menu.handle_menu()
+                if menu.option == "1":
+                    user_signed_in.view_my_grades(organisation)
+                elif menu.option == "2":
+                    user_signed_in.submit_assignment(organisation)
+                elif menu.option == "0":
+                    return "exit"
         elif type(user_signed_in) == user.Employee:
             menu = MenuEmployee()
             menu.handle_menu()
@@ -37,22 +40,25 @@ class Menu:
             elif menu.option == "5":
                 user_signed_in.edit_mentor(organisation)
         elif type(user_signed_in) == user.Mentor:
-            menu = MenuMentor()
-            menu.handle_menu()
-            if menu.option == "1":
-                user_signed_in.check_attendance(organisation)
-            elif menu.option == "2":
-                user_signed_in.list_students(organisation)
-            elif menu.option == "3":
-                user_signed_in.view_student_details(organisation)
-            elif menu.option == "4":
-                user_signed_in.add_student(organisation)
-            elif menu.option == "5":
-                user_signed_in.edit_student(organisation)
-            elif menu.option == "6":
-                user_signed_in.submit_assignment(organisation)
-            elif menu.option == "7":
-                user_signed_in.grade_assignment()
+            while True:
+                menu = MenuMentor()
+                menu.handle_menu()
+                if menu.option == "1":
+                    user_signed_in.check_attendance(organisation)
+                elif menu.option == "2":
+                    user_signed_in.list_students(organisation)
+                elif menu.option == "3":
+                    user_signed_in.view_student_details(organisation)
+                elif menu.option == "4":
+                    user_signed_in.add_student(organisation)
+                elif menu.option == "5":
+                    user_signed_in.edit_student(organisation)
+                elif menu.option == "6":
+                    user_signed_in.add_assignment(organisation)
+                elif menu.option == "7":
+                    user_signed_in.grade_submission(organisation)
+                elif menu.option == "0":
+                    return "exit"
 
         return menu
 

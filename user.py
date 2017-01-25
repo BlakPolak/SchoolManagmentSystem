@@ -1,4 +1,7 @@
 import ui
+import assignment
+import submission
+
 class User:
     def __init__(self, name, surname, gender, birth_date, email, login, password):
         self.name = name
@@ -26,15 +29,21 @@ class Employee(User):
 class Student(User):
     def __init__(self, name, surname, gender, birth_date, email, login, password):
         super().__init__(name, surname, gender, birth_date, email, login, password)
-
-    def choose_assignment(self):
-        pass
+        self.my_submissions_list = []
 
     def view_my_grades(self):
         pass
 
-    def submit_assignment(self):
-        pass
+    def submit_assignment(self, organisation):
+        list_assignment = []
+        for assignment in organisation.assignments_list:
+            list_assignment.append(str(assignment))
+        ui.Ui.print_menu("Choose assignment to submit", list_assignment, "Exit")
+        options = ui.Ui.get_inputs(["->"], "")
+        picked_assignment = organisation.assignments_list[int(options[0]) - 1]
+        new_submission = submission.Submission(picked_assignment)
+        new_submission.provide_result()
+        organisation.submissions_list.append(new_submission)
 
 
 class Mentor(Employee):
@@ -46,7 +55,7 @@ class Mentor(Employee):
                                     "Password"], "Provide information about new student")
         new_student = Student(options[0], options[1], options[2], options[3], options[4], options[5],
                             options[6])
-        organisation.students_lists.append(new_student)
+        organisation.students_list.append(new_student)
         print("Student was added.")
 
     def remove_student(self):
@@ -68,11 +77,28 @@ class Mentor(Employee):
         print("Update completed")
         self.list_students(organisation)
 
-    def grade_submission(self):
-        pass
+    def grade_submission(self, organisation):
+        list_submission = []
+        i = -1
+        for submission_ in organisation.submissions_list:
+            if not submission_.grade:
+                list_submission.append(submission_)
+            else:
+                i += 1
+        if not list_submission:
+            print("No submission avaible")
+            return
+        ui.Ui.print_menu("Choose submission to grade", list_submission, "Exit")
+        options = ui.Ui.get_inputs(["->"], "")
+        picked_submission = organisation.submissions_list[int(options[0])+i]
+        options = ui.Ui.get_inputs(["Enter grade for this submission"], "")
+        picked_submission.grade = options[0]
 
-    def add_assignment(self):
-        pass
+    def add_assignment(self, organisation):
+        options = ui.Ui.get_inputs(["Name", "Max. points to receive", "Delivery date", "Content"],
+                                    "Provide information about new assignment")
+        new_assignment = assignment.Assignment(options[0], options[1], options[2], options[3])
+        organisation.assignments_list.append(new_assignment)
 
 class Manager(Employee):
     def __init__(self, name, surname, gender, birth_date, email, login, password):
