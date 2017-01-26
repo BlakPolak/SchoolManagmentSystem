@@ -112,9 +112,17 @@ class Student(User):
                                                                         # graded assignments of actual student
         final_list = [assignment for assignment in organisation.assignments_list if assignment not in submission_list_done]
         if final_list:
-            ui.Ui.print_menu("Choose assignment to submit", final_list, "Exit")
+            #ui.Ui.print_menu("Choose assignment to submit", final_list, "Exit")
+            table_to_print = []
+            id_ = 1
+            for assignment in final_list:
+                table_to_print.append([str(id_), assignment.name, assignment.max_points,
+                                       assignment.delivery_date, assignment.content])
+                id_ += 1
+            ui.Ui.print_table(table_to_print, ["ID", "Assignment name", "Assignment max points",
+                                               "delivery date", "Content"])
             options = ui.Ui.get_inputs(["->"], "")
-            if options[0] == '0':
+            if options[0] == "0":
                 return
             picked_assignment = final_list[int(options[0]) - 1]
             new_submission = submission.Submission(picked_assignment, self)
