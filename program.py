@@ -91,8 +91,6 @@ class Program:
             new_assignment = assignment.Assignment(name, max_points, delivery_date, content)
             self.assignments_list.append(new_assignment)
 
-        print(self.submissions_table)
-        input()
         assignment_related = None
         for row in self.submissions_table:
             assignment_name_related = row[0]
@@ -101,8 +99,6 @@ class Program:
                     assignment_related = assignment_
                     break
             if assignment_related:
-                print(assignment_related)
-                input()
                 student_name = row[1]
                 student_surname = row[2]
                 submission_date = row[3]
@@ -167,8 +163,6 @@ class Program:
             row = [submission.assignment.name, submission.student.name, submission.student.surname,
                    str(submission.submission_date), str(submission.result), str(submission.grade)]
             submissions_table.append(row)
-            print(row)
-            input()
 
         for attendance in self.attendance_list:
             row = [attendance.student.name, attendance.student.surname, str(attendance.date), attendance.was_present]
