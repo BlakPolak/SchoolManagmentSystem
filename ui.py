@@ -2,8 +2,10 @@ import getpass
 
 
 class Ui:
+    """This class create user interface"""
     @staticmethod
     def get_login(organisation):
+        """Ask user for login and password"""
         login = input("login: ")
         password = getpass.getpass("password: ")
         for manager in organisation.managers_list:
@@ -29,6 +31,7 @@ class Ui:
 
     @staticmethod
     def handle_manager_menu():
+        """Method display menu for manager"""
         print("""
                Welcome
                What would you like to do:
@@ -46,6 +49,7 @@ class Ui:
 
     @staticmethod
     def handle_mentor_menu():
+        """Method display menu for mentor"""
         print("""
                Welcome
                What would you like to do:
@@ -64,6 +68,7 @@ class Ui:
 
     @staticmethod
     def handle_student_menu():
+        """Method display menu for student"""
         print("""
                Welcome
                What would you like to do:
@@ -76,6 +81,7 @@ class Ui:
 
     @staticmethod
     def handle_employee_menu():
+        """Method display menu for employee"""
         print("""
                Welcome
                What would you like to do:
@@ -88,6 +94,7 @@ class Ui:
 
     @staticmethod
     def get_inputs(list_labels, title):
+        """Method ask user for input"""
         inputs = []
         print(title)
         for item in list_labels:
@@ -97,6 +104,7 @@ class Ui:
 
     @staticmethod
     def print_menu(title, list_options, exit_message):
+        """Display option for user"""
         print(title + ':')
         for i in range(len(list_options)):
             print('  ({}) {}'.format(i + 1, list_options[i]))
@@ -107,7 +115,9 @@ class Ui:
     #     for assignment in organisation.assignments_list:
     #         print(assignment)
 
+    @staticmethod
     def print_table(table, title_list):
+        """Display data in formatted table"""
         table.insert(0, title_list)
         for row_index, row in enumerate(table):
             for col_index, col in enumerate(row):

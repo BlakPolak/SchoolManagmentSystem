@@ -246,12 +246,21 @@ class Manager(Employee):
         self.list_mentors(organisation)
 
     def list_mentors(self, organisation):
-        i = 0
-        for mentor in organisation.mentors_list:
-            i += 1
-            print(str(i), mentor.name, mentor.surname)
+        mentor_list = []
+        n = 1
+        while n < len(organisation.mentors_list):
+            for mentor in organisation.mentors_list:
+                mentor_list.append([str(n) + ".", mentor.name, mentor.surname])
+                n += 1
+        return mentor_list
 
     def view_mentors_details(self, organisation):
-        for mentor in organisation.mentors_list:
-            print(mentor.name, mentor.surname, mentor.gender, mentor.birth_date, mentor.email, mentor.login,
-                  mentor.password)
+        mentors_details_list = []
+        n = 1
+        while n < len(organisation.mentors_list):
+            for mentor in organisation.mentors_list:
+                mentors_details_list.append([str(n) + ".", mentor.name, mentor.surname, mentor.gender, mentor.birth_date,
+                                             mentor.email, mentor.login, mentor.password])
+                n += 1
+        return mentors_details_list
+
