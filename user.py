@@ -141,6 +141,16 @@ class Mentor(Employee):
     def add_student(self, organisation):
         options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
                                     "Password"], "Provide information about new student")
+
+        if options[0].isalpha() and options[1].isalpha() and options[2] in ['male', 'female', 'not sure']:
+            if options[3].isalpha():
+                print('Data should have format: YYYY-MM-DD')
+                return
+        else:
+            print('\nWrong input!\nName: only letters\nSurname: only numbers\n'
+                  'Gender: you can choose only male, female or not sure\nData format: YYYY-MM-DD\n')
+            return
+
         new_student = Student(options[0], options[1], options[2], options[3], options[4], options[5],
                             options[6])
         organisation.students_list.append(new_student)
@@ -172,6 +182,14 @@ class Mentor(Employee):
         student = organisation.students_list[int(options[0]) - 1]
         options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
                                     "Password"], "Edit information about student")
+        if options[0].isalpha() and options[1].isalpha() and options[2] in ['male', 'female', 'not sure']:
+            if options[3].isalpha():
+                print('Data should have format: YYYY-MM-DD')
+                return
+        else:
+            print('\nWrong input!\nName: only letters\nSurname: only numbers\n'
+                  'Gender: you can choose only male, female or not sure\nData format: YYYY-MM-DD\n')
+            return
         student.name = options[0]
         student.surname = options[1]
         student.gender = options[2]
@@ -202,6 +220,14 @@ class Mentor(Employee):
     def add_assignment(self, organisation):
         options = ui.Ui.get_inputs(["Name", "Max. points to receive", "Delivery date", "Content"],
                                     "Provide information about new assignment")
+        if options[0].isalpha() and options[1].isdigit() and options[3].isalpha():
+            if options[2].isalpha():
+                print('\nData format: YYYY-MM-DD\n')
+                return
+        else:
+            print('\nWrong input!\nName: only letters\nMax Points: only numbers\nContent: only letters\n'
+                  'Data should have format: YYYY-MM-DD\n')
+            return
         new_assignment = assignment.Assignment(options[0], options[1], options[2], options[3])
         organisation.assignments_list.append(new_assignment)
 
@@ -213,6 +239,14 @@ class Manager(Employee):
         #ui.Ui.print_menu()
         options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
                                     "Password"], "Provide information about new mentor")
+        if options[0].isalpha() and options[1].isalpha() and options[2] in ['male', 'female', 'not sure']:
+            if options[3].isalpha():
+                print('\nData should have format: YYYY-MM-DD\n')
+                return
+        else:
+            print('\nWrong input!\nName: only letters\nSurname: only numbers\n'
+                  'Gender: you can choose only male, female or not sure\n')
+            return
         new_mentor = Mentor(options[0], options[1], options[2], options[3], options[4], options[5],
                             options[6])
         organisation.mentors_list.append(new_mentor)
@@ -231,6 +265,14 @@ class Manager(Employee):
         mentor = organisation.mentors_list[int(options[0]) - 1]
         options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
                                     "Password"], "Edit information about mentor")
+        if options[0].isalpha() and options[1].isalpha() and options[2] in ['male', 'female', 'not sure']:
+            if options[3].isalpha():
+                print('\nData should have format: YYYY-MM-DD\n')
+                return
+        else:
+            print('\nWrong input!\nName: only letters\nSurname: only numbers\n'
+                  'Gender: you can choose only male, female or not sure\n')
+            return
         mentor.name = options[0]
         mentor.surname = options[1]
         mentor.gender = options[2]
