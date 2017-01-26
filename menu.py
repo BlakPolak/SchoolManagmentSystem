@@ -1,8 +1,8 @@
 import user
 import ui
 
-class Menu:
 
+class Menu:
 
     def handle_menu(self):
         NotImplementedError()
@@ -14,7 +14,8 @@ class Menu:
                 menu = MenuStudent()
                 menu.handle_menu()
                 if menu.option == "1":
-                    ui.Ui.print_table(user_signed_in.view_my_grades(organisation), ['Index', 'Your grade assignments', 'Grade'])
+                    ui.Ui.print_table(user_signed_in.view_my_grades(organisation), ['Index', 'Your grade assignments',
+                                                                                    'Grade'])
                 elif menu.option == "2":
                     user_signed_in.submit_assignment(organisation)
                 elif menu.option == "0":
@@ -26,7 +27,9 @@ class Menu:
                 if menu.option == "1":
                     ui.Ui.print_table(user_signed_in.list_students(organisation), ["Index", "Name", "Surname"])
                 elif menu.option == "2":
-                    user_signed_in.view_student_details(organisation)
+                    ui.Ui.print_table(user_signed_in.view_student_details(organisation), ["Index", "Name", "Surname",
+                                                                                          "Gender", "Date of birth",
+                                                                                          "Email", "Login", "Password"])
                 elif menu.option == "0":
                     return "exit"
         elif type(user_signed_in) == user.Manager:
@@ -58,12 +61,16 @@ class Menu:
                 elif menu.option == "2":
                     ui.Ui.print_table(user_signed_in.list_students(organisation), ["Index", "Name", "Surname"])
                 elif menu.option == "3":
-                    user_signed_in.view_student_details(organisation)
+                    ui.Ui.print_table(user_signed_in.view_student_details(organisation), ["Index", "Name", "Surname",
+                                                                                          "Gender", "Date of birth",
+                                                                                          "Email", "Login", "Password"])
                 elif menu.option == "4":
                     user_signed_in.add_student(organisation)
                 elif menu.option == "5":
+                    ui.Ui.print_table(user_signed_in.list_students(organisation), ["Index", "Name", "Surname"])
                     user_signed_in.remove_student(organisation)
                 elif menu.option == "6":
+                    ui.Ui.print_table(user_signed_in.list_students(organisation), ["Index", "Name", "Surname"])
                     user_signed_in.edit_student(organisation)
                 elif menu.option == "7":
                     user_signed_in.add_assignment(organisation)

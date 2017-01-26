@@ -119,4 +119,3 @@ class Ui:
             print("-" * sum_of_widths)
             print("|" + "  ".join((val.rjust(width) + "|" for val, width in zip(row, widths))))
         print("-" * sum_of_widths)
-
