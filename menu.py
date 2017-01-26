@@ -6,7 +6,7 @@ class Menu:
     """
     This class creates menu object
     """
-    
+
     def handle_menu(self):
         """Method display menu for signed user"""
         NotImplementedError()
@@ -94,6 +94,7 @@ class MenuStudent(Menu):
         self.option = None
 
     def handle_menu(self):
+        """Method display menu for signed user"""
         while not self.option:
             self.option = ui.Ui.handle_student_menu()
 
