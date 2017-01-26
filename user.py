@@ -30,7 +30,7 @@ class User:
             validated variable
         """
         if type(validate) != check_type:
-            raise TypeError
+            return()
         elif type(validate) == check_type:
             if validate.isdigit():
                 validate = int(validate)
