@@ -39,22 +39,24 @@ class Student(User):
         pass
 
     def submit_assignment(self, organisation):
-        list_assignment = []
         submission_list_done = []
-        for submission in organisation.submissions_list:
-            if submission.student.name == self.name:
-                if submission.student.surname == self.surname:
-                    if submission.grade:
-                        submission_list_done.append(submission.assignment)
-        final = set(organisation.assignments_list) - set(submission_list_done)
-        final_list = list(final)
-
-        ui.Ui.print_menu("Choose assignment to submit", final_list, "Exit")
-        options = ui.Ui.get_inputs(["->"], "")
-        picked_assignment = organisation.assignments_list[int(options[0]) - 1]
-        new_submission = submission.Submission(self, picked_assignment)
-        new_submission.provide_result()
-        organisation.submissions_list.append(new_submission)
+        for submission_ in organisation.submissions_list:
+             if submission_.student.name == self.name and submission_.student.surname == self.surname:
+                print(submission_.submission_date)
+                if submission_.grade == "":
+                    submission_list_done.append(submission_.assignment) # submission_list_done -
+                                                                            # graded assignments of actual student
+        final_list = [assignment for assignment in organisation.assignments_list if assignment not in submission_list_done]
+        if final_list:
+            ui.Ui.print_menu("Choose assignment to submit", final_list, "Exit")
+            options = ui.Ui.get_inputs(["->"], "")
+            picked_assignment = final_list[int(options[0]) - 1]
+            new_submission = submission.Submission(picked_assignment, self)
+            new_submission.provide_result()
+            organisation.submissions_list.append(new_submission)
+        else:
+            print("No assignments left.")
+            return
 
 
 class Mentor(Employee):

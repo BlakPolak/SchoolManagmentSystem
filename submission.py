@@ -4,7 +4,7 @@ import datetime
 
 class Submission:
 
-    def __init__(self, assignment, student, submission_date=None, result="", grade=""):
+    def __init__(self, assignment, student, submission_date="", result="", grade=""):
         self.result = result
         self.grade = grade
         self.submission_date = datetime.date.today()

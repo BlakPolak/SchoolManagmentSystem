@@ -167,6 +167,8 @@ class Program:
             row = [submission.assignment.name, submission.student.name, submission.student.surname,
                    str(submission.submission_date), str(submission.result), str(submission.grade)]
             submissions_table.append(row)
+            print(row)
+            input()
 
         for attendance in self.attendance_list:
             row = [attendance.student.name, attendance.student.surname, str(attendance.date), attendance.was_present]
