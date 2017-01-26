@@ -34,18 +34,24 @@ class Menu:
                 menu = MenuManager()
                 menu.handle_menu()
                 if menu.option == "1":
-                    user_signed_in.list_mentors(organisation)
+                    ui.Ui.print_table(user_signed_in.list_mentors(organisation), ["Index", "Name", "Surname"])
                 elif menu.option == "2":
-                    user_signed_in.view_mentors_details(organisation)
+                    ui.Ui.print_table(user_signed_in.view_mentors_details(organisation), ["Index", "Name", "Surname",
+                                                                                          "Gender", "Birth date",
+                                                                                          "Mail", "Login", "Password"])
                 elif menu.option == "3":
-                    user_signed_in.list_students(organisation)
+                    ui.Ui.print_table(user_signed_in.list_students(organisation), ["Index", "Name", "Surname"])
                 elif menu.option == "4":
-                    user_signed_in.view_student_details(organisation)
+                    ui.Ui.print_table(user_signed_in.view_student_details(organisation), ["Index", "Name", "Surname",
+                                                                                          "Gender", "Birth date",
+                                                                                          "Mail", "Login", "Password"])
                 elif menu.option == "5":
                     user_signed_in.add_mentor(organisation)
                 elif menu.option == "6":
+                    ui.Ui.print_table(user_signed_in.list_mentors(organisation), ["Index", "Name", "Surname"])
                     user_signed_in.remove_mentor(organisation)
                 elif menu.option == "7":
+                    ui.Ui.print_table(user_signed_in.list_mentors(organisation), ["Index", "Name", "Surname"])
                     user_signed_in.edit_mentor(organisation)  #add to exit to login
                 elif menu.option == "0":
                     return "exit"
