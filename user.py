@@ -35,14 +35,18 @@ class Student(User):
     def __str__(self):
         return self.name+self.surname
 
-    def view_my_grades(self):
-        pass
+    def view_my_grades(self, organisation):
+        #my_submissions_list = []
+        for submission_ in organisation.submissions_list:
+            if submission_.student.name == self.name and submission_.student.surname == self.surname:
+                if submission_.grade:
+                    print(submission_.assignment.name, submission_.student.name, submission_.student.surname,
+                          submission_.grade)
 
     def submit_assignment(self, organisation):
         submission_list_done = []
         for submission_ in organisation.submissions_list:
              if submission_.student.name == self.name and submission_.student.surname == self.surname:
-                print(submission_.submission_date)
                 if submission_.grade == "":
                     submission_list_done.append(submission_.assignment) # submission_list_done -
                                                                             # graded assignments of actual student
