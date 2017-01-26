@@ -24,8 +24,11 @@ class Employee(User):
         for student in organisation.students_list:
             print(student.name, student.surname)
 
-    def view_student_details(self, student):
-        pass
+    def view_student_details(self, organisation):
+        for student in organisation.students_list:
+            print(student.name, student.surname, student.gender, student.birth_date, student.email, student.login,
+                  student.password)
+
 
 class Student(User):
     def __init__(self, name, surname, gender, birth_date, email, login, password):
@@ -81,9 +84,12 @@ class Mentor(Employee):
             #attendance_list.append([student.name, student.surname, str(datetime.date.today()), options[i]])
             i += 1
 
-
-    def remove_student(self):
-        pass
+    def remove_student(self, organisation):  # add funcionality
+        self.list_students(organisation)
+        options = ui.Ui.get_inputs([""], "Enter number to erase student from database")
+        del organisation.students_list[int(options[0]) - 1]
+        print("Mentor was erased.")
+        #self.list_mentors(organisation)
 
     def edit_student(self, organisation):
         self.list_students(organisation)
@@ -166,6 +172,7 @@ class Manager(Employee):
             i += 1
             print(str(i), mentor.name, mentor.surname)
 
-
-    def view_mentors_details(self):
-        pass
+    def view_mentors_details(self, organisation):
+        for mentor in organisation.mentors_list:
+            print(mentor.name, mentor.surname, mentor.gender, mentor.birth_date, mentor.email, mentor.login,
+                  mentor.password)

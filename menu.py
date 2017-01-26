@@ -20,25 +20,35 @@ class Menu:
                 elif menu.option == "0":
                     return "exit"
         elif type(user_signed_in) == user.Employee:
-            menu = MenuEmployee()
-            menu.handle_menu()
-            if menu.option == "1":
-                user_signed_in.list_students(organisation)
-            elif menu.option == "2":
-                user_signed_in.view_student_details(organisation)
+            while True:
+                menu = MenuEmployee()
+                menu.handle_menu()
+                if menu.option == "1":
+                    user_signed_in.list_students(organisation)
+                elif menu.option == "2":
+                    user_signed_in.view_student_details(organisation)
+                elif menu.option == "0":
+                    return "exit"
         elif type(user_signed_in) == user.Manager:
-            menu = MenuManager()
-            menu.handle_menu()
-            if menu.option == "1":
-                user_signed_in.list_mentors(organisation)
-            elif menu.option == "2":
-                user_signed_in.list_students(organisation)
-            elif menu.option == "3":
-                user_signed_in.add_mentor(organisation)
-            elif menu.option == "4":
-                user_signed_in.remove_mentor(organisation)
-            elif menu.option == "5":
-                user_signed_in.edit_mentor(organisation)
+            while True:
+                menu = MenuManager()
+                menu.handle_menu()
+                if menu.option == "1":
+                    user_signed_in.list_mentors(organisation)
+                elif menu.option == "2":
+                    user_signed_in.view_mentors_details(organisation)
+                elif menu.option == "3":
+                    user_signed_in.list_students(organisation)
+                elif menu.option == "4":
+                    user_signed_in.view_student_details(organisation)
+                elif menu.option == "5":
+                    user_signed_in.add_mentor(organisation)
+                elif menu.option == "6":
+                    user_signed_in.remove_mentor(organisation)
+                elif menu.option == "7":
+                    user_signed_in.edit_mentor(organisation)  #add to exit to login
+                elif menu.option == "0":
+                    return "exit"
         elif type(user_signed_in) == user.Mentor:
             while True:
                 menu = MenuMentor()
@@ -52,15 +62,16 @@ class Menu:
                 elif menu.option == "4":
                     user_signed_in.add_student(organisation)
                 elif menu.option == "5":
-                    user_signed_in.edit_student(organisation)
+                    user_signed_in.remove_student(organisation)
                 elif menu.option == "6":
-                    user_signed_in.add_assignment(organisation)
+                    user_signed_in.edit_student(organisation)
                 elif menu.option == "7":
+                    user_signed_in.add_assignment(organisation)
+                elif menu.option == "8":
                     user_signed_in.grade_submission(organisation)
                 elif menu.option == "0":
                     return "exit"
-
-        return menu
+            return menu
 
 class MenuStudent(Menu):
     def __init__(self):
@@ -81,6 +92,7 @@ class MenuMentor(Menu):
         while not self.option:
             self.option = ui.Ui.handle_mentor_menu()
 
+
 class MenuManager(Menu):
     def __init__(self):
         self.option = None
@@ -88,9 +100,6 @@ class MenuManager(Menu):
     def handle_menu(self):
         while not self.option:
             self.option = ui.Ui.handle_manager_menu()
-
-
-
 
 
 class MenuEmployee(Menu):
