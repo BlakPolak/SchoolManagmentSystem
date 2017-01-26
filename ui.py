@@ -28,15 +28,17 @@ class Ui:
     @staticmethod
     def handle_manager_menu():
         print("""
-           Welcome
-           What would you like to do:
-           (1) List mentors
-           (2) List students
-           (3) Add mentor
-           (4) Remove mentor
-           (5) Edit mentor
-           (0) Exit CcMS
-        """)
+               Welcome
+               What would you like to do:
+               (1) List mentors
+               (2) View mentors details
+               (3) List students
+               (4) View students details
+               (5) Add mentor
+               (6) Remove mentor
+               (7) Edit mentors data
+               (0) Exit CcMS
+            """)
         option = input("Your choice: ")
         return option
 
@@ -49,9 +51,10 @@ class Ui:
                (2) List students
                (3) View students details
                (4) Add student
-               (5) Edit student
-               (6) Submit assignment
-               (7) Grade assignment
+               (5) Remove student
+               (6) Edit students data
+               (7) Add assignment
+               (8) Grade assignment
                (0) Exit CcMS
             """)
         option = input("Your choice: ")
@@ -60,12 +63,12 @@ class Ui:
     @staticmethod
     def handle_student_menu():
         print("""
-                   Welcome
-                   What would you like to do:
-                   (1) View my grades
-                   (2) Submit assignment
-                   (0) Exit CcMS
-                """)
+               Welcome
+               What would you like to do:
+               (1) View my grades
+               (2) Submit assignment
+               (0) Exit CcMS
+            """)
         option = input("Your choice: ")
         return option
 
