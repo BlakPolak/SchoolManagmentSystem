@@ -91,18 +91,30 @@ class Program:
             new_assignment = assignment.Assignment(name, max_points, delivery_date, content)
             self.assignments_list.append(new_assignment)
 
+        print(self.submissions_table)
+        input()
+        assignment_related = None
         for row in self.submissions_table:
             assignment_name_related = row[0]
             for assignment_ in self.assignments_list:
                 if assignment_.name == assignment_name_related:
                     assignment_related = assignment_
                     break
-            student = row[1]
-            submission_date = row[2]
-            result = row[3]
-            grade = row[4]
-            new_submission = submission.Submission(assignment_related, student, submission_date, result, grade)
-            self.submissions_list.append(new_submission)
+            if assignment_related:
+                print(assignment_related)
+                input()
+                student_name = row[1]
+                student_surname = row[2]
+                submission_date = row[3]
+                result = row[4]
+                grade = row[5]
+                for student in self.students_list:
+                    if student.name == student_name:
+                        if student.surname == student_surname:
+                            student_to_append= student
+                if assignment_related:
+                    new_submission = submission.Submission(assignment_related, student_to_append, submission_date, result, grade)
+                    self.submissions_list.append(new_submission)
 
         for row in self.attendance_table:
             student_name_related = row[0]
@@ -152,7 +164,7 @@ class Program:
             assignments_table.append(row)
 
         for submission in self.submissions_list:
-            row = [submission.assignment.name, submission.student.name+submission.student.surname,
+            row = [submission.assignment.name, submission.student.name, submission.student.surname,
                    str(submission.submission_date), str(submission.result), str(submission.grade)]
             submissions_table.append(row)
 
