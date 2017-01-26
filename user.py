@@ -40,12 +40,19 @@ class Student(User):
 
     def submit_assignment(self, organisation):
         list_assignment = []
-        for assignment in organisation.assignments_list:
-            list_assignment.append(str(assignment))
-        ui.Ui.print_menu("Choose assignment to submit", list_assignment, "Exit")
+        submission_list_done = []
+        for submission in organisation.submissions_list:
+            if submission.student.name == self.name:
+                if submission.student.surname == self.surname:
+                    if submission.grade:
+                        submission_list_done.append(submission.assignment)
+        final = set(organisation.assignments_list) - set(submission_list_done)
+        final_list = list(final)
+
+        ui.Ui.print_menu("Choose assignment to submit", final_list, "Exit")
         options = ui.Ui.get_inputs(["->"], "")
         picked_assignment = organisation.assignments_list[int(options[0]) - 1]
-        new_submission = submission.Submission(picked_assignment)
+        new_submission = submission.Submission(self, picked_assignment)
         new_submission.provide_result()
         organisation.submissions_list.append(new_submission)
 

@@ -97,10 +97,11 @@ class Program:
                 if assignment_.name == assignment_name_related:
                     assignment_related = assignment_
                     break
-            submission_date = row[1]
-            result = row[2]
-            grade = row[3]
-            new_submission = submission.Submission(assignment_related, submission_date, result, grade)
+            student = row[1]
+            submission_date = row[2]
+            result = row[3]
+            grade = row[4]
+            new_submission = submission.Submission(assignment_related, student, submission_date, result, grade)
             self.submissions_list.append(new_submission)
 
         for row in self.attendance_table:
@@ -151,7 +152,8 @@ class Program:
             assignments_table.append(row)
 
         for submission in self.submissions_list:
-            row = [submission.assignment.name, str(submission.submission_date), str(submission.result), str(submission.grade)]
+            row = [submission.assignment.name, submission.student.name+submission.student.surname,
+                   str(submission.submission_date), str(submission.result), str(submission.grade)]
             submissions_table.append(row)
 
         for attendance in self.attendance_list:
