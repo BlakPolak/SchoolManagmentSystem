@@ -163,9 +163,9 @@ class Program:
                    str(submission.submission_date), str(submission.result), str(submission.grade)]
             submissions_table.append(row)
 
-        for attendance in self.attendance_list:
-            row = [attendance.student.name, attendance.student.surname, str(attendance.date), attendance.was_present]
-            attendance_table.append(row)
+        for attendance_ in self.attendance_list:
+                row = [attendance_.student.name, attendance_.student.surname, str(attendance_.date), attendance_.was_present]
+                attendance_table.append(row)
 
         self.write_csv("csv_lists/employee_list.csv", employee_table)
         self.write_csv("csv_lists/students_list.csv", students_table)

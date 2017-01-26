@@ -2,6 +2,7 @@ import ui
 import assignment
 import submission
 import datetime
+import attendance
 
 class User:
     def __init__(self, name, surname, gender, birth_date, email, login, password):
@@ -68,10 +69,16 @@ class Employee(User):
         super().__init__(name, surname, gender, birth_date, email, login, password)
 
     def list_students(self, organisation):
-        for student in organisation.students_list:
-            print(student.name, student.surname)
+        student_list = []
+        n = 1
+        while n < len(organisation.students_list):
+            for student in organisation.students_list:
+                student_list. append([str(n) + ".", student.name, student.surname])
+                n += 1
+        return student_list
 
     def view_student_details(self, organisation):
+        student_details = []
         for student in organisation.students_list:
             print(student.name, student.surname, student.gender, student.birth_date, student.email, student.login,
                   student.password)
@@ -132,21 +139,22 @@ class Mentor(Employee):
 
     def check_attendance(self, organisation):
         students_list = []
-        attendance_list = []
+        #attendance_list = []
         i = 0
         for student in organisation.students_list:
             students_list.append(student.surname+" "+student.name)
         options = ui.Ui.get_inputs(students_list, "Starting attendance check (mark 0 for absence, Enter otherwise")
         for student in organisation.students_list:
-            attendance_list.append([student, str(datetime.date.today()), options[i]])
-            #attendance_list.append([student.name, student.surname, str(datetime.date.today()), options[i]])
+            new_attendance = attendance.Attendance(student, str(datetime.date.today()), options[i])
+            #organisation.attendance_list.append([student, str(datetime.date.today()), options[i]])
+            organisation.attendance_list.append(new_attendance)
             i += 1
 
     def remove_student(self, organisation):  # add funcionality
         self.list_students(organisation)
         options = ui.Ui.get_inputs([""], "Enter number to erase student from database")
         del organisation.students_list[int(options[0]) - 1]
-        print("Mentor was erased.")
+        print("Student was erased.")
         #self.list_mentors(organisation)
 
     def edit_student(self, organisation):
@@ -174,7 +182,7 @@ class Mentor(Employee):
             else:
                 i += 1
         if not list_submission:
-            print("No submission avaible")
+            print("No submission available")
             return
         ui.Ui.print_menu("Choose submission to grade", list_submission, "Exit")
         options = ui.Ui.get_inputs(["->"], "")
