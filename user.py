@@ -2,6 +2,7 @@ import ui
 import assignment
 import submission
 import datetime
+import attendance
 
 class User:
     def __init__(self, name, surname, gender, birth_date, email, login, password):
@@ -86,21 +87,22 @@ class Mentor(Employee):
 
     def check_attendance(self, organisation):
         students_list = []
-        attendance_list = []
+        #attendance_list = []
         i = 0
         for student in organisation.students_list:
             students_list.append(student.surname+" "+student.name)
         options = ui.Ui.get_inputs(students_list, "Starting attendance check (mark 0 for absence, Enter otherwise")
         for student in organisation.students_list:
-            attendance_list.append([student, str(datetime.date.today()), options[i]])
-            #attendance_list.append([student.name, student.surname, str(datetime.date.today()), options[i]])
+            new_attendance = attendance.Attendance(student, str(datetime.date.today()), options[i])
+            #organisation.attendance_list.append([student, str(datetime.date.today()), options[i]])
+            organisation.attendance_list.append(new_attendance)
             i += 1
 
     def remove_student(self, organisation):  # add funcionality
         self.list_students(organisation)
         options = ui.Ui.get_inputs([""], "Enter number to erase student from database")
         del organisation.students_list[int(options[0]) - 1]
-        print("Mentor was erased.")
+        print("Student was erased.")
         #self.list_mentors(organisation)
 
     def edit_student(self, organisation):
