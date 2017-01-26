@@ -70,19 +70,19 @@ class Employee(User):
         n = 1
         while n < len(organisation.students_list):
             for student in organisation.students_list:
-                student_list. append([str(n) + ".", student.name, student.surname])
+                student_list.append([str(n) + ".", student.name, student.surname])
                 n += 1
         return student_list
 
     def view_student_details(self, organisation):
-        students_details_list = []
+        student_details = []
         n = 1
         while n < len(organisation.students_list):
             for student in organisation.students_list:
-                students_details_list.append([str(n) + ".", student.name, student.surname, student.gender, student.birth_date,
-                                             student.email, student.login, student.password])
+                student_details.append([str(n) + ".", student.name, student.surname, student.gender, student.birth_date,
+                                        student.email, student.login, student.password])
                 n += 1
-        return students_details_list
+        return student_details
 
 
 class Student(User):
@@ -171,7 +171,7 @@ class Mentor(Employee):
 
     def remove_student(self, organisation):  # add funcionality
         self.list_students(organisation)
-        options = ui.Ui.get_inputs([""], "Enter number to erase student from database")
+        options = ui.Ui.get_inputs([""], "Enter number to erase student from database: ")
         del organisation.students_list[int(options[0]) - 1]
         print("Student was erased.")
         #self.list_mentors(organisation)
@@ -214,7 +214,7 @@ class Mentor(Employee):
         ui.Ui.print_menu("Choose submission to grade", list_submission, "Exit")
         options = ui.Ui.get_inputs(["->"], "")
         picked_submission = organisation.submissions_list[int(options[0])+i]
-        options = ui.Ui.get_inputs(["Enter grade for this submission"], "")
+        options = ui.Ui.get_inputs(["Enter grade for this submission: "], "")
         picked_submission.grade = options[0]
 
     def add_assignment(self, organisation):
@@ -228,8 +228,11 @@ class Mentor(Employee):
             print('\nWrong input!\nName: only letters\nMax Points: only numbers\nContent: only letters\n'
                   'Data should have format: YYYY-MM-DD\n')
             return
+        options = ui.Ui.get_inputs(["Title: ", "Max. points to receive: ", "Delivery date: ", "Content: "],
+                                   "Provide information about new assignment: ")
         new_assignment = assignment.Assignment(options[0], options[1], options[2], options[3])
         organisation.assignments_list.append(new_assignment)
+
 
 class Manager(Employee):
     def __init__(self, name, surname, gender, birth_date, email, login, password):
