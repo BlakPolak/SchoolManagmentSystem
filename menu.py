@@ -14,7 +14,7 @@ class Menu:
                 menu = MenuStudent()
                 menu.handle_menu()
                 if menu.option == "1":
-                    user_signed_in.view_my_grades(organisation)
+                    ui.Ui.print_table(user_signed_in.view_my_grades(organisation), ['Index', 'Your grade assignments', 'Grade'])
                 elif menu.option == "2":
                     user_signed_in.submit_assignment(organisation)
                 elif menu.option == "0":
@@ -24,7 +24,7 @@ class Menu:
                 menu = MenuEmployee()
                 menu.handle_menu()
                 if menu.option == "1":
-                    user_signed_in.list_students(organisation)
+                    ui.Ui.print_table(user_signed_in.list_students(organisation), ["Index", "Name", "Surname"])
                 elif menu.option == "2":
                     user_signed_in.view_student_details(organisation)
                 elif menu.option == "0":
@@ -56,7 +56,7 @@ class Menu:
                 if menu.option == "1":
                     user_signed_in.check_attendance(organisation)
                 elif menu.option == "2":
-                    user_signed_in.list_students(organisation)
+                    ui.Ui.print_table(user_signed_in.list_students(organisation), ["Index", "Name", "Surname"])
                 elif menu.option == "3":
                     user_signed_in.view_student_details(organisation)
                 elif menu.option == "4":

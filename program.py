@@ -125,7 +125,6 @@ class Program:
             new_attendance = attendance.Attendance(student_related, date, was_present)
             self.attendance_list.append(new_attendance)
 
-
     def export_data(self):
         employee_table = []
         students_table = []
