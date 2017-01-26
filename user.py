@@ -21,10 +21,16 @@ class Employee(User):
         super().__init__(name, surname, gender, birth_date, email, login, password)
 
     def list_students(self, organisation):
-        for student in organisation.students_list:
-            print(student.name, student.surname)
+        student_list = []
+        n = 1
+        while n < len(organisation.students_list):
+            for student in organisation.students_list:
+                student_list. append([str(n) + ".", student.name, student.surname])
+                n += 1
+        return student_list
 
     def view_student_details(self, organisation):
+        student_details = []
         for student in organisation.students_list:
             print(student.name, student.surname, student.gender, student.birth_date, student.email, student.login,
                   student.password)
@@ -122,7 +128,7 @@ class Mentor(Employee):
             else:
                 i += 1
         if not list_submission:
-            print("No submission avaible")
+            print("No submission available")
             return
         ui.Ui.print_menu("Choose submission to grade", list_submission, "Exit")
         options = ui.Ui.get_inputs(["->"], "")
