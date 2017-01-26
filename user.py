@@ -5,18 +5,65 @@ import datetime
 
 class User:
     def __init__(self, name, surname, gender, birth_date, email, login, password):
-        self.name = name
-        self.surname = surname
+        self.name = self.check_if_correct(name, str)
+        self.surname = self.check_if_correct(surname, str)
+        self.check_gender(gender)
         self.gender = gender
+        self.date_validate(birth_date)
         self.birth_date = birth_date
-        self.email = email
+        self.email = email  #checking email and login to do in the future
         self.login = login
-        self.password = password
+        self.password = self.check_if_correct(password, str)
 
-    def validate(self):
-        pass
+
+    @staticmethod
+    def check_if_correct(validate, check_type):
+        """
+        Checks if variable is expected type and convert it to integer type if it contains just digits
+
+        Args:
+            validate: variable to check
+            check_type: expected type of variable
+
+        Returns:
+            validated variable
+        """
+        if type(validate) != check_type:
+            raise TypeError
+        elif type(validate) == check_type:
+            if validate.isdigit():
+                validate = int(validate)
+                return validate
+            elif all(i.isalpha() or i.isspace() for i in validate):
+                return validate
+            else:
+                raise TypeError
+
+    def check_gender(self, gender):
+        """
+        Checks if variable is correct type of gender, if not - it raises an error
+
+        Args:
+            gender: variable to check
+
+        Returns:
+            None
+        """
+        gender_list = ['male', 'female', 'not sure']
+        if gender.lower() not in gender_list:
+            raise TypeError
+
+    def date_validate(self, birth_date):
+        try:
+            if birth_date != datetime.datetime.strptime(birth_date, '%Y-%m-%d').strftime('%Y-%m-%d'):
+                raise ValueError
+            return True
+        except ValueError:
+            return False
+
 
 class Employee(User):
+
     def __init__(self, name, surname, gender, birth_date, email, login, password):
         super().__init__(name, surname, gender, birth_date, email, login, password)
 
@@ -39,24 +86,29 @@ class Student(User):
         return self.name+self.surname
 
     def view_my_grades(self, organisation):
-        #my_submissions_list = []
+        my_submissions_list = []
+        i = 0
         for submission_ in organisation.submissions_list:
             if submission_.student.name == self.name and submission_.student.surname == self.surname:
                 if submission_.grade:
-                    print(submission_.assignment.name, submission_.student.name, submission_.student.surname,
-                          submission_.grade)
+                    submission_to_add = [str(i+1), submission_.assignment.name, submission_.grade]
+                    my_submissions_list.append(submission_to_add)
+                    i += 1
+        return my_submissions_list
 
     def submit_assignment(self, organisation):
         submission_list_done = []
         for submission_ in organisation.submissions_list:
-             if submission_.student.name == self.name and submission_.student.surname == self.surname:
+            if submission_.student.name == self.name and submission_.student.surname == self.surname:
                 if submission_.grade == "":
                     submission_list_done.append(submission_.assignment) # submission_list_done -
-                                                                            # graded assignments of actual student
+                                                                        # graded assignments of actual student
         final_list = [assignment for assignment in organisation.assignments_list if assignment not in submission_list_done]
         if final_list:
             ui.Ui.print_menu("Choose assignment to submit", final_list, "Exit")
             options = ui.Ui.get_inputs(["->"], "")
+            if options[0] == '0':
+                return
             picked_assignment = final_list[int(options[0]) - 1]
             new_submission = submission.Submission(picked_assignment, self)
             new_submission.provide_result()
