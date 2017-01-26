@@ -30,7 +30,7 @@ class User:
             validated variable
         """
         if type(validate) != check_type:
-            return()
+            raise TypeError("Wrong format for: " + (validate))
         elif type(validate) == check_type:
             if validate.isdigit():
                 validate = int(validate)
@@ -38,7 +38,7 @@ class User:
             elif all(i.isalpha() or i.isspace() for i in validate):
                 return validate
             else:
-                raise TypeError
+                raise TypeError("Wrong format for: " + str(validate))
 
     def check_gender(self, gender):
         """
@@ -52,15 +52,12 @@ class User:
         """
         gender_list = ['male', 'female', 'not sure']
         if gender.lower() not in gender_list:
-            raise TypeError
+            raise NameError('Gender should be: male, female, not sure')
 
     def date_validate(self, birth_date):
-        try:
-            if birth_date != datetime.datetime.strptime(birth_date, '%Y-%m-%d').strftime('%Y-%m-%d'):
-                raise ValueError
+        if datetime.datetime.strptime(birth_date, '%Y-%m-%d').strftime('%Y-%m-%d'):
             return True
-        except ValueError:
-            return False
+
 
 
 class Employee(User):
