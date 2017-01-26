@@ -1,9 +1,11 @@
-class Ui:
+import getpass
 
+
+class Ui:
     @staticmethod
     def get_login(organisation):
         login = input("login: ")
-        password = input("password: ")
+        password = getpass.getpass("password: ")
         for manager in organisation.managers_list:
             if login == manager.login:
                 if password == manager.password:
