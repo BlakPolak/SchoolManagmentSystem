@@ -4,18 +4,47 @@ import submission
 import datetime
 import attendance
 
+
 class User:
+    """
+        Base class creates user object
+
+        Args:
+            name: check_if_correct(name, str)
+            surname: check_if_correct(surname, str)
+            check_gender: gender
+            gender: gender
+            date_validate: birth_date
+            birth_date: birth_date
+            email:
+            login:login
+            password: check_if_correct(password, str)
+    """
     def __init__(self, name, surname, gender, birth_date, email, login, password):
+        """
+        Initialize user object
+
+        Args:
+            name: check_if_correct(name, str)
+            surname: check_if_correct(surname, str)
+            check_gender: gender
+            gender: gender
+            date_validate: birth_date
+            birth_date: birth_date
+            email:
+            login:login
+            password: check_if_correct(password, str)
+        """
+
         self.name = self.check_if_correct(name, str)
         self.surname = self.check_if_correct(surname, str)
         self.check_gender(gender)
         self.gender = gender
         self.date_validate(birth_date)
         self.birth_date = birth_date
-        self.email = email  #checking email and login to do in the future
+        self.email = email
         self.login = login
         self.password = self.check_if_correct(password, str)
-
 
     @staticmethod
     def check_if_correct(validate, check_type):
@@ -55,17 +84,49 @@ class User:
             raise NameError('Gender should be: male, female, not sure')
 
     def date_validate(self, birth_date):
+        """
+        Checks if data format is correct
+
+        Args:
+            birth_date: variable to check
+
+        Returns:
+         True if data format is correct
+        """
         if datetime.datetime.strptime(birth_date, '%Y-%m-%d').strftime('%Y-%m-%d'):
             return True
 
 
-
 class Employee(User):
-
+    """Class creates object employee"""
     def __init__(self, name, surname, gender, birth_date, email, login, password):
+        """
+        Initialize employee object that inherits from User class
+
+        Args:
+            name: check_if_correct(name, str)
+            surname: check_if_correct(surname, str)
+            check_gender: gender
+            gender: gender
+            date_validate: birth_date
+            birth_date: birth_date
+            email:
+            login:login
+            password: check_if_correct(password, str)
+        """
         super().__init__(name, surname, gender, birth_date, email, login, password)
 
     def list_students(self, organisation):
+        """
+        Return student list to display
+
+            Args:
+                organisation
+
+            Returns:
+
+                student list
+        """
         student_list = []
         n = 1
         while n < len(organisation.students_list):
@@ -75,6 +136,16 @@ class Employee(User):
         return student_list
 
     def view_student_details(self, organisation):
+        """
+        Returns students details list to display
+
+            Args:
+                organisation
+
+            Returns:
+
+                student detail list
+        """
         student_details = []
         n = 1
         while n < len(organisation.students_list):
@@ -86,7 +157,22 @@ class Employee(User):
 
 
 class Student(User):
+    """Class creates object student"""
     def __init__(self, name, surname, gender, birth_date, email, login, password):
+        """
+        Initialize student object that inherits from User class
+
+       Args:
+            name: check_if_correct(name, str)
+            surname: check_if_correct(surname, str)
+            check_gender: gender
+            gender: gender
+            date_validate: birth_date
+            birth_date: birth_date
+            email:
+            login:login
+            password: check_if_correct(password, str)
+        """
         super().__init__(name, surname, gender, birth_date, email, login, password)
         self.my_submissions_list = []
 
@@ -94,6 +180,16 @@ class Student(User):
         return self.name+self.surname
 
     def view_my_grades(self, organisation):
+        """
+        Method display list of submitted assignment with grades
+
+        Args:
+            organisation
+
+        Return:
+            list of submitted assignment with grades
+
+        """
         my_submissions_list = []
         i = 0
         for submission_ in organisation.submissions_list:
@@ -105,6 +201,16 @@ class Student(User):
         return my_submissions_list
 
     def submit_assignment(self, organisation):
+        """
+        Method allows student to submit assignment
+
+        Args:
+            organisation
+
+        Return:
+            list of submitted assignment
+
+        """
         submission_list_done = []
         for submission_ in organisation.submissions_list:
             if submission_.student.name == self.name and submission_.student.surname == self.surname:
@@ -113,7 +219,6 @@ class Student(User):
                                                                         # graded assignments of actual student
         final_list = [assignment for assignment in organisation.assignments_list if assignment not in submission_list_done]
         if final_list:
-            #ui.Ui.print_menu("Choose assignment to submit", final_list, "Exit")
             table_to_print = []
             id_ = 1
             for assignment in final_list:
@@ -135,10 +240,33 @@ class Student(User):
 
 
 class Mentor(Employee):
+    """Class creates object mentor"""
     def __init__(self, name, surname, gender, birth_date, email, login, password):
+        """
+        Initialize mentor object that inherits from User class
+
+        Args:
+            name: check_if_correct(name, str)
+            surname: check_if_correct(surname, str)
+            check_gender: gender
+            gender: gender
+            date_validate: birth_date
+            birth_date: birth_date
+            email:
+            login:login
+            password: check_if_correct(password, str)
+        """
         super().__init__(name, surname, gender, birth_date, email, login, password)
 
     def add_student(self, organisation):
+        """
+        Method allows mentor to add student to students list
+
+        Args:
+            organisation
+        Return:
+             None
+        """
         options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
                                     "Password"], "Provide information about new student")
 
@@ -157,6 +285,14 @@ class Mentor(Employee):
         print("Student was added.")
 
     def check_attendance(self, organisation):
+        """
+        Method allows mentor check students attendance
+
+        Args:
+            organisation
+        Return:
+             None
+        """
         students_list = []
         i = 0
         for student in organisation.students_list:
@@ -168,7 +304,15 @@ class Mentor(Employee):
             organisation.attendance_list.append(new_attendance)
             i += 1
 
-    def remove_student(self, organisation):  # add funcionality
+    def remove_student(self, organisation):
+        """
+        Method allows mentor remove students from students list
+
+        Args:
+            organisation
+        Return:
+             None
+        """
         self.list_students(organisation)
         options = ui.Ui.get_inputs([""], "Enter number to erase student from database: ")
         if int(options[0]) < 0 or int(options[0]) > len(self.list_students(organisation))-1:
@@ -176,9 +320,16 @@ class Mentor(Employee):
             return
         del organisation.students_list[int(options[0]) - 1]
         print("Student was erased.")
-        #self.list_mentors(organisation)
 
     def edit_student(self, organisation):
+        """
+        Method allows mentor edit students specific data
+
+        Args:
+            organisation
+        Return:
+             None
+        """
         self.list_students(organisation)
         options = ui.Ui.get_inputs([""], "Enter number to edit student's data")
         if options[0] == "0" or options[0] > len(self.list_students(organisation))-1:
@@ -205,6 +356,14 @@ class Mentor(Employee):
         self.list_students(organisation)
 
     def grade_submission(self, organisation):
+        """
+        Method allows mentor grade students submitted assignment
+
+        Args:
+            organisation
+        Return:
+             None
+        """
         list_submission = []
         i = -1
         for submission_ in organisation.submissions_list:
@@ -215,12 +374,19 @@ class Mentor(Employee):
         if not list_submission:
             print("No submission available")
             return
-        ui.Ui.print_menu("Choose submission to grade", list_submission, "Exit")
+        table_to_print = []
+        id_ = 1
+        for submission_ in list_submission:
+            table_to_print.append([str(id_), submission_.assignment.name, submission_.assignment.content])
+            id_ += 1
+        ui.Ui.print_table(table_to_print, ["ID", "Assignment name", "Assignment content"])
         options = ui.Ui.get_inputs(["->"], "")
         if options[0].isalpha() or int(options[0]) > len(list_submission)-1:
             print("There is no such number of assignment on list")
             return
-        picked_submission = organisation.submissions_list[int(options[0])-1]
+        if options[0] == "0":
+            return
+        picked_submission = list_submission[int(options[0])-1]
         options = ui.Ui.get_inputs(["Enter grade for this submission: "], "")
         if options[0].isalpha() or int(options[0]) < 0 or int(options[0]) > 5:
             print("Grade can be only number in range 0-5")
@@ -228,6 +394,14 @@ class Mentor(Employee):
         picked_submission.grade = options[0]
 
     def add_assignment(self, organisation):
+        """
+        Method allows mentor add new assignment to assignment list
+
+        Args:
+            organisation
+        Return:
+             None
+        """
         options = ui.Ui.get_inputs(["Name", "Max. points to receive", "Delivery date", "Content"],
                                     "Provide information about new assignment")
         if options[0].isalpha() and options[1].isdigit():
@@ -242,11 +416,33 @@ class Mentor(Employee):
 
 
 class Manager(Employee):
+    """Class creates object mentor"""
     def __init__(self, name, surname, gender, birth_date, email, login, password):
+        """
+        Initialize mentor object that inherits from User class
+
+        Args:
+            name: check_if_correct(name, str)
+            surname: check_if_correct(surname, str)
+            check_gender: gender
+            gender: gender
+            date_validate: birth_date
+            birth_date: birth_date
+            email:
+            login:login
+            password: check_if_correct(password, str)
+        """
         super().__init__(name, surname, gender, birth_date, email, login, password)
 
     def add_mentor(self, organisation):
-        #ui.Ui.print_menu()
+        """
+        Method allows manager to add mentor to mentors list
+
+        Args:
+            organisation
+        Return:
+             None
+        """
         options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
                                     "Password"], "Provide information about new mentor")
         if options[0].isalpha() and options[1].isalpha() and options[2] in ['male', 'female', 'not sure']:
@@ -263,6 +459,14 @@ class Manager(Employee):
         print("Mentor was added.")
 
     def remove_mentor(self, organisation):
+        """
+        Method allows manager to remove mentor from mentors list
+
+        Args:
+            organisation
+        Return:
+             None
+        """
         self.list_mentors(organisation)
         options = ui.Ui.get_inputs([""], "Enter number to erase mentor from database")
 
@@ -271,9 +475,16 @@ class Manager(Employee):
             return
         del organisation.mentors_list[int(options[0]) - 1]
         print("Mentor was erased.")
-        #self.list_mentors(organisation)
 
     def edit_mentor(self, organisation):
+        """
+        Method allows manager to edit mentor specific data
+
+        Args:
+            organisation
+        Return:
+             None
+        """
         self.list_mentors(organisation)
         options = ui.Ui.get_inputs([""], "Enter number to edit mentor's data")
         mentor = organisation.mentors_list[int(options[0]) - 1]
@@ -298,6 +509,14 @@ class Manager(Employee):
         self.list_mentors(organisation)
 
     def list_mentors(self, organisation):
+        """
+        Method allows manager to list all mentor from list
+
+        Args:
+            organisation
+        Return:
+             None
+        """
         mentor_list = []
         n = 1
         while n < len(organisation.mentors_list):
@@ -307,6 +526,16 @@ class Manager(Employee):
         return mentor_list
 
     def view_mentors_details(self, organisation):
+        """
+        Returns mentors details list to display
+
+        Args:
+            organisation
+
+        Returns:
+
+            student detail list
+        """
         mentors_details_list = []
         n = 1
         while n < len(organisation.mentors_list):
