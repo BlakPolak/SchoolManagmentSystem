@@ -13,17 +13,23 @@ class Menu:
     @staticmethod
     def create_menu(user_signed_in, organisation):
         """Method create menu for every user"""
+        exit_menu = None
+        if type(user_signed_in) == user.Student:
+            menu = MenuStudent(user_signed_in, organisation)
+        elif type(user_signed_in) == user.Employee:
+            menu = MenuEmployee(organisation)
+        elif type(user_signed_in) == user.Mentor:
+            menu = MenuMentor(organisation)
+        elif type(user_signed_in) == user.Manager:
+            menu = MenuManager(organisation)
+
         if type(user_signed_in) == user.Student:
             while True:
-                menu = MenuStudent()
-                menu.handle_menu()
-                if menu.option == "1":
-                    ui.Ui.print_table(user_signed_in.view_my_grades(organisation), ['Index', 'Your grade assignments',
-                                                                                    'Grade'])
-                elif menu.option == "2":
-                    user_signed_in.submit_assignment(organisation)
-                elif menu.option == "0":
-                    return "exit"
+                exit_menu = menu.handle_menu()
+                if exit_menu:
+                    break
+            print("exit")
+            input()
         elif type(user_signed_in) == user.Employee:
             while True:
                 menu = MenuEmployee()
@@ -95,14 +101,25 @@ class MenuStudent(Menu):
     """
     This class create student menu object.
     """
-    def __init__(self):
+    def __init__(self, user_signed_in, organisation):
         """Initialize object student menu"""
         self.option = None
+        self.user_signed_in = user_signed_in
+        self.organisation = organisation
 
     def handle_menu(self):
         """Method display menu for signed user"""
-        while not self.option:
-            self.option = ui.Ui.handle_student_menu()
+        self.option = ui.Ui.handle_student_menu()
+        if self.option == "1":
+            ui.Ui.print_table(self.user_signed_in.view_my_grades(self.organisation),
+                              ['Index', 'Your grade assignments', 'Grade'])
+            return True
+        elif self.option == "2":
+            self.user_signed_in.submit_assignment(self.organisation)
+        elif self.option == "0":
+            return "exit"
+
+
 
 
 class MenuMentor(Menu):
