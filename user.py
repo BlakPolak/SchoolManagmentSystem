@@ -470,7 +470,7 @@ class Manager(Employee):
         self.list_mentors(organisation)
         options = ui.Ui.get_inputs([""], "Enter number to erase mentor from database")
 
-        if options[0].isalpha() or int(options[0]) < 1 or int(options[0]) > len(self.list_students(organisation)):
+        if options[0].isalpha() or int(options[0]) < 1 or int(options[0]) > len(self.list_mentors(organisation)):
             print('\n You have to choose number from Mentors list')
             return
         del organisation.mentors_list[int(options[0]) - 1]
