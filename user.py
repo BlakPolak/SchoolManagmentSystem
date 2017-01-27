@@ -377,9 +377,9 @@ class Mentor(Employee):
         table_to_print = []
         id_ = 1
         for submission_ in list_submission:
-            table_to_print.append([str(id_), submission_.assignment.name, submission_.assignment.content])
+            table_to_print.append([str(id_), submission_.assignment.name, submission_.result])
             id_ += 1
-        ui.Ui.print_table(table_to_print, ["ID", "Assignment name", "Assignment content"])
+        ui.Ui.print_table(table_to_print, ["ID", "Assignment name", "Submission result"])
         options = ui.Ui.get_inputs(["->"], "")
         if options[0].isalpha() or int(options[0]) > len(list_submission)-1:
             print("There is no such number of assignment on list")
