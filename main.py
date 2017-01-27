@@ -1,11 +1,10 @@
 import program
-import user
 import ui
 import menu
 
 
 def main():
-
+    """Method starts program and checks users access"""
     codecool = program.Program("csv_lists/employee_list.csv",
                                "csv_lists/students_list.csv",
                                "csv_lists/mentors_list.csv",
@@ -23,10 +22,9 @@ def main():
             user_menu = menu.Menu.create_menu(user_signed_in, codecool)
             if user_menu == "exit":
                 codecool.export_data()
-                print("Logout successfull")
+                print("Logout successfully.")
                 user_signed_in = None
                 continue
-
         else:
             print("Wrong login input. Please try again.")
 

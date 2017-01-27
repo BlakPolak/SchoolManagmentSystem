@@ -107,7 +107,7 @@ class Program:
                 for student in self.students_list:
                     if student.name == student_name:
                         if student.surname == student_surname:
-                            student_to_append= student
+                            student_to_append = student
                 if assignment_related:
                     new_submission = submission.Submission(assignment_related, student_to_append, submission_date, result, grade)
                     self.submissions_list.append(new_submission)

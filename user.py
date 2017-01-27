@@ -30,7 +30,7 @@ class User:
             validated variable
         """
         if type(validate) != check_type:
-            return()
+            raise TypeError("Wrong format for: " + (validate))
         elif type(validate) == check_type:
             if validate.isdigit():
                 validate = int(validate)
@@ -38,7 +38,7 @@ class User:
             elif all(i.isalpha() or i.isspace() for i in validate):
                 return validate
             else:
-                raise TypeError
+                raise TypeError("Wrong format for: " + str(validate))
 
     def check_gender(self, gender):
         """
@@ -52,15 +52,12 @@ class User:
         """
         gender_list = ['male', 'female', 'not sure']
         if gender.lower() not in gender_list:
-            raise TypeError
+            raise NameError('Gender should be: male, female, not sure')
 
     def date_validate(self, birth_date):
-        try:
-            if birth_date != datetime.datetime.strptime(birth_date, '%Y-%m-%d').strftime('%Y-%m-%d'):
-                raise ValueError
+        if datetime.datetime.strptime(birth_date, '%Y-%m-%d').strftime('%Y-%m-%d'):
             return True
-        except ValueError:
-            return False
+
 
 
 class Employee(User):
@@ -73,19 +70,19 @@ class Employee(User):
         n = 1
         while n < len(organisation.students_list):
             for student in organisation.students_list:
-                student_list. append([str(n) + ".", student.name, student.surname])
+                student_list.append([str(n) + ".", student.name, student.surname])
                 n += 1
         return student_list
 
     def view_student_details(self, organisation):
-        students_details_list = []
+        student_details = []
         n = 1
         while n < len(organisation.students_list):
             for student in organisation.students_list:
-                students_details_list.append([str(n) + ".", student.name, student.surname, student.gender, student.birth_date,
-                                             student.email, student.login, student.password])
+                student_details.append([str(n) + ".", student.name, student.surname, student.gender, student.birth_date,
+                                        student.email, student.login, student.password])
                 n += 1
-        return students_details_list
+        return student_details
 
 
 class Student(User):
@@ -116,7 +113,6 @@ class Student(User):
                                                                         # graded assignments of actual student
         final_list = [assignment for assignment in organisation.assignments_list if assignment not in submission_list_done]
         if final_list:
-            #ui.Ui.print_menu("Choose assignment to submit", final_list, "Exit")
             table_to_print = []
             id_ = 1
             for assignment in final_list:
@@ -144,6 +140,16 @@ class Mentor(Employee):
     def add_student(self, organisation):
         options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
                                     "Password"], "Provide information about new student")
+
+        if options[0].isalpha() and options[1].isalpha() and options[2] in ['male', 'female', 'not sure']:
+            if options[3].isalpha():
+                print('Data should have format: YYYY-MM-DD')
+                return
+        else:
+            print('\nWrong input!\nName: only letters\nSurname: only numbers\n'
+                  'Gender: you can choose only male, female or not sure\nData format: YYYY-MM-DD\n')
+            return
+
         new_student = Student(options[0], options[1], options[2], options[3], options[4], options[5],
                             options[6])
         organisation.students_list.append(new_student)
@@ -164,7 +170,7 @@ class Mentor(Employee):
 
     def remove_student(self, organisation):  # add funcionality
         self.list_students(organisation)
-        options = ui.Ui.get_inputs([""], "Enter number to erase student from database")
+        options = ui.Ui.get_inputs([""], "Enter number to erase student from database: ")
         del organisation.students_list[int(options[0]) - 1]
         print("Student was erased.")
         #self.list_mentors(organisation)
@@ -175,6 +181,14 @@ class Mentor(Employee):
         student = organisation.students_list[int(options[0]) - 1]
         options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
                                     "Password"], "Edit information about student")
+        if options[0].isalpha() and options[1].isalpha() and options[2] in ['male', 'female', 'not sure']:
+            if options[3].isalpha():
+                print('Data should have format: YYYY-MM-DD')
+                return
+        else:
+            print('\nWrong input!\nName: only letters\nSurname: only numbers\n'
+                  'Gender: you can choose only male, female or not sure\nData format: YYYY-MM-DD\n')
+            return
         student.name = options[0]
         student.surname = options[1]
         student.gender = options[2]
@@ -196,17 +210,37 @@ class Mentor(Employee):
         if not list_submission:
             print("No submission available")
             return
-        ui.Ui.print_menu("Choose submission to grade", list_submission, "Exit")
+        #final_list = [subm for subm in organisation.submissions_list if subm not in list_submission]
+        table_to_print = []
+        id_ = 1
+        for submission_ in list_submission:
+            table_to_print.append([str(id_), submission_.assignment.name, submission_.assignment.content])
+            id_ += 1
+        ui.Ui.print_table(table_to_print, ["ID", "Assignment name", "Assignment content"])
+        #ui.Ui.print_menu("Choose submission to grade", list_submission, "Exit")
         options = ui.Ui.get_inputs(["->"], "")
-        picked_submission = organisation.submissions_list[int(options[0])+i]
-        options = ui.Ui.get_inputs(["Enter grade for this submission"], "")
+        if options[0] == "0":
+            return
+        picked_submission = list_submission[int(options[0])-1]
+        options = ui.Ui.get_inputs(["Enter grade for this submission: "], "")
         picked_submission.grade = options[0]
 
     def add_assignment(self, organisation):
         options = ui.Ui.get_inputs(["Name", "Max. points to receive", "Delivery date", "Content"],
                                     "Provide information about new assignment")
+        if options[0].isalpha() and options[1].isdigit() and options[3].isalpha():
+            if options[2].isalpha():
+                print('\nData format: YYYY-MM-DD\n')
+                return
+        else:
+            print('\nWrong input!\nName: only letters\nMax Points: only numbers\nContent: only letters\n'
+                  'Data should have format: YYYY-MM-DD\n')
+            return
+        options = ui.Ui.get_inputs(["Title: ", "Max. points to receive: ", "Delivery date: ", "Content: "],
+                                   "Provide information about new assignment: ")
         new_assignment = assignment.Assignment(options[0], options[1], options[2], options[3])
         organisation.assignments_list.append(new_assignment)
+
 
 class Manager(Employee):
     def __init__(self, name, surname, gender, birth_date, email, login, password):
@@ -216,6 +250,14 @@ class Manager(Employee):
         #ui.Ui.print_menu()
         options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
                                     "Password"], "Provide information about new mentor")
+        if options[0].isalpha() and options[1].isalpha() and options[2] in ['male', 'female', 'not sure']:
+            if options[3].isalpha():
+                print('\nData should have format: YYYY-MM-DD\n')
+                return
+        else:
+            print('\nWrong input!\nName: only letters\nSurname: only numbers\n'
+                  'Gender: you can choose only male, female or not sure\n')
+            return
         new_mentor = Mentor(options[0], options[1], options[2], options[3], options[4], options[5],
                             options[6])
         organisation.mentors_list.append(new_mentor)
@@ -234,6 +276,14 @@ class Manager(Employee):
         mentor = organisation.mentors_list[int(options[0]) - 1]
         options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
                                     "Password"], "Edit information about mentor")
+        if options[0].isalpha() and options[1].isalpha() and options[2] in ['male', 'female', 'not sure']:
+            if options[3].isalpha():
+                print('\nData should have format: YYYY-MM-DD\n')
+                return
+        else:
+            print('\nWrong input!\nName: only letters\nSurname: only numbers\n'
+                  'Gender: you can choose only male, female or not sure\n')
+            return
         mentor.name = options[0]
         mentor.surname = options[1]
         mentor.gender = options[2]
