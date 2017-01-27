@@ -211,8 +211,17 @@ class Mentor(Employee):
         if not list_submission:
             print("No submission available")
             return
+
+        table_to_print = []
+        id_ = 1
+        for submission_ in list_submission:
+            table_to_print.append([str(id_), submission_.assignment.name, submission_.assignment.content])
+            id_ += 1
+        ui.Ui.print_table(table_to_print, ["ID", "Assignment name", "Assignment content"])
         ui.Ui.print_menu("Choose submission to grade", list_submission, "Exit")
         options = ui.Ui.get_inputs(["->"], "")
+        if options[0] == "0":
+            return
         picked_submission = organisation.submissions_list[int(options[0])+i]
         options = ui.Ui.get_inputs(["Enter grade for this submission: "], "")
         picked_submission.grade = options[0]
