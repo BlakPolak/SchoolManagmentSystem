@@ -315,7 +315,7 @@ class Mentor(Employee):
         """
         self.list_students(organisation)
         options = ui.Ui.get_inputs([""], "Enter number to erase student from database: ")
-        if int(options[0]) < 0 or int(options[0]) > len(self.list_students(organisation))-1:
+        if int(options[0]) < 0 or int(options[0]) > len(self.list_students(organisation)):
             print("There is no such student number on the list")
             return
         del organisation.students_list[int(options[0]) - 1]
@@ -332,7 +332,7 @@ class Mentor(Employee):
         """
         self.list_students(organisation)
         options = ui.Ui.get_inputs([""], "Enter number to edit student's data")
-        if options[0] == "0" or options[0] > len(self.list_students(organisation))-1:
+        if options[0] == "0" or options[0] > len(self.list_students(organisation)):
             return
         student = organisation.students_list[int(options[0]) - 1]
         options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
@@ -381,7 +381,7 @@ class Mentor(Employee):
             id_ += 1
         ui.Ui.print_table(table_to_print, ["ID", "Assignment name", "Submission result"])
         options = ui.Ui.get_inputs(["->"], "")
-        if options[0].isalpha() or int(options[0]) > len(list_submission)-1:
+        if options[0].isalpha() or int(options[0]) > len(list_submission):
             print("There is no such number of assignment on list")
             return
         if options[0] == "0":
@@ -470,7 +470,7 @@ class Manager(Employee):
         self.list_mentors(organisation)
         options = ui.Ui.get_inputs([""], "Enter number to erase mentor from database")
 
-        if options[0].isalpha() or int(options[0]) < 1 or int(options[0]) > len(self.list_students(organisation))-1:
+        if options[0].isalpha() or int(options[0]) < 1 or int(options[0]) > len(self.list_students(organisation)):
             print('\n You have to choose number from Mentors list')
             return
         del organisation.mentors_list[int(options[0]) - 1]
