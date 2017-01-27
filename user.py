@@ -332,7 +332,7 @@ class Mentor(Employee):
         """
         self.list_students(organisation)
         options = ui.Ui.get_inputs([""], "Enter number to edit student's data")
-        if options[0] == "0" or options[0] > len(self.list_students(organisation)):
+        if options[0] == "0" or int(options[0]) > len(self.list_students(organisation)):
             return
         student = organisation.students_list[int(options[0]) - 1]
         options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
