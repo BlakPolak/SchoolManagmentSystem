@@ -24,6 +24,22 @@ class Program:
         Returns: None
         """
 
+        self.employee_table = self.import_csv(employee_csv)
+        self.students_table = self.import_csv(students_csv)
+        self.mentors_table = self.import_csv(mentors_csv)
+        self.managers_table = self.import_csv(managers_csv)
+        self.assignments_table = self.import_csv(assignments_csv)
+        self.submissions_table = self.import_csv(submissions_csv)
+        self.attendance_table = self.import_csv(attendance_csv)
+        self.employee_list = []
+        self.students_list = []
+        self.mentors_list = []
+        self.managers_list = []
+        self.assignments_list = []
+        self.submissions_list = []
+        self.attendance_list = []
+        self.initialize_objects()
+
     def import_csv(self, file_name):
         """
         Imports data from csv and  writes it to a list.
