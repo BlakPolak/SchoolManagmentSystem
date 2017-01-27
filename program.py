@@ -4,10 +4,26 @@ import submission
 import attendance
 import datetime
 
-class Program:
 
+class Program:
+    """
+    This class creates program.
+
+    """
     def __init__(self, employee_csv, students_csv, mentors_csv, managers_csv, assignments_csv,
                  submissions_csv, attendance_csv):
+        """
+        Initialize object
+        Args:   employee_csv: stores data
+                students_csv:stores data
+                mentors_csv: stores data
+                managers_csv: stores data
+                assignments_csv: stores data
+                submissions_csv: stores data
+                attendance_csv: stores data
+        Returns: None
+        """
+
         self.employee_table = self.import_csv(employee_csv)
         self.students_table = self.import_csv(students_csv)
         self.mentors_table = self.import_csv(mentors_csv)
@@ -24,21 +40,34 @@ class Program:
         self.attendance_list = []
         self.initialize_objects()
 
-
     def import_csv(self, file_name):
+        """
+        Imports data from csv and  writes it to a list.
+        Args: file_name: name of file
+        Returns: table(list)
+        """
         with open(file_name, "r") as file:
             lines = file.readlines()
         table = [element.replace("\n", "").split(";") for element in lines]
         return table
 
-
     def write_csv(self, file_name, table):
+        """
+        Writes data from table to file.
+        Args: file_name: name of file
+              table: list with data
+        Returns: None
+        """
         with open(file_name, "w") as file:
             for record in table:
                 row = ';'.join(record)
                 file.write(row + "\n")
 
     def initialize_objects(self):
+        """
+        Initializes objects for classes.
+        Returns: None
+        """
         for row in self.employee_table:
             name = row[0]
             surname = row[1]
@@ -126,6 +155,10 @@ class Program:
             self.attendance_list.append(new_attendance)
 
     def export_data(self):
+        """
+        Exports data from csv to lists.
+        Returns: None
+        """
         employee_table = []
         students_table = []
         mentors_table = []
