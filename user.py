@@ -436,7 +436,7 @@ class Mentor(Employee):
             return
         picked_submission.grade = options[0]
 
-    def add_assignment(self, organisation):
+    def add_assignment(self):
         """
         Method allows mentor add new assignment to assignment list
 
@@ -445,17 +445,27 @@ class Mentor(Employee):
         Return:
              None
         """
-        options = ui.Ui.get_inputs(["Name", "Max. points to receive", "Delivery date", "Content"],
+        options = ui.Ui.get_inputs(["Name", "Type", "Max. points to receive", "Delivery date", "Content"],
                                     "Provide information about new assignment")
-        if options[0].isalpha() and options[1].isdigit():
-            if options[2].isalpha():
-                print('\nData format: YYYY-MM-DD\n')
-                return
-        else:
-            print('\nWrong input!\nName: only letters\nMax Points: only numbers\nData should have format: YYYY-MM-DD\n')
-            return
-        new_assignment = assignment.Assignment(options[0], options[1], options[2], options[3])
-        organisation.assignments_list.append(new_assignment)
+        # if options[0].isalpha() and options[1].isdigit():
+        #     if options[2].isalpha():
+        #         print('\nData format: YYYY-MM-DD\n')
+        #         return
+        # else:
+        #     print('\nWrong input!\nName: only letters\nMax Points: only numbers\nData should have format: YYYY-MM-DD\n')
+        #     return
+
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute(
+            "INSERT INTO `assignment` (`name`, `type`, `max_points`, `delivery_date`, `content`) "
+            "VALUES ('{}', '{}', '{}', '{}', '{}')"
+            .format(options[0], options[1], options[2], options[3],
+                    options[4]))
+        data.commit()
+        data.close()
+        print("Assignment was added.")
+
 
     def add_team(self):
         pass
