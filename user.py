@@ -138,7 +138,7 @@ class Employee(User):
             n += 1
         return student_list
 
-    def view_student_details(self, organisation):
+    def view_student_details(self):
         """
         Returns students details list to display
 
@@ -149,14 +149,17 @@ class Employee(User):
 
                 student detail list
         """
-        student_details = []
+
+        student_list = []
+        cursor = data.Data.init_db()
+        cursor.execute("SELECT * FROM `User` WHERE User_type='student'")
+        students = cursor.fetchall()
         n = 1
-        while n < len(organisation.students_list):
-            for student in organisation.students_list:
-                student_details.append([str(n) + ".", student.name, student.surname, student.gender, student.birth_date,
-                                        student.email, student.login, student.password])
-                n += 1
-        return student_details
+        for student in students:
+            student_list.append([str(n) + ".", student[1], student[2], student[3],
+                                 student[4], student[5], student[6], student[7]])
+            n += 1
+        return student_list
 
 
 class Student(User):

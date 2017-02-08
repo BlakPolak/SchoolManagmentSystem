@@ -71,7 +71,7 @@ class Menu:
                 elif menu.option == "2":
                     ui.Ui.print_table(user_signed_in.list_students(), ["Index", "Name", "Surname"])
                 elif menu.option == "3":
-                    ui.Ui.print_table(user_signed_in.view_student_details(organisation), ["Index", "Name", "Surname",
+                    ui.Ui.print_table(user_signed_in.view_student_details(), ["Index", "Name", "Surname",
                                                                                           "Gender", "Date of birth",
                                                                                           "Email", "Login", "Password"])
                 elif menu.option == "4":
