@@ -659,9 +659,9 @@ class Manager(Employee):
         data.close()
         return mentors_details_list
 
-    def average_grade(self):
+    def average_grade_for_student(self):
         """
-                Method display list of submitted assignment with grades
+                Method display list of grades for choosen student
 
                 Args:
                     organisation
@@ -670,13 +670,32 @@ class Manager(Employee):
                     list of submitted assignment with grades
 
                 """
+        options = ui.Ui.get_inputs([""], "Enter the number of student to see his assessment")
+
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        cursor.execute("SELECT Grade FROM `Submission` WHERE ID_Student='{}'".format(student_id))
-        grades = cursor.fetchall()
-        # print(grades)
+        records = cursor.execute("SELECT COUNT(`Name`) FROM `User` WHERE `User_Type` = 'mentor'")
+        records = records.fetchall()
+        number_of_records = int(records[0][0])
+
+        if int(options[0]) < 0 or int(options[0]) > number_of_records:
+            print("There is no such student on the list")
+            return
+
+        # mydata = c.execute('DELETE FROM Zoznam WHERE Name=?', (data3,))
+        # data = sqlite3.connect("program.db")
+        # cursor = data.cursor()
+        # cursor.execute("DELETE FROM `User` WHERE Name = '{}' and Surname= '{}'").format(options[0], options[1])
+        # data.commit()
+        # data.close()
+
+        cursor.execute("SELECT * FROM `User` WHERE `User_type`='student'")
+        students = cursor.fetchall()
+        student_id = students[int(options[0]) - 1][0]
+        cursor.execute("SELECT AVG(Grade) FROM `Submission` WHERE `ID_Student`='{}'"
+                       .format(student_id))
         data.commit()
         data.close()
-        return grades
-    def full_stats():
+        print("Mentor was erased.")
+    def full_stats(self):
         pass
