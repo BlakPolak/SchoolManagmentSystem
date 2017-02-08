@@ -1,4 +1,5 @@
 import ui
+import data
 import assignment
 import submission
 import datetime
@@ -116,7 +117,7 @@ class Employee(User):
         """
         super().__init__(name, surname, gender, birth_date, email, login, password)
 
-    def list_students(self, organisation):
+    def list_students(self):
         """
         Return student list to display
 
@@ -128,11 +129,13 @@ class Employee(User):
                 student list
         """
         student_list = []
+        cursor = data.Data.init_db()
+        cursor.execute("SELECT * FROM `User` WHERE User_type='student'")
+        students = cursor.fetchall()
         n = 1
-        while n < len(organisation.students_list):
-            for student in organisation.students_list:
-                student_list.append([str(n) + ".", student.name, student.surname])
-                n += 1
+        for student in students:
+            student_list.append([str(n) + ".", student[1], student[2]])
+            n += 1
         return student_list
 
     def view_student_details(self, organisation):
@@ -413,6 +416,9 @@ class Mentor(Employee):
             return
         new_assignment = assignment.Assignment(options[0], options[1], options[2], options[3])
         organisation.assignments_list.append(new_assignment)
+
+    def add_team(self):
+        pass
 
 
 class Manager(Employee):

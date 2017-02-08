@@ -60,6 +60,7 @@ class Ui:
                (6) Edit students data
                (7) Add assignment
                (8) Grade assignment
+               (9) Add team
                (0) Exit CcMS
             """)
         option = input("Your choice: ")
