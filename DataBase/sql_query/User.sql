@@ -1,0 +1,14 @@
+INSERT INTO User (ID, Name, Surname, Gender, Email, Login, Password, "User Type") VALUES (1, 'Jerzy', 'Mardaus', 'male', 'jerzy.mardaus@codecool.com', 'jerzy.mardaus@codecool.com', 'password', 'manager');
+INSERT INTO User (ID, Name, Surname, Gender, Email, Login, Password, "User Type") VALUES (2, 'Miriam', 'Codecool', 'female', 'miriam@codecool.com', 'miriam@codecool.com', 'password', 'employee');
+INSERT INTO User (ID, Name, Surname, Gender, Email, Login, Password, "User Type") VALUES (3, 'Kati', 'Codecool', 'female', 'kati@codecool.com', 'kati@codecool.com', 'password', 'employee');
+INSERT INTO User (ID, Name, Surname, Gender, Email, Login, Password, "User Type") VALUES (4, 'Pawel', 'Polakiewicz', 'male', 'pawelp@codecool.com', 'pawelp@codecool.com', 'password', 'student');
+INSERT INTO User (ID, Name, Surname, Gender, Email, Login, Password, "User Type") VALUES (5, 'Ika', 'Grabon', 'female', 'ika@codecool.com', 'ika@codecool.com', 'password', 'student');
+INSERT INTO User (ID, Name, Surname, Gender, Email, Login, Password, "User Type") VALUES (6, 'Marta', 'Sajdak ', 'female', 'marta@codecool.com', 'marta@codecool.com', 'password', 'student');
+INSERT INTO User (ID, Name, Surname, Gender, Email, Login, Password, "User Type") VALUES (7, 'Joanna', 'Gargas', 'female', 'joanna@codecool.co"joanna@codecool.com"', 'joanna@codecool.co"joanna@codecool.com"', 'password', 'student');
+INSERT INTO User (ID, Name, Surname, Gender, Email, Login, Password, "User Type") VALUES (8, 'Pawel', 'Lasota', 'male', 'pawell@codecool.com', 'pawell@codecool.com', 'password', 'student');
+INSERT INTO User (ID, Name, Surname, Gender, Email, Login, Password, "User Type") VALUES (9, 'Maria', 'Steinmec', 'female', 'marias@codecool.com', 'marias@codecool.com', 'password', 'student');
+INSERT INTO User (ID, Name, Surname, Gender, Email, Login, Password, "User Type") VALUES (10, 'Anna', 'Matras', 'female', 'annam@codecool.com', 'annam@codecool.com', 'password', 'student');
+INSERT INTO User (ID, Name, Surname, Gender, Email, Login, Password, "User Type") VALUES (11, 'Rafal', 'Stepien', 'male', 'rafals@codecool.com', 'rafals@codecool.com', 'password', 'mentor');
+INSERT INTO User (ID, Name, Surname, Gender, Email, Login, Password, "User Type") VALUES (12, 'Mateusz', 'Ostafil', 'male', 'mateuszo@codecool.com', 'mateuszo@codecool.com', 'password', 'mentor');
+INSERT INTO User (ID, Name, Surname, Gender, Email, Login, Password, "User Type") VALUES (13, 'Marcin', 'Izworski', 'male', 'marcini@codecool.com', 'marcini@codecool.com', 'password', 'mentor');
+INSERT INTO User (ID, Name, Surname, Gender, Email, Login, Password, "User Type") VALUES (14, 'Przemek', 'Ciacka', 'male', 'przemekc@codecool.com', 'przemekc@codecool.com', 'password', 'mentor');

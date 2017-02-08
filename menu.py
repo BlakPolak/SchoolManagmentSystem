@@ -18,7 +18,7 @@ class Menu:
                 menu = MenuStudent()
                 menu.handle_menu()
                 if menu.option == "1":
-                    ui.Ui.print_table(user_signed_in.view_my_grades(organisation), ['Index', 'Your grade assignments',
+                    ui.Ui.print_table(user_signed_in.view_my_grades(), ['Index', 'Your grade assignments',
                                                                                     'Grade'])
                 elif menu.option == "2":
                     user_signed_in.submit_assignment(organisation)

@@ -24,6 +24,7 @@ INSERT INTO `User` (ID,Name,Surname,Gender,Birth_date,Email,Login,Password,User_
  (12,'Mateusz','Ostafil','male','1986-12-12','mateuszo@codecool.com','mati','pass','mentor'),
  (13,'Marcin','Izworski','male','1986-12-12','marcini@codecool.com','marcini@codecool.com','password','mentor'),
  (14,'Przemek','Ciacka','male','1986-12-12','przemekc@codecool.com','przemekc@codecool.com','password','mentor');
+
 CREATE TABLE "Teams" (
 	`ID`	INTEGER,
 	`Team Name`	TEXT,
