@@ -22,7 +22,7 @@ class User:
             login:login
             password: check_if_correct(password, str)
     """
-    def __init__(self, name, surname, gender, birth_date, email, login, password):
+    def __init__(self, _id, name, surname, gender, birth_date, email, login, password):
         """
         Initialize user object
 
@@ -37,7 +37,7 @@ class User:
             login:login
             password: check_if_correct(password, str)
         """
-
+        self._id = _id
         self.name = self.check_if_correct(name, str)
         self.surname = self.check_if_correct(surname, str)
         self.check_gender(gender)
@@ -101,7 +101,7 @@ class User:
 
 class Employee(User):
     """Class creates object employee"""
-    def __init__(self, name, surname, gender, birth_date, email, login, password):
+    def __init__(self, _id, name, surname, gender, birth_date, email, login, password):
         """
         Initialize employee object that inherits from User class
 
@@ -116,7 +116,7 @@ class Employee(User):
             login:login
             password: check_if_correct(password, str)
         """
-        super().__init__(name, surname, gender, birth_date, email, login, password)
+        super().__init__(_id, name, surname, gender, birth_date, email, login, password)
 
     def list_students(self):
         """
@@ -165,7 +165,7 @@ class Employee(User):
 
 class Student(User):
     """Class creates object student"""
-    def __init__(self, name, surname, gender, birth_date, email, login, password):
+    def __init__(self, _id, name, surname, gender, birth_date, email, login, password):
         """
         Initialize student object that inherits from User class
 
@@ -180,7 +180,7 @@ class Student(User):
             login:login
             password: check_if_correct(password, str)
         """
-        super().__init__(name, surname, gender, birth_date, email, login, password)
+        super().__init__(_id, name, surname, gender, birth_date, email, login, password)
         self.my_submissions_list = []
 
     def __str__(self):
@@ -248,7 +248,7 @@ class Student(User):
 
 class Mentor(Employee):
     """Class creates object mentor"""
-    def __init__(self, name, surname, gender, birth_date, email, login, password):
+    def __init__(self, _id, name, surname, gender, birth_date, email, login, password):
         """
         Initialize mentor object that inherits from User class
 
@@ -263,7 +263,7 @@ class Mentor(Employee):
             login:login
             password: check_if_correct(password, str)
         """
-        super().__init__(name, surname, gender, birth_date, email, login, password)
+        super().__init__(_id, name, surname, gender, birth_date, email, login, password)
 
     def add_student(self):
         """
@@ -345,7 +345,7 @@ class Mentor(Employee):
         print("Student was erased.")
 
 
-    def edit_student(self, organisation):
+    def edit_student(self):
         """
         Method allows mentor edit students specific data
 
@@ -354,9 +354,9 @@ class Mentor(Employee):
         Return:
              None
         """
-        self.list_students(organisation)
+        self.list_students()
         options = ui.Ui.get_inputs([""], "Enter number to edit student's data")
-        if options[0] == "0" or int(options[0]) > len(self.list_students(organisation)):
+        if options[0] == "0" or int(options[0]) > len(self.list_students()):
             return
         student = organisation.students_list[int(options[0]) - 1]
         options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
@@ -444,7 +444,7 @@ class Mentor(Employee):
 
 class Manager(Employee):
     """Class creates object mentor"""
-    def __init__(self, name, surname, gender, birth_date, email, login, password):
+    def __init__(self, _id, name, surname, gender, birth_date, email, login, password):
         """
         Initialize mentor object that inherits from User class
 
@@ -459,7 +459,7 @@ class Manager(Employee):
             login:login
             password: check_if_correct(password, str)
         """
-        super().__init__(name, surname, gender, birth_date, email, login, password)
+        super().__init__(_id, name, surname, gender, birth_date, email, login, password)
 
     def add_mentor(self, organisation):
         """
