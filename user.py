@@ -505,19 +505,35 @@ class Manager(Employee):
         Return:
              None
         """
-        options = ui.Ui.get_inputs(["Name", "Surname"], "Enter number to erase mentor from database")
+        options = ui.Ui.get_inputs([""], "Enter number to erase mentor from database")
 
-        if options[0].isnumeric() and options[1].isnumeric():
-            print('\n You have to type  Name and Surname from Mentors list')
-            return
-
-            mydata = c.execute('DELETE FROM Zoznam WHERE Name=?', (data3,))
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        cursor.execute("DELETE FROM `User` WHERE Name = '{}' and Surname= '{}'").format(options[0], options[1])
+        records = cursor.execute("SELECT COUNT(`Name`) FROM `User` WHERE `User_Type` = 'mentor'")
+        records = records.fetchall()
+        number_of_records = int(records[0][0])
+
+        if int(options[0]) < 0 or int(options[0]) > number_of_records:
+            print("There is no such student number on the list")
+            return
+
+
+        #     mydata = c.execute('DELETE FROM Zoznam WHERE Name=?', (data3,))
+        # data = sqlite3.connect("program.db")
+        # cursor = data.cursor()
+        # cursor.execute("DELETE FROM `User` WHERE Name = '{}' and Surname= '{}'").format(options[0], options[1])
+        # data.commit()
+        # data.close()
+
+        cursor.execute("SELECT * FROM `User` WHERE `User_type`='mentor'")
+        mentors = cursor.fetchall()
+        mentor_name = mentors[int(options[0]) - 1][1]
+        mentor_surname = mentors[int(options[0]) - 1][2]
+        print(mentor_name, mentor_surname)
+        cursor.execute("DELETE FROM `User` WHERE `Name`='{}' AND `Surname`='{}'"
+                       .format(mentor_name, mentor_surname))
         data.commit()
         data.close()
-
         print("Mentor was erased.")
 
     def edit_mentor(self, organisation):
