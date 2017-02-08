@@ -368,10 +368,9 @@ class Mentor(Employee):
              None
         """
         self.list_students()
-        options = ui.Ui.get_inputs([""], "Enter number to edit student's data")
-        if options[0] == "0" or int(options[0]) > len(self.list_students()):
+        choosed_student = ui.Ui.get_inputs([""], "Enter number to edit student's data")
+        if choosed_student[0] == "0" or int(choosed_student[0]) > len(self.list_students()):
             return
-        student = organisation.students_list[int(options[0]) - 1]
         options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
                                     "Password"], "Edit information about student")
         if options[0].isalpha() and options[1].isalpha() and options[2] in ['male', 'female', 'not sure']:
@@ -382,15 +381,22 @@ class Mentor(Employee):
             print('\nWrong input!\nName: only letters\nSurname: only letters\n'
                   'Gender: you can choose only male, female or not sure\nData format: YYYY-MM-DD\n')
             return
-        student.name = options[0]
-        student.surname = options[1]
-        student.gender = options[2]
-        student.birth_date = options[3]
-        student.email = options[4]
-        student.login = options[5]
-        student.password = options[6]
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT * FROM `user` WHERE `user_type`='student'")
+        students = cursor.fetchall()
+        student_to_edit_name = students[int(choosed_student[0]) - 1][1]
+        student_to_edit_surname = students[int(choosed_student[0]) - 1][2]
+
+        cursor.execute(
+            "UPDATE `User` SET `name`='{}', `surname`='{}', `gender`='{}', `birth_date`='{}', `email`='{}', `login`='{}', `password`='{}' "
+            " WHERE "
+            "`name`='{}' AND `surname`='{}'"
+            .format(options[0], options[1], options[2], options[3],
+                    options[4], options[5], options[6], student_to_edit_name, student_to_edit_surname))
+        data.commit()
+        data.close()
         print("Update completed")
-        self.list_students(organisation)
 
     def grade_submission(self, organisation):
         """
@@ -516,19 +522,35 @@ class Manager(Employee):
         Return:
              None
         """
-        options = ui.Ui.get_inputs(["Name", "Surname"], "Enter number to erase mentor from database")
+        options = ui.Ui.get_inputs([""], "Enter number to erase mentor from database")
 
-        if options[0].isnumeric() and options[1].isnumeric():
-            print('\n You have to type  Name and Surname from Mentors list')
-            return
-
-            mydata = c.execute('DELETE FROM Zoznam WHERE Name=?', (data3,))
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        cursor.execute("DELETE FROM `User` WHERE Name = '{}' and Surname= '{}'").format(options[0], options[1])
+        records = cursor.execute("SELECT COUNT(`Name`) FROM `User` WHERE `User_Type` = 'mentor'")
+        records = records.fetchall()
+        number_of_records = int(records[0][0])
+
+        if int(options[0]) < 0 or int(options[0]) > number_of_records:
+            print("There is no such student number on the list")
+            return
+
+
+        #     mydata = c.execute('DELETE FROM Zoznam WHERE Name=?', (data3,))
+        # data = sqlite3.connect("program.db")
+        # cursor = data.cursor()
+        # cursor.execute("DELETE FROM `User` WHERE Name = '{}' and Surname= '{}'").format(options[0], options[1])
+        # data.commit()
+        # data.close()
+
+        cursor.execute("SELECT * FROM `User` WHERE `User_type`='mentor'")
+        mentors = cursor.fetchall()
+        mentor_name = mentors[int(options[0]) - 1][1]
+        mentor_surname = mentors[int(options[0]) - 1][2]
+        print(mentor_name, mentor_surname)
+        cursor.execute("DELETE FROM `User` WHERE `Name`='{}' AND `Surname`='{}'"
+                       .format(mentor_name, mentor_surname))
         data.commit()
         data.close()
-
         print("Mentor was erased.")
 
     def edit_mentor(self, organisation):
