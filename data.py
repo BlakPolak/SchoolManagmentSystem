@@ -1,4 +1,6 @@
 import sqlite3
+
+
 class Data:
     db = "program.db"
 

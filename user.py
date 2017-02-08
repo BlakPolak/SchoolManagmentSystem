@@ -3,6 +3,8 @@ import assignment
 import submission
 import datetime
 import attendance
+import data
+import sqlite3
 
 
 class User:
@@ -59,7 +61,7 @@ class User:
             validated variable
         """
         if type(validate) != check_type:
-            raise TypeError("Wrong format for: " + (validate))
+            raise TypeError("Wrong format for: " + str(validate))
         elif type(validate) == check_type:
             if validate.isdigit():
                 validate = int(validate)
@@ -453,9 +455,13 @@ class Manager(Employee):
             print('\nWrong input!\nName: only letters\nSurname: only letters\n'
                   'Gender: you can choose only male, female or not sure\nData should have format: YYYY-MM-DD\n')
             return
+
         new_mentor = Mentor(options[0], options[1], options[2], options[3], options[4], options[5],
                             options[6])
-        organisation.mentors_list.append(new_mentor)
+
+        data.init_db.execute('INSERT INTO `User`(Name, Surname, Gender, Birth_date, Email, Login, Password, User_type) '
+                             'VALUES (new_mentor.name,new_mentor.surname, new_mentor.gender, new_mentor.birth_date, '
+                             'new_mentor.email, new_mentor.login, new_mentor.password, "student")')
         print("Mentor was added.")
 
     def remove_mentor(self, organisation):
