@@ -188,7 +188,7 @@ class Student(User):
     def __str__(self):
         return self.name+self.surname
 
-    def view_my_grades(self, organisation):
+    def view_my_grades(self):
         """
         Method display list of submitted assignment with grades
 
@@ -199,17 +199,17 @@ class Student(User):
             list of submitted assignment with grades
 
         """
-        my_submissions_list = []
-        i = 0
-        for submission_ in organisation.submissions_list:
-            if submission_.student.name == self.name and submission_.student.surname == self.surname:
-                if submission_.grade:
-                    submission_to_add = [str(i+1), submission_.assignment.name, submission_.grade]
-                    my_submissions_list.append(submission_to_add)
-                    i += 1
-        return my_submissions_list
+        student_id = self._id
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT Grade FROM `Submission` WHERE ID_Student='{}'".format(student_id))
+        grades = cursor.fetchall()
+        # print(grades)
+        data.commit()
+        data.close()
+        return grades
 
-    def submit_assignment(self, organisation):
+    def submit_assignment(self):
         """
         Method allows student to submit assignment
 
@@ -220,31 +220,42 @@ class Student(User):
             list of submitted assignment
 
         """
-        submission_list_done = []
-        for submission_ in organisation.submissions_list:
-            if submission_.student.name == self.name and submission_.student.surname == self.surname:
-                if submission_.grade == "":
-                    submission_list_done.append(submission_.assignment) # submission_list_done -
-                                                                        # graded assignments of actual student
-        final_list = [assignment for assignment in organisation.assignments_list if assignment not in submission_list_done]
-        if final_list:
-            table_to_print = []
-            id_ = 1
-            for assignment in final_list:
-                table_to_print.append([str(id_), assignment.name, assignment.max_points,
-                                       assignment.delivery_date, assignment.content])
-                id_ += 1
-            ui.Ui.print_table(table_to_print, ["ID", "Assignment name", "Assignment max points",
-                                               "delivery date", "Content"])
-            options = ui.Ui.get_inputs(["->"], "")
-            if options[0] == "0":
-                return
-            picked_assignment = final_list[int(options[0]) - 1]
-            new_submission = submission.Submission(picked_assignment, self)
-            new_submission.provide_result()
-            organisation.submissions_list.append(new_submission)
-        else:
-            print("No assignments left.")
+
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("INSERT INTO `Assignment` (`ID`, `Name`, `Type`, `Max_points`, `Delivery_date`, `Content`) "
+                       "VALUES ('{}', '{}', '{}', '{}', '{}', '{}')"
+                       .format(options[0], options[1], options[2], options[3],
+                               options[4], option[5]))
+        submission = cursor.fetchall()
+        data.commit()
+        data.close()
+        #
+        # submission_list_done = []
+        # for submission_ in organisation.submissions_list:
+        #     if submission_.student.name == self.name and submission_.student.surname == self.surname:
+        #         if submission_.grade == "":
+        #             submission_list_done.append(submission_.assignment) # submission_list_done -
+        #                                                                 # graded assignments of actual student
+        # final_list = [assignment for assignment in organisation.assignments_list if assignment not in submission_list_done]
+        # if final_list:
+        #     table_to_print = []
+        #     id_ = 1
+        #     for assignment in final_list:
+        #         table_to_print.append([str(id_), assignment.name, assignment.max_points,
+        #                                assignment.delivery_date, assignment.content])
+        #         id_ += 1
+        #     ui.Ui.print_table(table_to_print, ["ID", "Assignment name", "Assignment max points",
+        #                                        "delivery date", "Content"])
+        #     options = ui.Ui.get_inputs(["->"], "")
+        #     if options[0] == "0":
+        #         return
+        #     picked_assignment = final_list[int(options[0]) - 1]
+        #     new_submission = submission.Submission(picked_assignment, self)
+        #     new_submission.provide_result()
+        #     organisation.submissions_list.append(new_submission)
+        # else:
+        #     print("No assignments left.")
             return
 
 
