@@ -1,4 +1,5 @@
 import ui
+import sqlite3
 import data
 import assignment
 import submission
@@ -264,7 +265,7 @@ class Mentor(Employee):
         """
         super().__init__(name, surname, gender, birth_date, email, login, password)
 
-    def add_student(self, organisation):
+    def add_student(self):
         """
         Method allows mentor to add student to students list
 
@@ -285,9 +286,14 @@ class Mentor(Employee):
                   'Gender: you can choose only male, female or not sure\nData format: YYYY-MM-DD\n')
             return
 
-        new_student = Student(options[0], options[1], options[2], options[3], options[4], options[5],
-                            options[6])
-        organisation.students_list.append(new_student)
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("INSERT INTO `User` (`name`, `surname`, `gender`, `birth_date`, `email`, `login`, `password`, `user_type`) "
+                       "VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')"
+                       .format(options[0], options[1], options[2], options[3],
+                               options[4], options[5], options[6], "student"))
+        data.commit()
+        data.close()
         print("Student was added.")
 
     def check_attendance(self, organisation):

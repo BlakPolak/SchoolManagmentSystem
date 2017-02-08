@@ -75,7 +75,7 @@ class Menu:
                                                                                           "Gender", "Date of birth",
                                                                                           "Email", "Login", "Password"])
                 elif menu.option == "4":
-                    user_signed_in.add_student(organisation)
+                    user_signed_in.add_student()
                 elif menu.option == "5":
                     ui.Ui.print_table(user_signed_in.list_students(organisation), ["Index", "Name", "Surname"])
                     user_signed_in.remove_student(organisation)
