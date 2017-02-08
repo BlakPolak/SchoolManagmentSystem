@@ -316,7 +316,7 @@ class Mentor(Employee):
             organisation.attendance_list.append(new_attendance)
             i += 1
 
-    def remove_student(self, organisation):
+    def remove_student(self):
         """
         Method allows mentor remove students from students list
 
@@ -325,13 +325,25 @@ class Mentor(Employee):
         Return:
              None
         """
-        self.list_students(organisation)
+        self.list_students()
         options = ui.Ui.get_inputs([""], "Enter number to erase student from database: ")
-        if int(options[0]) < 0 or int(options[0]) > len(self.list_students(organisation)):
+        if int(options[0]) < 0 or int(options[0]) > len(self.list_students()):
             print("There is no such student number on the list")
             return
-        del organisation.students_list[int(options[0]) - 1]
+
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT * FROM `user` WHERE `user_type`='student'")
+        students = cursor.fetchall()
+        student_to_erase_name = students[int(options[0])-1][1]
+        student_to_erase_surname = students[int(options[0])-1][2]
+        print(student_to_erase_name, student_to_erase_surname)
+        cursor.execute("DELETE FROM `User` WHERE `name`='{}' AND `surname`='{}'"
+                       .format(student_to_erase_name, student_to_erase_surname))
+        data.commit()
+        data.close()
         print("Student was erased.")
+
 
     def edit_student(self, organisation):
         """
