@@ -659,7 +659,24 @@ class Manager(Employee):
         data.close()
         return mentors_details_list
 
-    def average_grade():
-        pass
+    def average_grade(self):
+        """
+                Method display list of submitted assignment with grades
+
+                Args:
+                    organisation
+
+                Return:
+                    list of submitted assignment with grades
+
+                """
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT Grade FROM `Submission` WHERE ID_Student='{}'".format(student_id))
+        grades = cursor.fetchall()
+        # print(grades)
+        data.commit()
+        data.close()
+        return grades
     def full_stats():
         pass
