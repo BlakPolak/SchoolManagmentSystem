@@ -451,7 +451,7 @@ class Manager(Employee):
         """
         super().__init__(name, surname, gender, birth_date, email, login, password)
 
-    def add_mentor(self, organisation):
+    def add_mentor(self):
         """
         Method allows manager to add mentor to mentors list
 
@@ -471,15 +471,20 @@ class Manager(Employee):
                   'Gender: you can choose only male, female or not sure\nData should have format: YYYY-MM-DD\n')
             return
 
-        new_mentor = Mentor(options[0], options[1], options[2], options[3], options[4], options[5],
-                            options[6])
+        # new_mentor = Mentor(options[0], options[1], options[2], options[3], options[4], options[5],
+        #                     options[6])
 
-        data.init_db.execute('INSERT INTO `User`(Name, Surname, Gender, Birth_date, Email, Login, Password, User_type) '
-                             'VALUES (new_mentor.name,new_mentor.surname, new_mentor.gender, new_mentor.birth_date, '
-                             'new_mentor.email, new_mentor.login, new_mentor.password, "student")')
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("INSERT INTO `User`(Name, Surname, Gender, Birth_date, Email, Login, Password, User_type) "
+                       "VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')"
+                       .format(options[0], options[1], options[2], options[3],
+                               options[4], options[5], options[6], "mentor"))
+        data.commit()
+        data.close()
         print("Mentor was added.")
 
-    def remove_mentor(self, organisation):
+    def remove_mentor(self):
         """
         Method allows manager to remove mentor from mentors list
 
@@ -488,13 +493,19 @@ class Manager(Employee):
         Return:
              None
         """
-        self.list_mentors(organisation)
-        options = ui.Ui.get_inputs([""], "Enter number to erase mentor from database")
+        options = ui.Ui.get_inputs(["Name", "Surname"], "Enter number to erase mentor from database")
 
-        if options[0].isalpha() or int(options[0]) < 1 or int(options[0]) > len(self.list_mentors(organisation)):
-            print('\n You have to choose number from Mentors list')
+        if options[0].isnumeric() and options[1].isnumeric():
+            print('\n You have to type  Name and Surname from Mentors list')
             return
-        del organisation.mentors_list[int(options[0]) - 1]
+
+            mydata = c.execute('DELETE FROM Zoznam WHERE Name=?', (data3,))
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("DELETE FROM `User` WHERE Name = '{}' and Surname= '{}'").format(options[0], options[1])
+        data.commit()
+        data.close()
+
         print("Mentor was erased.")
 
     def edit_mentor(self, organisation):
@@ -529,7 +540,7 @@ class Manager(Employee):
         print("Update completed")
         self.list_mentors(organisation)
 
-    def list_mentors(self, organisation):
+    def list_mentors(self):
         """
         Method allows manager to list all mentor from list
 
@@ -539,14 +550,20 @@ class Manager(Employee):
              None
         """
         mentor_list = []
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT * FROM `User` WHERE User_type='mentor'")
+        mentors = cursor.fetchall()
         n = 1
-        while n < len(organisation.mentors_list):
-            for mentor in organisation.mentors_list:
-                mentor_list.append([str(n) + ".", mentor.name, mentor.surname])
-                n += 1
+        for mentor in mentors:
+            mentor_list.append([str(n) + ".", mentor[1], mentor[2]])
+            n += 1
+        data.commit()
+        data.close()
         return mentor_list
 
-    def view_mentors_details(self, organisation):
+
+    def view_mentors_details(self):
         """
         Returns mentors details list to display
 
@@ -558,11 +575,20 @@ class Manager(Employee):
             student detail list
         """
         mentors_details_list = []
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT * FROM `User` WHERE User_type='mentor'")
+        mentors = cursor.fetchall()
         n = 1
-        while n < len(organisation.mentors_list):
-            for mentor in organisation.mentors_list:
-                mentors_details_list.append([str(n) + ".", mentor.name, mentor.surname, mentor.gender, mentor.birth_date,
-                                             mentor.email, mentor.login, mentor.password])
-                n += 1
+        for mentor in mentors:
+            mentors_details_list.append([str(n) + ".", mentor[1], mentor[2], mentor[3], mentor[4],
+                                         mentor[5], mentor[6], mentor[7]])
+            n += 1
+        data.commit()
+        data.close()
         return mentors_details_list
 
+    def average_grade():
+        pass
+    def full_stats():
+        pass
