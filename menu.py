@@ -69,13 +69,13 @@ class Menu:
                 if menu.option == "1":
                     user_signed_in.check_attendance(organisation)
                 elif menu.option == "2":
-                    ui.Ui.print_table(user_signed_in.list_students(organisation), ["Index", "Name", "Surname"])
+                    ui.Ui.print_table(user_signed_in.list_students(), ["Index", "Name", "Surname"])
                 elif menu.option == "3":
-                    ui.Ui.print_table(user_signed_in.view_student_details(organisation), ["Index", "Name", "Surname",
+                    ui.Ui.print_table(user_signed_in.view_student_details(), ["Index", "Name", "Surname",
                                                                                           "Gender", "Date of birth",
                                                                                           "Email", "Login", "Password"])
                 elif menu.option == "4":
-                    user_signed_in.add_student(organisation)
+                    user_signed_in.add_student()
                 elif menu.option == "5":
                     ui.Ui.print_table(user_signed_in.list_students(organisation), ["Index", "Name", "Surname"])
                     user_signed_in.remove_student(organisation)
@@ -86,6 +86,8 @@ class Menu:
                     user_signed_in.add_assignment(organisation)
                 elif menu.option == "8":
                     user_signed_in.grade_submission(organisation)
+                elif menu.option == "9":
+                    user_signed_in.add_team()
                 elif menu.option == "0":
                     return "exit"
             return menu
