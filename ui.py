@@ -4,7 +4,7 @@ import getpass
 class Ui:
     """This class create user interface"""
     @staticmethod
-    def get_login(organisation):
+    def get_login():
         """Ask user for login and password"""
         login = input("login: ")
         password = getpass.getpass("password: ")

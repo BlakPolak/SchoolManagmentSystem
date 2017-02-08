@@ -5,23 +5,13 @@ import menu
 
 def main():
     """Method starts program and checks users access"""
-    codecool = program.Program("csv_lists/employee_list.csv",
-                               "csv_lists/students_list.csv",
-                               "csv_lists/mentors_list.csv",
-                               "csv_lists/managers_list.csv",
-                               "csv_lists/assignments_list.csv",
-                               "csv_lists/submissions_list.csv",
-                               "csv_lists/attendance_list.csv"
-                               )
-
     user_signed_in = None
     while not user_signed_in:
-        user_signed_in = ui.Ui.get_login(codecool)
+        user_signed_in = ui.Ui.get_login()
         if user_signed_in:
             print("Welcome "+user_signed_in.name)
-            user_menu = menu.Menu.create_menu(user_signed_in, codecool)
+            user_menu = menu.Menu.create_menu(user_signed_in)
             if user_menu == "exit":
-                codecool.export_data()
                 print("Logout successfully.")
                 user_signed_in = None
                 continue
