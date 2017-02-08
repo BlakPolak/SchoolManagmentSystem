@@ -24,7 +24,7 @@ class User:
             login:login
             password: check_if_correct(password, str)
     """
-    def __init__(self, name, surname, gender, birth_date, email, login, password):
+    def __init__(self, _id, name, surname, gender, birth_date, email, login, password):
         """
         Initialize user object
 
@@ -39,7 +39,7 @@ class User:
             login:login
             password: check_if_correct(password, str)
         """
-
+        self._id = _id
         self.name = self.check_if_correct(name, str)
         self.surname = self.check_if_correct(surname, str)
         self.check_gender(gender)
@@ -103,7 +103,7 @@ class User:
 
 class Employee(User):
     """Class creates object employee"""
-    def __init__(self, name, surname, gender, birth_date, email, login, password):
+    def __init__(self, _id, name, surname, gender, birth_date, email, login, password):
         """
         Initialize employee object that inherits from User class
 
@@ -118,7 +118,7 @@ class Employee(User):
             login:login
             password: check_if_correct(password, str)
         """
-        super().__init__(name, surname, gender, birth_date, email, login, password)
+        super().__init__(_id, name, surname, gender, birth_date, email, login, password)
 
     def list_students(self):
         """
@@ -167,7 +167,7 @@ class Employee(User):
 
 class Student(User):
     """Class creates object student"""
-    def __init__(self, name, surname, gender, birth_date, email, login, password):
+    def __init__(self, _id, name, surname, gender, birth_date, email, login, password):
         """
         Initialize student object that inherits from User class
 
@@ -182,7 +182,7 @@ class Student(User):
             login:login
             password: check_if_correct(password, str)
         """
-        super().__init__(name, surname, gender, birth_date, email, login, password)
+        super().__init__(_id, name, surname, gender, birth_date, email, login, password)
         self.my_submissions_list = []
 
     def __str__(self):
@@ -250,7 +250,7 @@ class Student(User):
 
 class Mentor(Employee):
     """Class creates object mentor"""
-    def __init__(self, name, surname, gender, birth_date, email, login, password):
+    def __init__(self, _id, name, surname, gender, birth_date, email, login, password):
         """
         Initialize mentor object that inherits from User class
 
@@ -265,7 +265,7 @@ class Mentor(Employee):
             login:login
             password: check_if_correct(password, str)
         """
-        super().__init__(name, surname, gender, birth_date, email, login, password)
+        super().__init__(_id, name, surname, gender, birth_date, email, login, password)
 
     def add_student(self):
         """
@@ -347,7 +347,7 @@ class Mentor(Employee):
         print("Student was erased.")
 
 
-    def edit_student(self, organisation):
+    def edit_student(self):
         """
         Method allows mentor edit students specific data
 
@@ -356,11 +356,10 @@ class Mentor(Employee):
         Return:
              None
         """
-        self.list_students(organisation)
-        options = ui.Ui.get_inputs([""], "Enter number to edit student's data")
-        if options[0] == "0" or int(options[0]) > len(self.list_students(organisation)):
+        self.list_students()
+        choosed_student = ui.Ui.get_inputs([""], "Enter number to edit student's data")
+        if choosed_student[0] == "0" or int(choosed_student[0]) > len(self.list_students()):
             return
-        student = organisation.students_list[int(options[0]) - 1]
         options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
                                     "Password"], "Edit information about student")
         if options[0].isalpha() and options[1].isalpha() and options[2] in ['male', 'female', 'not sure']:
@@ -371,15 +370,22 @@ class Mentor(Employee):
             print('\nWrong input!\nName: only letters\nSurname: only letters\n'
                   'Gender: you can choose only male, female or not sure\nData format: YYYY-MM-DD\n')
             return
-        student.name = options[0]
-        student.surname = options[1]
-        student.gender = options[2]
-        student.birth_date = options[3]
-        student.email = options[4]
-        student.login = options[5]
-        student.password = options[6]
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT * FROM `user` WHERE `user_type`='student'")
+        students = cursor.fetchall()
+        student_to_edit_name = students[int(choosed_student[0]) - 1][1]
+        student_to_edit_surname = students[int(choosed_student[0]) - 1][2]
+
+        cursor.execute(
+            "UPDATE `User` SET `name`='{}', `surname`='{}', `gender`='{}', `birth_date`='{}', `email`='{}', `login`='{}', `password`='{}' "
+            " WHERE "
+            "`name`='{}' AND `surname`='{}'"
+            .format(options[0], options[1], options[2], options[3],
+                    options[4], options[5], options[6], student_to_edit_name, student_to_edit_surname))
+        data.commit()
+        data.close()
         print("Update completed")
-        self.list_students(organisation)
 
     def grade_submission(self, organisation):
         """
@@ -446,7 +452,7 @@ class Mentor(Employee):
 
 class Manager(Employee):
     """Class creates object mentor"""
-    def __init__(self, name, surname, gender, birth_date, email, login, password):
+    def __init__(self, _id, name, surname, gender, birth_date, email, login, password):
         """
         Initialize mentor object that inherits from User class
 
@@ -461,7 +467,7 @@ class Manager(Employee):
             login:login
             password: check_if_correct(password, str)
         """
-        super().__init__(name, surname, gender, birth_date, email, login, password)
+        super().__init__(_id, name, surname, gender, birth_date, email, login, password)
 
     def add_mentor(self):
         """

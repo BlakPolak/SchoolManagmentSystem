@@ -15,16 +15,16 @@ class Ui:
                        .format(_login, _password))
         _user = cursor.fetchone()
         if _user[8] == "mentor":
-            mentor = user.Mentor(_user[1], _user[2], _user[3], _user[4], _user[5], _user[6], _user[7])
+            mentor = user.Mentor(_user[0], _user[1], _user[2], _user[3], _user[4], _user[5], _user[6], _user[7])
             return mentor
         if _user[8] == "student":
-            student = user.Student(_user[1], _user[2], _user[3], _user[4], _user[5], _user[6], _user[7])
+            student = user.Student(_user[0], _user[1], _user[2], _user[3], _user[4], _user[5], _user[6], _user[7])
             return student
         if _user[8] == "manager":
-            manager = user.Manager(_user[1], _user[2], _user[3], _user[4], _user[5], _user[6], _user[7])
+            manager = user.Manager(_user[0], _user[1], _user[2], _user[3], _user[4], _user[5], _user[6], _user[7])
             return manager
         if _user[8] == "employee":
-            employee = user.Employee(_user[1], _user[2], _user[3], _user[4], _user[5], _user[6], _user[7])
+            employee = user.Employee(_user[0], _user[1], _user[2], _user[3], _user[4], _user[5], _user[6], _user[7])
             return employee
         return None
 
