@@ -1,32 +1,31 @@
 import getpass
+from data import Data
+import user
 
 
 class Ui:
     """This class create user interface"""
     @staticmethod
-    def get_login(organisation):
+    def get_login():
         """Ask user for login and password"""
-        login = input("login: ")
-        password = getpass.getpass("password: ")
-        for manager in organisation.managers_list:
-            if login == manager.login:
-                if password == manager.password:
-                    return manager
-
-        for mentor in organisation.mentors_list:
-            if login == mentor.login:
-                if password == mentor.password:
-                    return mentor
-
-        for student in organisation.students_list:
-            if login == student.login:
-                if password == student.password:
-                    return student
-
-        for employee in organisation.employee_list:
-            if login == employee.login:
-                if password == employee.password:
-                    return employee
+        _login = input("login: ")
+        _password = getpass.getpass("password: ")
+        cursor = Data.init_db()
+        cursor.execute("SELECT * FROM `User` WHERE Login='{}' AND Password='{}'"
+                       .format(_login, _password))
+        _user = cursor.fetchone()
+        if _user[8] == "mentor":
+            mentor = user.Mentor(_user[1], _user[2], _user[3], _user[4], _user[5], _user[6], _user[7])
+            return mentor
+        if _user[8] == "student":
+            student = user.Student(_user[1], _user[2], _user[3], _user[4], _user[5], _user[6], _user[7])
+            return student
+        if _user[8] == "manager":
+            manager = user.Manager(_user[1], _user[2], _user[3], _user[4], _user[5], _user[6], _user[7])
+            return manager
+        if _user[8] == "employee":
+            employee = user.Employee(_user[1], _user[2], _user[3], _user[4], _user[5], _user[6], _user[7])
+            return employee
         return None
 
     @staticmethod
