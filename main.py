@@ -5,10 +5,6 @@ import menu
 
 def main():
     """Method starts program and checks users access"""
-<<<<<<< HEAD
-
-=======
->>>>>>> 01c05eb40d671bf57abbf33a22efd7d1a28bf5d6
     user_signed_in = None
     while not user_signed_in:
         user_signed_in = ui.Ui.get_login()

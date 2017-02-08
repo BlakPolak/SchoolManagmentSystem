@@ -11,7 +11,7 @@ class Menu:
         NotImplementedError()
 
     @staticmethod
-    def create_menu(user_signed_in, organisation):
+    def create_menu(user_signed_in):
         """Method create menu for every user"""
         if type(user_signed_in) == user.Student:
             while True:
