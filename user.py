@@ -357,10 +357,9 @@ class Mentor(Employee):
              None
         """
         self.list_students()
-        options = ui.Ui.get_inputs([""], "Enter number to edit student's data")
-        if options[0] == "0" or int(options[0]) > len(self.list_students()):
+        choosed_student = ui.Ui.get_inputs([""], "Enter number to edit student's data")
+        if choosed_student[0] == "0" or int(choosed_student[0]) > len(self.list_students()):
             return
-        student = organisation.students_list[int(options[0]) - 1]
         options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
                                     "Password"], "Edit information about student")
         if options[0].isalpha() and options[1].isalpha() and options[2] in ['male', 'female', 'not sure']:
@@ -371,15 +370,22 @@ class Mentor(Employee):
             print('\nWrong input!\nName: only letters\nSurname: only letters\n'
                   'Gender: you can choose only male, female or not sure\nData format: YYYY-MM-DD\n')
             return
-        student.name = options[0]
-        student.surname = options[1]
-        student.gender = options[2]
-        student.birth_date = options[3]
-        student.email = options[4]
-        student.login = options[5]
-        student.password = options[6]
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT * FROM `user` WHERE `user_type`='student'")
+        students = cursor.fetchall()
+        student_to_edit_name = students[int(choosed_student[0]) - 1][1]
+        student_to_edit_surname = students[int(choosed_student[0]) - 1][2]
+
+        cursor.execute(
+            "UPDATE `User` SET `name`='{}', `surname`='{}', `gender`='{}', `birth_date`='{}', `email`='{}', `login`='{}', `password`='{}' "
+            " WHERE "
+            "`name`='{}' AND `surname`='{}'"
+            .format(options[0], options[1], options[2], options[3],
+                    options[4], options[5], options[6], student_to_edit_name, student_to_edit_surname))
+        data.commit()
+        data.close()
         print("Update completed")
-        self.list_students(organisation)
 
     def grade_submission(self, organisation):
         """
