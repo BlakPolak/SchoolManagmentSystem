@@ -78,15 +78,19 @@ class Menu:
                     if signed_user:
                         ui.Ui.print_table(signed_user, ["Name", "Surname", "Average grade"])
                 elif menu.option == "9": #card stats for mentor
-                    ui.Ui.print_table(user_signed_in.list_mentors(), ["Index", "Name", "Surname"])
                     signed_user = user_signed_in.which_mentor_is_a_monster()
-                    #if signed_user:
-                        #ui.Ui.print_table(signed_user, ["Name", "Surname", "Average grade"])
-                elif menu.option == "10": #full stats for student
+                    if signed_user:
+                        ui.Ui.print_table(signed_user, ["Name and Surname", "Red cards", "Yellow cards", "Green cards"])
+                elif menu.option == "10": #card stats for mentor
+                    signed_user = user_signed_in.grades_stats_for_mentors()
+                    if signed_user:
+                        ui.Ui.print_table(signed_user, ["Name", "Surname", "Number of graded assignments",
+                                                        "Average rating of mentor"])
+                elif menu.option == "11": #full stats for student
                     ui.Ui.print_table(user_signed_in.list_students(), ["Index", "Name", "Surname"])
                     signed_user = user_signed_in.full_stats_for_students()
-                    #if signed_user:
-                        #ui.Ui.print_table(signed_user, ["Name", "Surname", "Average grade"])
+                    # if signed_user:
+                    #     ui.Ui.print_table(signed_user, ["Name", "Surname", "Average grade"])
                 elif menu.option == "0":
                     return "exit"
         elif type(user_signed_in) == user.Mentor:

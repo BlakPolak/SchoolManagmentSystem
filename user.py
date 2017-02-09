@@ -793,12 +793,6 @@ class Manager(Employee):
             print("There is no such student on the list")
             return
 
-        # mydata = c.execute('DELETE FROM Zoznam WHERE Name=?', (data3,))
-        # data = sqlite3.connect("program.db")
-        # cursor = data.cursor()
-        # cursor.execute("DELETE FROM `User` WHERE Name = '{}' and Surname= '{}'").format(options[0], options[1])
-        # data.commit()
-        # data.close()
         average_grade_list = []
         cursor.execute("SELECT * FROM `User` WHERE `User_type`='student'")
         students = cursor.fetchall()
@@ -817,40 +811,60 @@ class Manager(Employee):
 
     @staticmethod
     def which_mentor_is_a_monster():
-        mentor_statistics = {}
+
+        list_to_print = []
+        cards_statistics = {}
         mentors = []
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
         cards = cursor.execute("SELECT `Name`, `Surname`, `Card` "
                                "FROM `Checkpoint_submittion` "
                                "INNER JOIN `User` ON Checkpoint_submittion.ID_Mentor = User.ID ")
-        for row in cards:
-            print (row)
-            mentor_statistics[row[1]] = [0, 0, 0] #Cards [red,yellow,green] # row[1]- surname change for name,surname or ID_Mentor
-            mentors.append(row[1])
-        mentors = list(set(mentors))
-        print (mentors)
-        cards = cursor.execute("SELECT `Name`, `Surname`, `Card` "
-                               "FROM `Checkpoint_submittion` "
-                               "INNER JOIN `User` ON Checkpoint_submittion.ID_Mentor = User.ID ")
         cards = cards.fetchall()
+        for row in cards:
+            name_surname = str(row[0]) + ' ' + str(row[1])
+            cards_statistics[name_surname] = [0, 0, 0] #Cards [red,yellow,green] # row[1]- surname change for name,surname or ID_Mentor
+            mentors.append(name_surname)
+        mentors = list(set(mentors))
         for mentor in mentors:
             for row in cards:
-                print (row)
-                if row[1] == mentor:
+                if str(row[0]) + ' ' + str(row[1]) == mentor:
                     if str(row[2]) == 'red':
-                        mentor_statistics[mentor][0] += 1
+                        cards_statistics[mentor][0] += 1
                     if str(row[2]) == 'yellow':
-                        mentor_statistics[mentor][1] += 1
+                        cards_statistics[mentor][1] += 1
                     if str(row[2]) == 'green':
-                        mentor_statistics[mentor][2] += 1
+                        cards_statistics[mentor][2] += 1
+        for key, value in cards_statistics.items():
+            temp = [key, value[0], value[1], value[2]]
+            list_to_print.append(temp)
+        data.commit()
+        data.close()
+        return list_to_print
 
-        print(mentor_statistics)
-        # average_and_amount = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
-        #                                     "FROM `Submission` INNER JOIN `User` ON `Submission`.ID_Mentor = User.ID"
-        #                                     " GROUP BY `Name`")
-        # records = records.fetchall()
-        # number_of_records = int(records[0][0])
+    @staticmethod
+    def grades_stats_for_mentors():
 
-    def full_stats_for_students(self):
-        pass
+        grades_statistics = []
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        grades = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
+                                            "FROM `Submission` INNER JOIN `User` ON `Submission`.ID_Mentor = User.ID"
+                                            " GROUP BY `Name`")
+        grades = grades.fetchall()
+        for row in grades:
+            grades_statistics.append(row)
+
+        return grades_statistics
+
+    @staticmethod
+    def full_stats_for_students():
+        student_stats = []
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        grades = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
+                                "FROM `Submission` INNER JOIN `User` ON `Submission`.ID_Student = User.ID"
+                                " GROUP BY `Name`")
+        grades = grades.fetchall()
+        for row in grades:
+            student_stats.append(row)
