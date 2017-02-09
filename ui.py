@@ -42,6 +42,8 @@ class Ui:
                (6) Remove mentor
                (7) Edit mentors data
                (8) Show student average grade
+               (9) Show checkpoint cards statistics for mentors
+               (10) Show student stats
                (0) Exit CcMS
             """)
         option = input("Your choice: ")
