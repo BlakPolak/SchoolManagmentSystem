@@ -21,7 +21,7 @@ class Menu:
                     ui.Ui.print_table(user_signed_in.view_my_grades(), ['Index', 'Your grade assignments',
                                                                                     'Grade'])
                 elif menu.option == "2":
-                    assignment = user_signed_in.list_assignments()
+                    assignment = user_signed_in.list_assignments_to_submit()
                     ui.Ui.print_table(assignment, ['Index', 'Assignment name', 'Assignment type',
                                                                                     'Delivery date'])
                     user_signed_in.submit_assignment(assignment)
