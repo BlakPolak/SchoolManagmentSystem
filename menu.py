@@ -90,10 +90,9 @@ class Menu:
                 elif menu.option == "8":
                     user_signed_in.grade_submission()
                 elif menu.option == "9":
-                    #ui.Ui.print_table(user_signed_in.list_teams(), ["Index", "Team", "Name", "Surname"])
                     ui.Ui.print_table(user_signed_in.list_students(), ["Index", "Name", "Surname"])
                     user_signed_in.add_team()
-                    ui.Ui.print_table(user_signed_in.list_teams(), ["Index", "Name", "Surname"])
+                    ui.Ui.print_table(user_signed_in.list_teams(), ["Index", "Team", "Name", "Surname"])
                 elif menu.option == "0":
                     return "exit"
             return menu
