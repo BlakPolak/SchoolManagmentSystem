@@ -716,22 +716,20 @@ class Manager(Employee):
         """
                 Method display list of grades for choosen student
 
-                Args:
-                    organisation
 
                 Return:
-                    list of submitted assignment with grades
+                    average grade for student
 
                 """
         options = ui.Ui.get_inputs([""], "Enter the number of student to see his average grade")
 
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        records = cursor.execute("SELECT COUNT(`Name`) FROM `User` WHERE `User_Type` = 'mentor'")
+        records = cursor.execute("SELECT COUNT(`Name`) FROM `User` WHERE `User_Type` = 'student'")
         records = records.fetchall()
         number_of_records = int(records[0][0])
 
-        if int(options[0]) < 1 or int(options[0]) > number_of_records-1:
+        if int(options[0]) < 1 or int(options[0]) > number_of_records:
             print("There is no such student on the list")
             return
 
