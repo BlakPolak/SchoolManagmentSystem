@@ -26,7 +26,10 @@ class Menu:
                                                                                     'Delivery date'])
                     user_signed_in.submit_assignment(assignment)
                 elif menu.option == "3":
-                    user_signed_in.add_group_assignment()
+                    group_submission = user_signed_in.list_group_assignment()
+                    ui.Ui.print_table(group_submission, ['Index', 'Assignment name', 'Assignment type',
+                                                                                    'Delivery date'])
+                    user_signed_in.add_group_assignment(group_submission)
                 elif menu.option == "4":
                     ui.Ui.print_table(user_signed_in.check_my_attendance(), ['Attendance in %'])
                 elif menu.option == "0":

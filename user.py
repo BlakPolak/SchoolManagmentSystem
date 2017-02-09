@@ -262,12 +262,36 @@ class Student(User):
         data.commit()
         data.close()
 
+    def list_group_assignment(self):
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT ID, Name, Type, Delivery_date FROM `Assignment` WHERE Type='group'")
+        group_assignments = cursor.fetchall()
+        group_assignments_list = []
+        for assignment in group_assignments:
+            group_assignments_list.append([assignment[0], assignment[1], assignment[2], assignment[3]])
+        data.commit()
+        data.close()
+        return group_assignments_list
 
-    def add_group_assignment(self):
+
+    def add_group_assignment(self, group_assignment):
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        if len(group_assignment) <= 1:
+            print("You have no assignment to submitt!")
+            return
+        assignment_id = ui.Ui.get_inputs([""], "Enter number to choose assignment to submit: ")
+        # TODO: validate index from user input
+        result = ui.Ui.get_inputs(["Content"], "Provide information about new assignment")
+        submission_date = datetime.date.today()
+        cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
+                       "VALUES ('{}', '{}', '{}', '{}')".format(self._id, assignment_id[0], result[0], submission_date))
+        data.commit()
+        data.close()
         pass
 
     def check_my_attendance(self):
-
         student_id = self._id
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
