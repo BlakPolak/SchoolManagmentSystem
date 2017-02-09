@@ -199,15 +199,20 @@ class Student(User):
             list of submitted assignment with grades
 
         """
+        grades_for_view = []
         student_id = self._id
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
         cursor.execute("SELECT Grade FROM `Submission` WHERE ID_Student='{}'".format(student_id))
         grades = cursor.fetchall()
-        # print(grades)
+        n = 0
+        for grade in grades:
+            grades_for_view.append(grade)
+            n += 1
         data.commit()
         data.close()
-        return grades
+        return grades_for_view
+
 
     def submit_assignment(self):
         """
@@ -220,23 +225,17 @@ class Student(User):
             list of submitted assignment
 
         """
-
+        options = ui.Ui.get_inputs(["Content"], "Provide information about new assignment")
+        delivery_date = datetime.datetime.now()
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        cursor.execute("INSERT INTO `Assignment` (`ID`, `Name`, `Type`, `Max_points`, `Delivery_date`, `Content`) "
-                       "VALUES ('{}', '{}', '{}', '{}', '{}', '{}')"
-                       .format(options[0], options[1], options[2], options[3],
-                               options[4], option[5]))
+        cursor.execute("INSERT INTO `Assignment` (`Content`, `Delivery_date`) "
+                       "VALUES ('{}', '{}')".format(options[0], delivery_date))
         submission = cursor.fetchall()
         data.commit()
         data.close()
-        #
-        # submission_list_done = []
-        # for submission_ in organisation.submissions_list:
-        #     if submission_.student.name == self.name and submission_.student.surname == self.surname:
-        #         if submission_.grade == "":
-        #             submission_list_done.append(submission_.assignment) # submission_list_done -
-        #                                                                 # graded assignments of actual student
+        return submission
+
         # final_list = [assignment for assignment in organisation.assignments_list if assignment not in submission_list_done]
         # if final_list:
         #     table_to_print = []
@@ -256,7 +255,28 @@ class Student(User):
         #     organisation.submissions_list.append(new_submission)
         # else:
         #     print("No assignments left.")
-            return
+        #     return
+
+    def add_group_assignment(self):
+
+
+        pass
+
+    def check_my_attendance(self):
+        attendance_list = []
+        student_id = self._id
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT Presence FROM `Attendance` WHERE ID_Student='{}'".format(student_id))
+        presence = cursor.fetchall()
+        n = 0
+        for attendance in presence:
+            attendance_list.append(attendance)
+            n += 1
+        data.commit()
+        data.close()
+        return attendance_list
+
 
 
 class Mentor(Employee):
