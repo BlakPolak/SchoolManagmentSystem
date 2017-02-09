@@ -21,6 +21,8 @@ class Menu:
                     ui.Ui.print_table(user_signed_in.view_my_grades(), ['Index', 'Your grade assignments',
                                                                                     'Grade'])
                 elif menu.option == "2":
+                    ui.Ui.print_table(user_signed_in.list_assignments(), ['Index', 'Assigment name', 'Assignment type',
+                                                                                    'Delivery date'])
                     user_signed_in.submit_assignment()
                 elif menu.option == "0":
                     return "exit"
