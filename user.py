@@ -191,10 +191,9 @@ class Student(User):
     def view_my_grades(self):
         """
         Method display list of submitted assignment with grades
-        
 
         Return:
-            list of submitted assignment with grades
+            table submitted assignment with grades
 
         """
         grades_for_view = []
@@ -212,6 +211,13 @@ class Student(User):
         return grades_for_view
 
     def list_submissions(self): #to refactor - move to class submission as class method
+        """
+        Method returns list of all student submission
+
+        Return:
+            list submitted assignment
+
+        """
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
         cursor.execute("select ID_Assignment from `Submission` WHERE ID_Student='{}'".format(self._id))
@@ -223,6 +229,13 @@ class Student(User):
         return submissions_list
 
     def list_assignments_to_submit(self): #to refactor - move to class submission as class method
+        """
+        Method returns list of all student submission
+
+        Return:
+            list not submitted assignment
+
+        """
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
         cursor.execute("SELECT ID, Name, Type, Delivery_date FROM `Assignment`")
@@ -239,10 +252,7 @@ class Student(User):
         Method allows student to submit assignment
 
         Args:
-            organisation
-
-        Return:
-            list of submitted assignment
+            assignment
 
         """
         data = sqlite3.connect("program.db")
@@ -251,7 +261,9 @@ class Student(User):
             print("You have no assignment to submitt!")
             return
         assignment_id = ui.Ui.get_inputs([""], "Enter number to choose assignment to submit: ")
-        # TODO: validate index from user input
+        if assignment_id not in assignment or assignment_id <= 0:
+            print("Try again with right index!")
+            return
         result = ui.Ui.get_inputs(["Content"], "Provide information about new assignment")
         submission_date = datetime.date.today()
         cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
@@ -260,6 +272,13 @@ class Student(User):
         data.close()
 
     def list_group_assignment(self):
+        """
+        Method returns list of all group submission
+
+        Return:
+            list assignment for group
+
+        """
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
         cursor.execute("SELECT ID, Name, Type, Delivery_date FROM `Assignment` WHERE Type='group'")
@@ -272,14 +291,29 @@ class Student(User):
         return group_assignments_list
 
     def find_student_team(self):
+        """
+        Method returns team name for logged student
+
+        Return:
+            team name as list
+
+        """
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
         cursor.execute("SELECT team_name FROM `Teams` WHERE ID_Student='{}'".format(self._id))
         teams = cursor.fetchall()
+        data.commit()
         data.close()
         return teams[0][0]
 
     def find_students_teammates(self, team):
+        """
+        Method returns all students from the same team
+
+        Return:
+            list student teammates
+
+        """
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
         cursor.execute("SELECT Id_Student FROM `Teams` WHERE Team_name='{}'".format(team))
@@ -287,17 +321,27 @@ class Student(User):
         teammates_list = []
         for mate in teammates:
             teammates_list.append(mate[0])
+        data.commit()
         data.close()
         return teammates_list
 
     def add_group_assignment(self, teammates, group_submission):
+        """
+        Method allows student to submit assignment for each team member
+
+        Args:
+            teammates, group_submission
+
+        """
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
         if len(group_submission) <= 1:
             print("You have no assignment to submitt!")
             return
         assignment_id = ui.Ui.get_inputs([""], "Enter number to choose assignment to submit: ")
-        # TODO: validate index from user input
+        if assignment_id not in group_submission or assignment_id <= 0:
+            print("Try again with right index!")
+            return
         result = ui.Ui.get_inputs(["Content"], "Provide information about new assignment")
         submission_date = datetime.date.today()
         for row in teammates:
@@ -307,6 +351,13 @@ class Student(User):
         data.close()
 
     def check_my_attendance(self):
+        """
+        Method allows student to check attendance level in %
+
+        Return:
+            percent of attendance
+
+        """
         student_id = self._id
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
@@ -316,6 +367,10 @@ class Student(User):
         cursor.execute("SELECT COUNT(Presence) FROM `Attendance`")
         number_of_days = cursor.fetchall()
         days = float(number_of_days[0][0])
+        if days == 0:
+            print("No attendance!")
+            return
+        # TODO: new validation implementation...
         percent_of_attendance = str((number_of_presence/days)*100)
         percent_of_attendance_list =[]
         percent_of_attendance_list.append(percent_of_attendance)
