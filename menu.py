@@ -103,6 +103,10 @@ class Menu:
                     checkpoint_assignment_id = user_signed_in.get_checkpoint_id()
                     ui.Ui.print_table(user_signed_in.list_students(), ["Index", "Name", "Surname"])
                     user_signed_in.add_checkpoint_submission(checkpoint_assignment_id)
+                elif menu.option == "11":
+                    ui.Ui.print_table(user_signed_in.list_students_simple_view(), ["Index", "Name", "Surname"])
+                    stats_table = user_signed_in.check_student_performance()
+                    ui.Ui.print_table(stats_table, ["Name", "Surname", "Avg presence", "Avg grades", "Yellow cards", "Red cards"])
                 elif menu.option == "0":
                     return "exit"
             return menu

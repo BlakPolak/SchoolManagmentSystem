@@ -144,6 +144,27 @@ class Employee(User):
         return student_list
 
 
+    def list_students_simple_view(self):
+        """
+        Return student list to display
+
+            Args:
+                organisation
+
+            Returns:
+
+                student list
+        """
+        student_list = []
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT * FROM `User` WHERE User_type='student'")
+        students = cursor.fetchall()
+        for student in students:
+            student_list.append([student[0], student[1], student[2]])
+        data.close()
+        return student_list
+
     def view_student_details(self):
         """
         Returns students details list to display
@@ -335,11 +356,13 @@ class Mentor(Employee):
         presences = ui.Ui.get_inputs(students_list, "Starting attendance check (mark 0 for absence, 1 for present)")
         i = 0
         for presence in presences:
-            cursor.execute("""INSERT INTO attendance (ID_Student, Date, Presence) VALUES ({}, {}, {})""".format(ids[i], str(datetime.date.today()), presence))
+            cursor.execute("INSERT INTO attendance (ID_Student, Date, Presence) VALUES ('{}', '{}', '{}')"
+                           .format(ids[i], str(datetime.date.today()), presence))
             i += 1
         data.commit()
         data.close()
         print("Checking attendance finished")
+
 
     def remove_student(self):
         """
@@ -542,9 +565,6 @@ class Mentor(Employee):
         data.close()
         return student_list
 
-
-
-
     def list_checkpoint_assignments(self):
         checkpoint_assignments_list = []
         data = sqlite3.connect("program.db")
@@ -596,6 +616,58 @@ class Mentor(Employee):
         else:
             print("Checkpoint already graded.")
         data.close()
+
+    def check_student_performance(self):
+        return_list = []
+        choosed_student = ui.Ui.get_inputs([""], "Choose student to check hes performance")
+        if int(choosed_student[0]) < 0 or int(choosed_student[0]) > len(self.list_students()):
+            print("There is no such student number on the list")
+            return None
+        student_to_check_id = int(choosed_student[0])
+        period = ui.Ui.get_inputs(["Date from", "Date to"], "Enter dates for performance check")
+        #datetime.strptime(war_start, '%Y-%m-%d')
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT name, surname FROM user where ID={}".format(student_to_check_id))
+        _data = cursor.fetchone()
+        student_name = _data[0]
+        student_surname = _data[1]
+
+        cursor.execute("SELECT * FROM attendance where id_student={} AND date BETWEEN '{}' AND '{}'"
+                       .format(student_to_check_id, period[0], period[1]))
+        _data = cursor.fetchall()
+        all_days = 0
+        days_in_school = 0
+        for item in _data:
+            all_days += 1
+            if item[3] == "1":
+                days_in_school += 1
+        avg_days = round(days_in_school/all_days, 2)
+
+        cursor.execute("SELECT Grade FROM Submission where id_student={} AND Submittion_date BETWEEN '{}' AND '{}'"
+                       .format(student_to_check_id, period[0], period[1]))
+        _data = cursor.fetchall()
+        grades_quantity = 0
+        grades_sum = 0
+        for item in _data:
+            grades_quantity += 1
+            grades_sum += item[0]
+        grades_avg = round(grades_sum/grades_quantity, 2)
+
+        cursor.execute("SELECT Card FROM Checkpoint_submittion where id_student={} AND date BETWEEN '{}' AND '{}'"
+                       .format(student_to_check_id, period[0], period[1]))
+        _data = cursor.fetchall()
+        yellow_cards = 0
+        red_cards = 0
+        for item in _data:
+            if item[0] == "yellow":
+                yellow_cards += 1
+            elif item[0] == "red":
+                red_cards += 1
+
+        return_list.append([student_name, student_surname, avg_days,
+                            grades_avg, yellow_cards, red_cards])
+        return return_list
 
 
 class Manager(Employee):
