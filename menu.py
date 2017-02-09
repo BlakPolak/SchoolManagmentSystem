@@ -27,7 +27,7 @@ class Menu:
                 elif menu.option == "3":
                     user_signed_in.add_group_assignment()
                 elif menu.option == "4":
-                    user_signed_in.check_my_attendance()
+                    ui.Ui.print_table(user_signed_in.check_my_attendance(), ['Attendance in %'])
                 elif menu.option == "0":
                     return "exit"
         elif type(user_signed_in) == user.Employee:

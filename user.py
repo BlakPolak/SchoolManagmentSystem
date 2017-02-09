@@ -213,6 +213,19 @@ class Student(User):
         data.close()
         return grades_for_view
 
+    def list_assignments(self):
+        assigments_list = []
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("select `Name`, `Type`, `Delivery_date` from assignment inner join submission on submission.id_student = {}".format(self._id))
+        assignments = cursor.fetchall()
+        n = 1
+        for assignment in assignments:
+            assigments_list.append([str(n) + ".", assignment[0], assignment[1], assignment[2]])
+            n += 1
+        data.close()
+        return assigments_list
+
 
     def submit_assignment(self):
         """
@@ -225,57 +238,39 @@ class Student(User):
             list of submitted assignment
 
         """
-        options = ui.Ui.get_inputs(["Content"], "Provide information about new assignment")
-        delivery_date = datetime.datetime.now()
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        cursor.execute("INSERT INTO `Assignment` (`Content`, `Delivery_date`) "
-                       "VALUES ('{}', '{}')".format(options[0], delivery_date))
-        submission = cursor.fetchall()
+        options = ui.Ui.get_inputs(["Content"], "Provide information about new assignment")
+        submission_date = datetime.date.today()
+        cursor.execute("INSERT INTO `Submission` (`ID_Student`,`Result`, `Submittion_date`) "
+                       "VALUES ('{}', '{}', '{}')".format(self._id, options[0], submission_date))
         data.commit()
         data.close()
-        return submission
 
-        # final_list = [assignment for assignment in organisation.assignments_list if assignment not in submission_list_done]
-        # if final_list:
-        #     table_to_print = []
-        #     id_ = 1
-        #     for assignment in final_list:
-        #         table_to_print.append([str(id_), assignment.name, assignment.max_points,
-        #                                assignment.delivery_date, assignment.content])
-        #         id_ += 1
-        #     ui.Ui.print_table(table_to_print, ["ID", "Assignment name", "Assignment max points",
-        #                                        "delivery date", "Content"])
-        #     options = ui.Ui.get_inputs(["->"], "")
-        #     if options[0] == "0":
-        #         return
-        #     picked_assignment = final_list[int(options[0]) - 1]
-        #     new_submission = submission.Submission(picked_assignment, self)
-        #     new_submission.provide_result()
-        #     organisation.submissions_list.append(new_submission)
-        # else:
-        #     print("No assignments left.")
-        #     return
 
     def add_group_assignment(self):
-
-
         pass
 
     def check_my_attendance(self):
-        attendance_list = []
+
         student_id = self._id
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        cursor.execute("SELECT Presence FROM `Attendance` WHERE ID_Student='{}'".format(student_id))
+        cursor.execute("SELECT COUNT(Presence) FROM `Attendance` WHERE ID_Student='{}' AND `Presence`= NULL".format(student_id))
         presence = cursor.fetchall()
-        n = 0
-        for attendance in presence:
-            attendance_list.append(attendance)
-            n += 1
+        number_of_presence = float(presence[0][0])
+        cursor.execute("SELECT COUNT(Presence) FROM `Attendance`")
+        number_of_days = cursor.fetchall()
+        days = float(number_of_days[0][0])
+        percent_of_attendance = str((number_of_presence/days)*100) + "%"
+        percent_of_attendance_list =[]
+        percent_of_attendance_list.append(percent_of_attendance)
+        # print(percent_of_attendance_list)
         data.commit()
         data.close()
-        return attendance_list
+        return percent_of_attendance_list
+
+
 
 
 class Mentor(Employee):
