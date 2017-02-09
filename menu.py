@@ -60,6 +60,9 @@ class Menu:
                 elif menu.option == "7":
                     ui.Ui.print_table(user_signed_in.list_mentors(), ["Index", "Name", "Surname"])
                     user_signed_in.edit_mentor()
+                elif menu.option == "8":
+                    ui.Ui.print_table(user_signed_in.list_students(), ["Index", "Name", "Surname"])
+                    user_signed_in.average_grade_for_student()
                 elif menu.option == "0":
                     return "exit"
         elif type(user_signed_in) == user.Mentor:
