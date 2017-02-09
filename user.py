@@ -192,9 +192,6 @@ class Student(User):
         """
         Method display list of submitted assignment with grades
 
-        Args:
-            organisation
-
         Return:
             list of submitted assignment with grades
 
@@ -202,11 +199,12 @@ class Student(User):
         grades_for_view = []
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        cursor.execute("SELECT Grade FROM `Submission` WHERE ID_Student='{}'".format(self._id))
+        cursor.execute("SELECT assignment.name, submission.grade FROM assignment INNER JOIN submission "
+                       "ON submission.ID_assignment = assignment.ID WHERE ID_Student='{}'".format(self._id))
         grades = cursor.fetchall()
-        n = 0
+        n = 1
         for grade in grades:
-            grades_for_view.append(grade)
+            grades_for_view.append([str(n) + ".", grade[0], grade[1]])
             n += 1
         data.commit()
         data.close()
@@ -234,8 +232,6 @@ class Student(User):
                 assignments_to_submit.append(list(assignment))
         data.close()
         return assignments_to_submit
-
-
 
     def submit_assignment(self, assignment):
         """
@@ -595,7 +591,8 @@ class Manager(Employee):
         """
         super().__init__(_id, name, surname, gender, birth_date, email, login, password)
 
-    def add_mentor(self):
+    @staticmethod
+    def add_mentor():
         """
         Method allows manager to add mentor to mentors list
 
@@ -628,7 +625,8 @@ class Manager(Employee):
         data.close()
         print("Mentor was added.")
 
-    def remove_mentor(self):
+    @staticmethod
+    def remove_mentor():
         """
         Method allows manager to remove mentor from mentors list
 
@@ -667,7 +665,8 @@ class Manager(Employee):
         data.close()
         print("Mentor was erased.")
 
-    def edit_mentor(self):
+    @staticmethod
+    def edit_mentor():
         """
         Method allows manager to edit mentor specific data
 
@@ -715,7 +714,8 @@ class Manager(Employee):
         data.close()
         print("Update completed")
 
-    def list_mentors(self):
+    @staticmethod
+    def list_mentors():
         """
         Method allows manager to list all mentor from list
 
@@ -737,8 +737,8 @@ class Manager(Employee):
         data.close()
         return mentor_list
 
-
-    def view_mentors_details(self):
+    @staticmethod
+    def view_mentors_details():
         """
         Returns mentors details list to display
 
@@ -763,26 +763,25 @@ class Manager(Employee):
         data.close()
         return mentors_details_list
 
-    def average_grade_for_student(self):
+    @staticmethod
+    def average_grade_for_student():
         """
                 Method display list of grades for choosen student
 
-                Args:
-                    organisation
 
                 Return:
-                    list of submitted assignment with grades
+                    average grade for student
 
                 """
         options = ui.Ui.get_inputs([""], "Enter the number of student to see his average grade")
 
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        records = cursor.execute("SELECT COUNT(`Name`) FROM `User` WHERE `User_Type` = 'mentor'")
+        records = cursor.execute("SELECT COUNT(`Name`) FROM `User` WHERE `User_Type` = 'student'")
         records = records.fetchall()
         number_of_records = int(records[0][0])
 
-        if int(options[0]) < 1 or int(options[0]) > number_of_records-1:
+        if int(options[0]) < 1 or int(options[0]) > number_of_records:
             print("There is no such student on the list")
             return
 
@@ -808,5 +807,42 @@ class Manager(Employee):
         return average_grade_list
 
 
-    def full_stats(self):
+    @staticmethod
+    def which_mentor_is_a_monster():
+        mentor_statistics = {}
+        mentors = []
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cards = cursor.execute("SELECT `Name`, `Surname`, `Card` "
+                               "FROM `Checkpoint_submittion` "
+                               "INNER JOIN `User` ON Checkpoint_submittion.ID_Mentor = User.ID ")
+        for row in cards:
+            print (row)
+            mentor_statistics[row[1]] = [0, 0, 0] #Cards [red,yellow,green] # row[1]- surname change for name,surname or ID_Mentor
+            mentors.append(row[1])
+        mentors = list(set(mentors))
+        print (mentors)
+        cards = cursor.execute("SELECT `Name`, `Surname`, `Card` "
+                               "FROM `Checkpoint_submittion` "
+                               "INNER JOIN `User` ON Checkpoint_submittion.ID_Mentor = User.ID ")
+        cards = cards.fetchall()
+        for mentor in mentors:
+            for row in cards:
+                print (row)
+                if row[1] == mentor:
+                    if str(row[2]) == 'red':
+                        mentor_statistics[mentor][0] += 1
+                    if str(row[2]) == 'yellow':
+                        mentor_statistics[mentor][1] += 1
+                    if str(row[2]) == 'green':
+                        mentor_statistics[mentor][2] += 1
+
+        print(mentor_statistics)
+        # average_and_amount = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
+        #                                     "FROM `Submission` INNER JOIN `User` ON `Submission`.ID_Mentor = User.ID"
+        #                                     " GROUP BY `Name`")
+        # records = records.fetchall()
+        # number_of_records = int(records[0][0])
+
+    def full_stats_for_students(self):
         pass
