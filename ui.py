@@ -75,6 +75,8 @@ class Ui:
                What would you like to do:
                (1) View my grades
                (2) Submit assignment
+               (3) Add group assignment
+               (4) Check attendance (%)
                (0) Exit CcMS
             """)
         option = input("Your choice: ")

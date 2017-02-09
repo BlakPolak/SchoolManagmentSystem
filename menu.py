@@ -21,7 +21,13 @@ class Menu:
                     ui.Ui.print_table(user_signed_in.view_my_grades(), ['Index', 'Your grade assignments',
                                                                                     'Grade'])
                 elif menu.option == "2":
+                    ui.Ui.print_table(user_signed_in.list_assignments(), ['Index', 'Assignment name', 'Assignment type',
+                                                                                    'Delivery date'])
                     user_signed_in.submit_assignment()
+                elif menu.option == "3":
+                    user_signed_in.add_group_assignment()
+                elif menu.option == "4":
+                    user_signed_in.check_my_attendance()
                 elif menu.option == "0":
                     return "exit"
         elif type(user_signed_in) == user.Employee:
@@ -92,7 +98,9 @@ class Menu:
                 elif menu.option == "8":
                     user_signed_in.grade_submission()
                 elif menu.option == "9":
+                    ui.Ui.print_table(user_signed_in.list_students(), ["Index", "Name", "Surname"])
                     user_signed_in.add_team()
+                    ui.Ui.print_table(user_signed_in.list_teams(), ["Index", "Team", "Name", "Surname"])
                 elif menu.option == "0":
                     return "exit"
             return menu
