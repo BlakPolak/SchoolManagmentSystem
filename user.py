@@ -200,10 +200,9 @@ class Student(User):
 
         """
         grades_for_view = []
-        student_id = self._id
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        cursor.execute("SELECT Grade FROM `Submission` WHERE ID_Student='{}'".format(student_id))
+        cursor.execute("SELECT Grade FROM `Submission` WHERE ID_Student='{}'".format(self._id))
         grades = cursor.fetchall()
         n = 0
         for grade in grades:
@@ -217,17 +216,23 @@ class Student(User):
         assigments_list = []
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        cursor.execute("select `Name`, `Type`, `Delivery_date` from assignment inner join submission on submission.id_student = {}".format(self._id))
+        cursor.execute("select ID_Assignment from `Submission` WHERE ID_Student='{}'".format(self._id))
+        submissions = cursor.fetchall()
+        submissions_list =[]
+        for element in submissions:
+            submissions_list.append(element[0])
+        cursor.execute("SELECT ID, Name, Type, Delivery_date FROM `Assignment`")
         assignments = cursor.fetchall()
-        n = 1
+        assignment_to_submitt =[]
         for assignment in assignments:
-            assigments_list.append([str(n) + ".", assignment[0], assignment[1], assignment[2]])
-            n += 1
+            if assignment[0] not in submissions_list:
+                assignment_to_submitt.append(list(assignment))
         data.close()
-        return assigments_list
+        return assignment_to_submitt
 
 
-    def submit_assignment(self):
+
+    def submit_assignment(self, assignment):
         """
         Method allows student to submit assignment
 
@@ -240,6 +245,13 @@ class Student(User):
         """
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
+        # assigment_for_student = []
+        # individual_assignment = cursor.execute("SELECT Name FROM `Assignment` WHERE Type='individual'")
+
+        options = ui.Ui.get_inputs([""], "Enter number to choose assignment to submit: ")
+        if int(options[0]) < 0 or int(options[0]) and len(assignment) < int(options[0]):
+            print("You have no assignment to submitt!")
+            return
         options = ui.Ui.get_inputs(["Content"], "Provide information about new assignment")
         submission_date = datetime.date.today()
         cursor.execute("INSERT INTO `Submission` (`ID_Student`,`Result`, `Submittion_date`) "
