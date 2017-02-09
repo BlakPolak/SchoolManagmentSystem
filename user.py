@@ -256,7 +256,7 @@ class Student(User):
         #     organisation.submissions_list.append(new_submission)
         # else:
         #     print("No assignments left.")
-            return
+        return
 
 
 class Mentor(Employee):
@@ -540,7 +540,7 @@ class Manager(Employee):
         records = records.fetchall()
         number_of_records = int(records[0][0])
 
-        if int(options[0]) < 0 or int(options[0]) > number_of_records:
+        if int(options[0]) < 0 or int(options[0]) > number_of_records-1:
             print("There is no such mentor number on the list")
             return
 
@@ -556,14 +556,13 @@ class Manager(Employee):
         mentors = cursor.fetchall()
         mentor_name = mentors[int(options[0]) - 1][1]
         mentor_surname = mentors[int(options[0]) - 1][2]
-        print(mentor_name, mentor_surname)
         cursor.execute("DELETE FROM `User` WHERE `Name`='{}' AND `Surname`='{}'"
                        .format(mentor_name, mentor_surname))
         data.commit()
         data.close()
         print("Mentor was erased.")
 
-    def edit_mentor(self, organisation):
+    def edit_mentor(self):
         """
         Method allows manager to edit mentor specific data
 
@@ -581,7 +580,7 @@ class Manager(Employee):
         records = records.fetchall()
         number_of_records = int(records[0][0])
 
-        if int(mentor_to_update[0]) < 1 or int(mentor_to_update[0]) > number_of_records:
+        if int(mentor_to_update[0]) < 1 or int(mentor_to_update[0]) > number_of_records-1:
             print("There is no such mentor number on the list")
             return
         options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
@@ -670,7 +669,7 @@ class Manager(Employee):
                     list of submitted assignment with grades
 
                 """
-        options = ui.Ui.get_inputs([""], "Enter the number of student to see his assessment")
+        options = ui.Ui.get_inputs([""], "Enter the number of student to see his average grade")
 
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
@@ -678,7 +677,7 @@ class Manager(Employee):
         records = records.fetchall()
         number_of_records = int(records[0][0])
 
-        if int(options[0]) < 0 or int(options[0]) > number_of_records:
+        if int(options[0]) < 1 or int(options[0]) > number_of_records-1:
             print("There is no such student on the list")
             return
 
@@ -688,14 +687,21 @@ class Manager(Employee):
         # cursor.execute("DELETE FROM `User` WHERE Name = '{}' and Surname= '{}'").format(options[0], options[1])
         # data.commit()
         # data.close()
-
+        average_grade_list = []
         cursor.execute("SELECT * FROM `User` WHERE `User_type`='student'")
         students = cursor.fetchall()
         student_id = students[int(options[0]) - 1][0]
-        cursor.execute("SELECT AVG(Grade) FROM `Submission` WHERE `ID_Student`='{}'"
+        student_name = students[int(options[0]) - 1][1]
+        student_surname = students[int(options[0]) - 1][2]
+        record = cursor.execute("SELECT AVG(Grade) FROM `Submission` WHERE `Grade` IS NOT NULL AND `ID_Student`='{}'"
                        .format(student_id))
+        record = record.fetchall()
+        average_grade = int(record[0][0])
+        average_grade_list.append([student_name, student_surname, average_grade])
         data.commit()
         data.close()
-        print("Mentor was erased.")
+        return average_grade_list
+
+
     def full_stats(self):
         pass
