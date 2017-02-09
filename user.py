@@ -282,7 +282,6 @@ class Student(User):
         data.close()
         return teams[0][0]
 
-
     def find_students_teammates(self, team):
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
@@ -292,9 +291,7 @@ class Student(User):
         for mate in teammates:
             teammates_list.append(mate[0])
         data.close()
-        print(teammates_list)
         return teammates_list
-
 
     def add_group_assignment(self, teammates, group_submission):
         data = sqlite3.connect("program.db")
@@ -325,7 +322,6 @@ class Student(User):
         percent_of_attendance = str((number_of_presence/days)*100)
         percent_of_attendance_list =[]
         percent_of_attendance_list.append(percent_of_attendance)
-        # print(percent_of_attendance_list)
         data.commit()
         data.close()
         return percent_of_attendance_list
