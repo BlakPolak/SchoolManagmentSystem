@@ -200,10 +200,9 @@ class Student(User):
 
         """
         grades_for_view = []
-        student_id = self._id
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        cursor.execute("SELECT Grade FROM `Submission` WHERE ID_Student='{}'".format(student_id))
+        cursor.execute("SELECT Grade FROM `Submission` WHERE ID_Student='{}'".format(self._id))
         grades = cursor.fetchall()
         n = 0
         for grade in grades:
@@ -213,8 +212,32 @@ class Student(User):
         data.close()
         return grades_for_view
 
+    def list_submissions(self): #to refactor - move to class submission as class method
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("select ID_Assignment from `Submission` WHERE ID_Student='{}'".format(self._id))
+        submissions = cursor.fetchall()
+        submissions_list = []
+        for element in submissions:
+            submissions_list.append(element[0])
+        data.close()
+        return submissions_list
 
-    def submit_assignment(self):
+    def list_assignments_to_submit(self): #to refactor - move to class submission as class method
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT ID, Name, Type, Delivery_date FROM `Assignment`")
+        assignments = cursor.fetchall()
+        assignments_to_submit = []
+        for assignment in assignments:
+            if assignment[0] not in self.list_submissions():
+                assignments_to_submit.append(list(assignment))
+        data.close()
+        return assignments_to_submit
+
+
+
+    def submit_assignment(self, assignment):
         """
         Method allows student to submit assignment
 
@@ -225,57 +248,89 @@ class Student(User):
             list of submitted assignment
 
         """
-        options = ui.Ui.get_inputs(["Content"], "Provide information about new assignment")
-        delivery_date = datetime.datetime.now()
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        cursor.execute("INSERT INTO `Assignment` (`Content`, `Delivery_date`) "
-                       "VALUES ('{}', '{}')".format(options[0], delivery_date))
-        submission = cursor.fetchall()
+        if len(assignment) <= 1:
+            print("You have no assignment to submitt!")
+            return
+        assignment_id = ui.Ui.get_inputs([""], "Enter number to choose assignment to submit: ")
+        # TODO: validate index from user input
+        result = ui.Ui.get_inputs(["Content"], "Provide information about new assignment")
+        submission_date = datetime.date.today()
+        cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
+                       "VALUES ('{}', '{}', '{}', '{}')".format(self._id, assignment_id[0], result[0], submission_date))
         data.commit()
         data.close()
-        return submission
 
-        # final_list = [assignment for assignment in organisation.assignments_list if assignment not in submission_list_done]
-        # if final_list:
-        #     table_to_print = []
-        #     id_ = 1
-        #     for assignment in final_list:
-        #         table_to_print.append([str(id_), assignment.name, assignment.max_points,
-        #                                assignment.delivery_date, assignment.content])
-        #         id_ += 1
-        #     ui.Ui.print_table(table_to_print, ["ID", "Assignment name", "Assignment max points",
-        #                                        "delivery date", "Content"])
-        #     options = ui.Ui.get_inputs(["->"], "")
-        #     if options[0] == "0":
-        #         return
-        #     picked_assignment = final_list[int(options[0]) - 1]
-        #     new_submission = submission.Submission(picked_assignment, self)
-        #     new_submission.provide_result()
-        #     organisation.submissions_list.append(new_submission)
-        # else:
-        #     print("No assignments left.")
-        #     return
+    def list_group_assignment(self):
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT ID, Name, Type, Delivery_date FROM `Assignment` WHERE Type='group'")
+        group_assignments = cursor.fetchall()
+        group_assignments_list = []
+        for assignment in group_assignments:
+            group_assignments_list.append([assignment[0], assignment[1], assignment[2], assignment[3]])
+        data.commit()
+        data.close()
+        return group_assignments_list
 
-    def add_group_assignment(self):
+    def find_student_team(self):
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT team_name FROM `Teams` WHERE ID_Student='{}'".format(self._id))
+        teams = cursor.fetchall()
+        data.close()
+        return teams[0][0]
 
 
-        pass
+    def find_students_teammates(self, team):
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT Id_Student FROM `Teams` WHERE Team_name='{}'".format(team))
+        teammates = cursor.fetchall()
+        teammates_list = []
+        for mate in teammates:
+            teammates_list.append(mate[0])
+        data.close()
+        print(teammates_list)
+        return teammates_list
+
+
+    def add_group_assignment(self, teammates, group_submission):
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        if len(group_submission) <= 1:
+            print("You have no assignment to submitt!")
+            return
+        assignment_id = ui.Ui.get_inputs([""], "Enter number to choose assignment to submit: ")
+        # TODO: validate index from user input
+        result = ui.Ui.get_inputs(["Content"], "Provide information about new assignment")
+        submission_date = datetime.date.today()
+        for row in teammates:
+            cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
+                           "VALUES ('{}', '{}', '{}', '{}')".format(row, assignment_id[0], result[0], submission_date))
+        data.commit()
+        data.close()
 
     def check_my_attendance(self):
-        attendance_list = []
         student_id = self._id
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        cursor.execute("SELECT Presence FROM `Attendance` WHERE ID_Student='{}'".format(student_id))
+        cursor.execute("SELECT COUNT(Presence) FROM `Attendance` WHERE ID_Student='{}' AND `Presence`= NULL".format(student_id))
         presence = cursor.fetchall()
-        n = 0
-        for attendance in presence:
-            attendance_list.append(attendance)
-            n += 1
+        number_of_presence = float(presence[0][0])
+        cursor.execute("SELECT COUNT(Presence) FROM `Attendance`")
+        number_of_days = cursor.fetchall()
+        days = float(number_of_days[0][0])
+        percent_of_attendance = str((number_of_presence/days)*100)
+        percent_of_attendance_list =[]
+        percent_of_attendance_list.append(percent_of_attendance)
+        # print(percent_of_attendance_list)
         data.commit()
         data.close()
-        return attendance_list
+        return percent_of_attendance_list
+
+
 
 
 class Mentor(Employee):
