@@ -274,22 +274,43 @@ class Student(User):
         data.close()
         return group_assignments_list
 
-
-    def add_group_assignment(self, group_assignment):
+    def find_student_team(self):
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        if len(group_assignment) <= 1:
+        cursor.execute("SELECT team_name FROM `Teams` WHERE ID_Student='{}'".format(self._id))
+        teams = cursor.fetchall()
+        data.close()
+        return teams[0][0]
+
+
+    def find_students_teammates(self, team):
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT Id_Student FROM `Teams` WHERE Team_name='{}'".format(team))
+        teammates = cursor.fetchall()
+        teammates_list = []
+        for mate in teammates:
+            teammates_list.append(mate[0])
+        data.close()
+        print(teammates_list)
+        return teammates_list
+
+
+    def add_group_assignment(self, teammates, group_submission):
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        if len(group_submission) <= 1:
             print("You have no assignment to submitt!")
             return
         assignment_id = ui.Ui.get_inputs([""], "Enter number to choose assignment to submit: ")
         # TODO: validate index from user input
         result = ui.Ui.get_inputs(["Content"], "Provide information about new assignment")
         submission_date = datetime.date.today()
-        cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
-                       "VALUES ('{}', '{}', '{}', '{}')".format(self._id, assignment_id[0], result[0], submission_date))
+        for row in teammates:
+            cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
+                           "VALUES ('{}', '{}', '{}', '{}')".format(row, assignment_id[0], result[0], submission_date))
         data.commit()
         data.close()
-        pass
 
     def check_my_attendance(self):
         student_id = self._id
