@@ -21,9 +21,13 @@ class Menu:
                     ui.Ui.print_table(user_signed_in.view_my_grades(), ['Index', 'Your grade assignments',
                                                                                     'Grade'])
                 elif menu.option == "2":
-                    ui.Ui.print_table(user_signed_in.list_assignments(), ['Index', 'Assigment name', 'Assignment type',
+                    ui.Ui.print_table(user_signed_in.list_assignments(), ['Index', 'Assignment name', 'Assignment type',
                                                                                     'Delivery date'])
                     user_signed_in.submit_assignment()
+                elif menu.option == "3":
+                    user_signed_in.add_group_assignment()
+                elif menu.option == "4":
+                    user_signed_in.check_my_attendance()
                 elif menu.option == "0":
                     return "exit"
         elif type(user_signed_in) == user.Employee:
