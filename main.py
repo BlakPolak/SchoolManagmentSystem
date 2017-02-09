@@ -13,8 +13,8 @@ def main():
             user_menu = menu.Menu.create_menu(user_signed_in)
             if user_menu == "exit":
                 print("Logout successfully.")
-                user_signed_in = None
-                continue
+                user_signed_in = True
+
         else:
             print("Wrong login input. Please try again.")
 

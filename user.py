@@ -191,6 +191,7 @@ class Student(User):
     def view_my_grades(self):
         """
         Method display list of submitted assignment with grades
+        
 
         Return:
             list of submitted assignment with grades
