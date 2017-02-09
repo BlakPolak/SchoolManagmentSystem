@@ -256,7 +256,7 @@ class Student(User):
         #     organisation.submissions_list.append(new_submission)
         # else:
         #     print("No assignments left.")
-            return
+        return
 
 
 class Mentor(Employee):
@@ -398,7 +398,7 @@ class Mentor(Employee):
         data.close()
         print("Update completed")
 
-    def grade_submission(self, organisation):
+    def grade_submission(self):
         """
         Method allows mentor grade students submitted assignment
 
@@ -467,8 +467,43 @@ class Mentor(Employee):
         print("Assignment was added.")
 
 
+    def list_teams(self):
+        team_list = []
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT team_name, name, surname FROM teams "
+                       "INNER JOIN user ON teams.id_student=user.id ORDER BY team_name")
+        teams = cursor.fetchall()
+        n = 1
+        for team in teams:
+            team_list.append([str(n) + ".", team[0], team[1], team[2]])
+            n += 1
+        data.close()
+        return team_list
+
+
     def add_team(self):
-        pass
+        choosed_student_and_team = ui.Ui.get_inputs(["Enter number to add student to team: ", "Team name for student: "], "")
+        if int(choosed_student_and_team[0]) < 0 or int(choosed_student_and_team[0]) > len(self.list_students()):
+            print("There is no such student number on the list")
+            return
+
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT * FROM `user` WHERE `user_type`='student'")
+        students = cursor.fetchall()
+        student_to_add_id = students[int(choosed_student_and_team[0]) - 1][0] #id student to add to team
+        cursor.execute("SELECT * FROM teams WHERE ID_Student='{}'".format(student_to_add_id)) # check if student already is in team
+        team_row = cursor.fetchone()
+        if team_row:
+            cursor.execute("DELETE FROM teams WHERE ID_Student='{}'"
+                           .format(student_to_add_id))
+
+        cursor.execute("INSERT INTO teams (ID_Student, Team_name) VALUES ('{}', '{}')"
+                           .format(student_to_add_id, choosed_student_and_team[1]))
+        data.commit()
+        data.close()
+        print("Team updated.")
 
 
 class Manager(Employee):
