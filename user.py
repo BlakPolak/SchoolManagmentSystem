@@ -652,8 +652,6 @@ class Manager(Employee):
         """
         Method allows manager to add mentor to mentors list
 
-        Args:
-            organisation
         Return:
              None
         """
@@ -686,8 +684,6 @@ class Manager(Employee):
         """
         Method allows manager to remove mentor from mentors list
 
-        Args:
-            organisation
         Return:
              None
         """
@@ -704,13 +700,6 @@ class Manager(Employee):
             return
 
 
-        #     mydata = c.execute('DELETE FROM Zoznam WHERE Name=?', (data3,))
-        # data = sqlite3.connect("program.db")
-        # cursor = data.cursor()
-        # cursor.execute("DELETE FROM `User` WHERE Name = '{}' and Surname= '{}'").format(options[0], options[1])
-        # data.commit()
-        # data.close()
-
         cursor.execute("SELECT * FROM `User` WHERE `User_type`='mentor'")
         mentors = cursor.fetchall()
         mentor_name = mentors[int(options[0]) - 1][1]
@@ -726,8 +715,6 @@ class Manager(Employee):
         """
         Method allows manager to edit mentor specific data
 
-        Args:
-            organisation
         Return:
              None
         """
@@ -775,10 +762,8 @@ class Manager(Employee):
         """
         Method allows manager to list all mentor from list
 
-        Args:
-            organisation
         Return:
-             None
+             mentor_list
         """
         mentor_list = []
         data = sqlite3.connect("program.db")
@@ -797,9 +782,6 @@ class Manager(Employee):
     def view_mentors_details():
         """
         Returns mentors details list to display
-
-        Args:
-            organisation
 
         Returns:
 
@@ -822,13 +804,13 @@ class Manager(Employee):
     @staticmethod
     def average_grade_for_student():
         """
-                Method display list of grades for choosen student
+        Method display average grade for choosen student
 
 
-                Return:
-                    average grade for student
+        Return:
+            average grade for student
 
-                """
+        """
         options = ui.Ui.get_inputs([""], "Enter the number of student to see his average grade")
 
         data = sqlite3.connect("program.db")
@@ -859,7 +841,14 @@ class Manager(Employee):
 
     @staticmethod
     def which_mentor_is_a_monster():
+        """
+        Method display checkpoint cards statistics of mentors
 
+
+        Return:
+           list with card statistics
+
+       """
         list_to_print = []
         cards_statistics = {}
         mentors = []
@@ -892,7 +881,14 @@ class Manager(Employee):
 
     @staticmethod
     def grades_stats_for_mentors():
+        """
+         Method display how many assignment mentor graded and what is his average grade
 
+
+         Return:
+            list with grade statistics
+
+        """
         grades_statistics = []
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
