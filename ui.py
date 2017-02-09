@@ -61,6 +61,7 @@ class Ui:
                (7) Add assignment
                (8) Grade assignment
                (9) Add team
+               (10) Add checkpoint submission
                (0) Exit CcMS
             """)
         option = input("Your choice: ")
@@ -122,7 +123,8 @@ class Ui:
         for row_index, row in enumerate(table):
             for col_index, col in enumerate(row):
                 if (type(col) == float) or (type(col) == int):
-                    table[row_index][col_index] = str("{0:,.2f}".format(col))
+                    table[row_index][col_index] = str(col)
+                    #table[row_index][col_index] = str("{0:,.2f}".format(col))
         widths = [max(map(len, col)) for col in zip(*table)]
         sum_of_widths = sum(widths) + len(table[0]) * 3 - 1 # len(table[0]) - number of |
         for row in table:

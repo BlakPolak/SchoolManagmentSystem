@@ -88,11 +88,21 @@ class Menu:
                 elif menu.option == "7":
                     user_signed_in.add_assignment()
                 elif menu.option == "8":
-                    user_signed_in.grade_submission()
+                    print_submissions = user_signed_in.show_submissions_to_grade()
+                    if print_submissions is not None:
+                        ui.Ui.print_table(print_submissions,
+                                          ["Index", "Assignment", "Delivery date", "Student name", "Student surname", "Submition date"])
+                        user_signed_in.grade_submission()
+
                 elif menu.option == "9":
                     ui.Ui.print_table(user_signed_in.list_students(), ["Index", "Name", "Surname"])
                     user_signed_in.add_team()
                     ui.Ui.print_table(user_signed_in.list_teams(), ["Index", "Team", "Name", "Surname"])
+                elif menu.option == "10":
+                    ui.Ui.print_table(user_signed_in.list_checkpoint_assignments(), ["Index", "Name", "Assignments"])
+                    checkpoint_assignment_id = user_signed_in.get_checkpoint_id()
+                    ui.Ui.print_table(user_signed_in.list_students(), ["Index", "Name", "Surname"])
+                    user_signed_in.add_checkpoint_submission(checkpoint_assignment_id)
                 elif menu.option == "0":
                     return "exit"
             return menu
