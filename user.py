@@ -287,9 +287,9 @@ class Student(User):
             print("You have no assignment to submitt!")
             return
         assignment_id = ui.Ui.get_inputs([""], "Enter number to choose assignment to submit: ")
-        if assignment_id not in assignment or assignment_id <= 0:
-            print("Try again with right index!")
-            return
+        # if assignment_id not in assignment or assignment_id <= 0:
+        #     print("Try again with right index!")
+        #     return
         result = ui.Ui.get_inputs(["Content"], "Provide information about new assignment")
         submission_date = datetime.date.today()
         cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
@@ -387,7 +387,8 @@ class Student(User):
         student_id = self._id
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        cursor.execute("SELECT COUNT(Presence) FROM `Attendance` WHERE ID_Student='{}' AND `Presence`= NULL".format(student_id))
+        cursor.execute("SELECT COUNT(Presence) FROM `Attendance` WHERE ID_Student='{}'"
+                       "AND `Presence`= 0".format(student_id))
         presence = cursor.fetchall()
         number_of_presence = float(presence[0][0])
         cursor.execute("SELECT COUNT(Presence) FROM `Attendance`")
@@ -397,9 +398,10 @@ class Student(User):
             print("No attendance!")
             return
         # TODO: new validation implementation...
-        percent_of_attendance = str((number_of_presence/days)*100)
+        # percent_of_attendance = str(int((number_of_presence/days)*100))
+        percent_of_attendance = (number_of_presence / days) * 100
         percent_of_attendance_list =[]
-        percent_of_attendance_list.append(percent_of_attendance)
+        percent_of_attendance_list.append([percent_of_attendance])
         data.commit()
         data.close()
         return percent_of_attendance_list
