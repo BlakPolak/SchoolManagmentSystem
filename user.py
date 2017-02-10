@@ -351,9 +351,6 @@ class Student(User):
             print("You have no assignment to submitt!")
             return
         assignment_id = ui.Ui.get_inputs([""], "Enter number to choose assignment to submit: ")
-        if assignment_id not in group_submission or assignment_id <= 0:
-            print("Try again with right index!")
-            return
         result = ui.Ui.get_inputs(["Content"], "Provide information about new assignment")
         submission_date = datetime.date.today()
         for row in teammates:
@@ -660,7 +657,11 @@ class Mentor(Employee):
         assignments = cursor.fetchall()
         n = 1
         for assignment in assignments:
-            checkpoint_assignments_list.append([str(n) + ".", assignment[1], assignment[2]])
+            if assignment[2] == None:
+                checkpoint_assignments_list.append([str(n) + ".", assignment[1], ''])
+
+            else:
+                checkpoint_assignments_list.append([str(n) + ".", assignment[1], assignment[2]])
             n += 1
         data.close()
         return checkpoint_assignments_list
