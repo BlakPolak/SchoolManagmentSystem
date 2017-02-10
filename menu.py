@@ -21,7 +21,19 @@ class Menu:
                     ui.Ui.print_table(user_signed_in.view_my_grades(), ['Index', 'Your grade assignments',
                                                                                     'Grade'])
                 elif menu.option == "2":
-                    user_signed_in.submit_assignment()
+                    assignment = user_signed_in.list_assignments_to_submit()
+                    ui.Ui.print_table(assignment, ['Index', 'Assignment name', 'Assignment type',
+                                                                                    'Delivery date'])
+                    user_signed_in.submit_assignment(assignment)
+                elif menu.option == "3":
+                    team = user_signed_in.find_student_team()
+                    teammates = user_signed_in.find_students_teammates(team)
+                    group_submission = user_signed_in.list_group_assignment()
+                    ui.Ui.print_table(group_submission, ['Index', 'Assignment name', 'Assignment type',
+                                                                                    'Delivery date'])
+                    user_signed_in.add_group_assignment(teammates, group_submission)
+                elif menu.option == "4":
+                    ui.Ui.print_table(user_signed_in.check_my_attendance(), ['Attendance in %'])
                 elif menu.option == "0":
                     return "exit"
         elif type(user_signed_in) == user.Employee:
@@ -62,7 +74,23 @@ class Menu:
                     user_signed_in.edit_mentor()
                 elif menu.option == "8":
                     ui.Ui.print_table(user_signed_in.list_students(), ["Index", "Name", "Surname"])
-                    user_signed_in.average_grade_for_student()
+                    signed_user = user_signed_in.average_grade_for_student()
+                    if signed_user:
+                        ui.Ui.print_table(signed_user, ["Name", "Surname", "Average grade"])
+                elif menu.option == "9": #card stats for mentor
+                    signed_user = user_signed_in.which_mentor_is_a_monster()
+                    if signed_user:
+                        ui.Ui.print_table(signed_user, ["Name and Surname", "Red cards", "Yellow cards", "Green cards"])
+                elif menu.option == "10": #card stats for mentor
+                    signed_user = user_signed_in.grades_stats_for_mentors()
+                    if signed_user:
+                        ui.Ui.print_table(signed_user, ["Name", "Surname", "Number of graded assignments",
+                                                        "Average rating of mentor"])
+                elif menu.option == "11": #full stats for student
+                    ui.Ui.print_table(user_signed_in.list_students(), ["Index", "Name", "Surname"])
+                    signed_user = user_signed_in.full_stats_for_students()
+                    # if signed_user:
+                    #     ui.Ui.print_table(signed_user, ["Name", "Surname", "Average grade"])
                 elif menu.option == "0":
                     return "exit"
         elif type(user_signed_in) == user.Mentor:

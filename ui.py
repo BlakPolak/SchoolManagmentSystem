@@ -41,6 +41,10 @@ class Ui:
                (5) Add mentor
                (6) Remove mentor
                (7) Edit mentors data
+               (8) Show student average grade
+               (9) Show mentors checkpoint cards statistics
+               (10) Show mentors grades statistics
+               (11) Show student stats
                (0) Exit CcMS
             """)
         option = input("Your choice: ")
@@ -77,6 +81,8 @@ class Ui:
                What would you like to do:
                (1) View my grades
                (2) Submit assignment
+               (3) Add group assignment
+               (4) Check attendance (%)
                (0) Exit CcMS
             """)
         option = input("Your choice: ")
