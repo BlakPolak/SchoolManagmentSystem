@@ -1051,14 +1051,17 @@ class Manager(Employee):
         grades = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
                                             "FROM `Submission` INNER JOIN `User` ON `Submission`.ID_Mentor = User.ID"
                                             " GROUP BY `Name`")
+        list_to_print = []
         grades = grades.fetchall()
         for row in grades:
             grades_statistics.append(row)
-
-        return grades_statistics
+        for row in grades_statistics:
+            list_to_print.append([row[0], row[1], row[2], row[3]])
+        return list_to_print
 
     @staticmethod
     def full_stats_for_students():
+
         student_stats = []
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
@@ -1068,3 +1071,33 @@ class Manager(Employee):
         grades = grades.fetchall()
         for row in grades:
             student_stats.append(row)
+        list_to_print = []
+        for row in student_stats:
+            list_to_print.append([row[0], row[1], row[2], row[3]])
+        return list_to_print
+
+        # # TODO: return list with percent of attendance for every student...
+        # presence = cursor.execute("SELECT  `Name`, `Surname`, COUNT(CASE WHEN Presence = 1 THEN 1 ELSE NULL END)"
+        #                           " FROM `Attendance` "
+        #                           "INNER JOIN `User` ON Attendance.ID_Student = User.ID "
+        #                           "GROUP BY `Name`")
+        # presence = presence.fetchall()
+        #
+        # percent_of_attendance = []
+        #
+        # for row in presence:
+        #     percent_of_attendance.append(row)
+        # print (percent_of_attendance)
+        #
+        # number_of_all_day = cursor.execute("SELECT  `Name`, `Surname`, COUNT(Presence)"
+        #                                     " FROM `Attendance` "
+        #                                     "INNER JOIN `User` ON Attendance.ID_Student = User.ID "
+        #                                     "GROUP BY `Name`")
+        #
+        # number_of_all_day = number_of_all_day.fetchall()
+        # for number in number_of_all_day:
+        #     for index, element in enumerate(percent_of_attendance):
+        #         if number[0] == element[0] and number[1] == element[1]:
+        #             percent_of_attendance[index][2] = str((element[0][2]/int(number[2])) * 100)
+        #
+        # print (percent_of_attendance)

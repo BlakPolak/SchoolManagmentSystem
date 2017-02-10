@@ -89,8 +89,9 @@ class Menu:
                 elif menu.option == "11": #full stats for student
                     ui.Ui.print_table(user_signed_in.list_students(), ["Index", "Name", "Surname"])
                     signed_user = user_signed_in.full_stats_for_students()
-                    # if signed_user:
-                    #     ui.Ui.print_table(signed_user, ["Name", "Surname", "Average grade"])
+                    if signed_user:
+                        ui.Ui.print_table(signed_user, ["Name", "Surname", "Amount of graded assignments",
+                                                        "Average Grade"])
                 elif menu.option == "0":
                     return "exit"
         elif type(user_signed_in) == user.Mentor:
