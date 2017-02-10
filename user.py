@@ -1,11 +1,8 @@
 import ui
-import sqlite3
-import data
 import assignment
 import submission
 import datetime
 import attendance
-import data
 import sqlite3
 
 
@@ -124,11 +121,7 @@ class Employee(User):
         """
         Return student list to display
 
-            Args:
-                organisation
-
-            Returns:
-
+        Returns:
                 student list
         """
         student_list = []
@@ -148,11 +141,7 @@ class Employee(User):
         """
         Return student list to display
 
-            Args:
-                organisation
-
-            Returns:
-
+        Returns:
                 student list
         """
         student_list = []
@@ -168,9 +157,6 @@ class Employee(User):
     def view_student_details(self):
         """
         Returns students details list to display
-
-            Args:
-                organisation
 
             Returns:
 
@@ -287,9 +273,9 @@ class Student(User):
             print("You have no assignment to submitt!")
             return
         assignment_id = ui.Ui.get_inputs([""], "Enter number to choose assignment to submit: ")
-        if assignment_id not in assignment or assignment_id <= 0:
-            print("Try again with right index!")
-            return
+        # if assignment_id not in assignment or assignment_id <= 0:
+        #     print("Try again with right index!")
+        #     return
         result = ui.Ui.get_inputs(["Content"], "Provide information about new assignment")
         submission_date = datetime.date.today()
         cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
@@ -387,7 +373,8 @@ class Student(User):
         student_id = self._id
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        cursor.execute("SELECT COUNT(Presence) FROM `Attendance` WHERE ID_Student='{}' AND `Presence`= NULL".format(student_id))
+        cursor.execute("SELECT COUNT(Presence) FROM `Attendance` WHERE ID_Student='{}'"
+                       "AND `Presence`= 0".format(student_id))
         presence = cursor.fetchall()
         number_of_presence = float(presence[0][0])
         cursor.execute("SELECT COUNT(Presence) FROM `Attendance`")
@@ -396,15 +383,13 @@ class Student(User):
         if days == 0:
             print("No attendance!")
             return
-        # TODO: new validation implementation...
-        percent_of_attendance = str((number_of_presence/days)*100)
+        # TODO: new validation
+        percent_of_attendance = (number_of_presence / days) * 100
         percent_of_attendance_list =[]
-        percent_of_attendance_list.append(percent_of_attendance)
+        percent_of_attendance_list.append([percent_of_attendance])
         data.commit()
         data.close()
         return percent_of_attendance_list
-
-
 
 
 class Mentor(Employee):
@@ -431,7 +416,7 @@ class Mentor(Employee):
         Method allows mentor to add student to students list
 
         Args:
-            organisation
+            None
         Return:
              None
         """
@@ -462,7 +447,7 @@ class Mentor(Employee):
         Method allows mentor check students attendance
 
         Args:
-            organisation
+            None
         Return:
              None
         """
@@ -491,7 +476,7 @@ class Mentor(Employee):
         Method allows mentor remove students from students list
 
         Args:
-            organisation
+            None
         Return:
              None
         """
@@ -520,7 +505,7 @@ class Mentor(Employee):
         Method allows mentor edit students specific data
 
         Args:
-            organisation
+            None
         Return:
              None
         """
@@ -555,12 +540,12 @@ class Mentor(Employee):
 
     def show_submissions_to_grade(self):
         """
-        Method allows mentor grade students submitted assignment
+        Method allows mentor show submissions to grade
 
         Args:
-            organisation
+            None
         Return:
-             None
+             List of lists with submissions to grade
         """
         return_list = []
         data = sqlite3.connect("program.db")
@@ -581,6 +566,14 @@ class Mentor(Employee):
         return return_list
 
     def grade_submission(self):
+        """
+        Method allows mentor grade students submitted assignment
+
+        Args:
+            None
+        Return:
+             None
+        """
         id_assignment_to_grade = ui.Ui.get_inputs([""], "Choose assignment to grade")
         grade = ui.Ui.get_inputs([""], "Enter grade for assignment")
         data = sqlite3.connect("program.db")
@@ -592,10 +585,10 @@ class Mentor(Employee):
 
     def add_assignment(self):
         """
-        Method allows mentor add new assignment to assignment list
+        Method allows mentor add new assignment
 
         Args:
-            organisation
+            None
         Return:
              None
         """
@@ -613,6 +606,14 @@ class Mentor(Employee):
         print("Assignment was added.")
 
     def list_teams(self):
+        """
+        Method allows mentor to list teams
+
+        Args:
+            None
+        Return:
+             None
+        """
         team_list = []
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
@@ -642,33 +643,16 @@ class Mentor(Employee):
         data.close()
         print("Team updated.")
 
-    def list_students_with_card(self):
-        """
-        Return student list to display
-
-            Args:
-                organisation
-
-            Returns:
-
-                student list
-        """
-        student_list = []
-        data = sqlite3.connect("program.db")
-        cursor = data.cursor()
-        cursor.execute("SELECT user.name, user.surname, Checkpoint_submittion.Card, Checkpoint_assignment.Name"
-                       " FROM User "
-                       "INNER JOIN Checkpoint_submittion INNER JOIN Checkpoint_assignment "
-                       "ON user.User_type='student'")
-        students = cursor.fetchall()
-        n = 1
-        for student in students:
-            student_list.append([str(n) + ".", student[0], student[1], student[2], student[3]])
-            n += 1
-        data.close()
-        return student_list
 
     def list_checkpoint_assignments(self):
+        """
+        Method allows mentor to list checkpoint assignments
+
+        Args:
+            None
+        Return:
+             None
+        """
         checkpoint_assignments_list = []
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
@@ -682,6 +666,14 @@ class Mentor(Employee):
         return checkpoint_assignments_list
 
     def get_checkpoint_id(self):
+        """
+        Returns id of checkpoint
+
+        Args:
+            None
+        Return:
+             id of checkpoint
+        """
         choosed_checkpoint = ui.Ui.get_inputs([""], "Choose checkpoint to grade student")
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
@@ -691,28 +683,15 @@ class Mentor(Employee):
         data.close()
         return checkpoint_id
 
-    def list_students_with_checkpoint_result(self):
-        """
-        Return student list to display
-
-            Args:
-                organisation
-
-            Returns:
-
-                student list
-        """
-        student_list = []
-        data = sqlite3.connect("program.db")
-        cursor = data.cursor()
-        cursor.execute("SELECT user.ID, user.name, user.Surname FROM User WHERE user_type='student'")
-        students = cursor.fetchall()
-        for student in students:
-            student_list.append([student[0], student[1], student[2], student[3]])
-        data.close()
-        return student_list
-
     def add_checkpoint_submission(self, checkpoint_assignment_id):
+        """
+        Method allows mentor to add cards to particular student
+
+        Args:
+            checkpoint_assignment_id: id of particular assignment
+        Return:
+             None
+        """
         choosed_student = ui.Ui.get_inputs([""], "Choose student to add checkpoint results")
         student_to_add_id = int(choosed_student[0])
         data = sqlite3.connect("program.db")
@@ -735,6 +714,14 @@ class Mentor(Employee):
         data.close()
 
     def check_student_performance(self):
+        """
+        Method allows mentor to check performance of particular student by showing hes statistics
+
+        Args:
+            None
+        Return:
+             None
+        """
         return_list = []
         choosed_student = ui.Ui.get_inputs([""], "Choose student to check hes performance")
         student_to_check_id = int(choosed_student[0])
@@ -765,7 +752,10 @@ class Mentor(Employee):
         for item in _data:
             grades_quantity += 1
             grades_sum += item[0]
-        grades_avg = round(grades_sum/grades_quantity, 2)
+        if grades_quantity:
+            grades_avg = round(grades_sum/grades_quantity, 2)
+        else:
+            grades_avg = 0
 
         cursor.execute("SELECT Card FROM Checkpoint_submittion where id_student={} AND date BETWEEN '{}' AND '{}'"
                        .format(student_to_check_id, period[0], period[1]))
