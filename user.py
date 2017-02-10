@@ -1,11 +1,8 @@
 import ui
-import sqlite3
-import data
 import assignment
 import submission
 import datetime
 import attendance
-import data
 import sqlite3
 
 
@@ -124,11 +121,7 @@ class Employee(User):
         """
         Return student list to display
 
-            Args:
-                organisation
-
-            Returns:
-
+        Returns:
                 student list
         """
         student_list = []
@@ -148,11 +141,7 @@ class Employee(User):
         """
         Return student list to display
 
-            Args:
-                organisation
-
-            Returns:
-
+        Returns:
                 student list
         """
         student_list = []
@@ -168,9 +157,6 @@ class Employee(User):
     def view_student_details(self):
         """
         Returns students details list to display
-
-            Args:
-                organisation
 
             Returns:
 
@@ -397,16 +383,13 @@ class Student(User):
         if days == 0:
             print("No attendance!")
             return
-        # TODO: new validation implementation...
-        # percent_of_attendance = str(int((number_of_presence/days)*100))
+        # TODO: new validation
         percent_of_attendance = (number_of_presence / days) * 100
         percent_of_attendance_list =[]
         percent_of_attendance_list.append([percent_of_attendance])
         data.commit()
         data.close()
         return percent_of_attendance_list
-
-
 
 
 class Mentor(Employee):
