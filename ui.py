@@ -59,10 +59,11 @@ class Ui:
                (5) Remove student
                (6) Edit students data
                (7) Add assignment
-               (8) Grade assignment
-               (9) Add team
-               (10) Add checkpoint submission
-               (11) Check student performance
+               (8) Grade submission
+               (9) List teams
+               (10) Add student to team
+               (11) Add checkpoint submission
+               (12) Check student performance
                (0) Exit CcMS
             """)
         option = input("Your choice: ")

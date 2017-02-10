@@ -404,8 +404,6 @@ class Mentor(Employee):
         """
         self.list_students()
         choosed_student = ui.Ui.get_inputs([""], "Enter number to edit student's data")
-        if choosed_student[0] == "0" or int(choosed_student[0]) > len(self.list_students()):
-            return
         options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
                                     "Password"], "Edit information about student")
         if options[0].isalpha() and options[1].isalpha() and options[2] in ['male', 'female', 'not sure']:
@@ -450,7 +448,7 @@ class Mentor(Employee):
 "FROM Submission "
 "INNER JOIN Assignment ON Assignment.ID=Submission.ID "
 "INNER JOIN User ON user.ID=Submission.ID_Student "
-"WHERE Submission.Grade IS NULL").fetchall()
+"WHERE Submission.Grade IS NULL OR Submission.Grade=''").fetchall()
         if len(submissions_not_graded) == 0:
             print("No submissions to grade")
             return None
@@ -481,14 +479,6 @@ class Mentor(Employee):
         """
         options = ui.Ui.get_inputs(["Name", "Type", "Max. points to receive", "Delivery date", "Content"],
                                     "Provide information about new assignment")
-        # if options[0].isalpha() and options[1].isdigit():
-        #     if options[2].isalpha():
-        #         print('\nData format: YYYY-MM-DD\n')
-        #         return
-        # else:
-        #     print('\nWrong input!\nName: only letters\nMax Points: only numbers\nData should have format: YYYY-MM-DD\n')
-        #     return
-
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
         cursor.execute(
@@ -500,33 +490,24 @@ class Mentor(Employee):
         data.close()
         print("Assignment was added.")
 
-
     def list_teams(self):
         team_list = []
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        cursor.execute("SELECT team_name, name, surname FROM teams "
+        cursor.execute("SELECT user.id, team_name, name, surname FROM teams "
                        "INNER JOIN user ON teams.id_student=user.id ORDER BY team_name")
         teams = cursor.fetchall()
-        n = 1
         for team in teams:
-            team_list.append([str(n) + ".", team[0], team[1], team[2]])
-            n += 1
+            team_list.append([team[0], team[1], team[2], team[3]])
         data.close()
         return team_list
 
-
     def add_team(self):
         choosed_student_and_team = ui.Ui.get_inputs(["Enter number to add student to team: ", "Team name for student: "], "")
-        if int(choosed_student_and_team[0]) < 0 or int(choosed_student_and_team[0]) > len(self.list_students()):
-            print("There is no such student number on the list")
-            return
-
+        student_to_add_id = int(choosed_student_and_team[0]) # id student to add to team
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        cursor.execute("SELECT * FROM `user` WHERE `user_type`='student'")
-        students = cursor.fetchall()
-        student_to_add_id = students[int(choosed_student_and_team[0]) - 1][0] #id student to add to team
+
         cursor.execute("SELECT * FROM teams WHERE ID_Student='{}'".format(student_to_add_id)) # check if student already is in team
         team_row = cursor.fetchone()
         if team_row:
@@ -588,18 +569,32 @@ class Mentor(Employee):
         data.close()
         return checkpoint_id
 
-    def add_checkpoint_submission(self, checkpoint_assignment_id):
-        choosed_student = ui.Ui.get_inputs(
-            [""], "Choose student to add checkpoint results")
-        if int(choosed_student[0]) < 0 or int(choosed_student[0]) > len(self.list_students()):
-            print("There is no such student number on the list")
-            return
+    def list_students_with_checkpoint_result(self):
+        """
+        Return student list to display
+
+            Args:
+                organisation
+
+            Returns:
+
+                student list
+        """
+        student_list = []
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        cursor.execute("SELECT * FROM `user` WHERE `user_type`='student'")
+        cursor.execute("SELECT user.ID, user.name, user.Surname FROM User WHERE user_type='student'")
         students = cursor.fetchall()
-        student_to_add_id = students[int(choosed_student[0]) - 1][0]  # id student choosed
+        for student in students:
+            student_list.append([student[0], student[1], student[2], student[3]])
+        data.close()
+        return student_list
 
+    def add_checkpoint_submission(self, checkpoint_assignment_id):
+        choosed_student = ui.Ui.get_inputs([""], "Choose student to add checkpoint results")
+        student_to_add_id = int(choosed_student[0])
+        data = sqlite3.connect("program.db")
+        cursor = data.cursor()
         card = ui.Ui.get_inputs([""], "Choose card to add (Enter to not assign)")
 
         cursor.execute("SELECT * FROM Checkpoint_submittion "
@@ -620,12 +615,8 @@ class Mentor(Employee):
     def check_student_performance(self):
         return_list = []
         choosed_student = ui.Ui.get_inputs([""], "Choose student to check hes performance")
-        if int(choosed_student[0]) < 0 or int(choosed_student[0]) > len(self.list_students()):
-            print("There is no such student number on the list")
-            return None
         student_to_check_id = int(choosed_student[0])
         period = ui.Ui.get_inputs(["Date from", "Date to"], "Enter dates for performance check")
-        #datetime.strptime(war_start, '%Y-%m-%d')
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
         cursor.execute("SELECT name, surname FROM user where ID={}".format(student_to_check_id))
@@ -667,6 +658,7 @@ class Mentor(Employee):
 
         return_list.append([student_name, student_surname, avg_days,
                             grades_avg, yellow_cards, red_cards])
+        data.close()
         return return_list
 
 

@@ -93,17 +93,18 @@ class Menu:
                         ui.Ui.print_table(print_submissions,
                                           ["Index", "Assignment", "Delivery date", "Student name", "Student surname", "Submition date"])
                         user_signed_in.grade_submission()
-
                 elif menu.option == "9":
-                    ui.Ui.print_table(user_signed_in.list_students(), ["Index", "Name", "Surname"])
-                    user_signed_in.add_team()
                     ui.Ui.print_table(user_signed_in.list_teams(), ["Index", "Team", "Name", "Surname"])
+
                 elif menu.option == "10":
+                    ui.Ui.print_table(user_signed_in.list_teams(), ["Index", "Team", "Name", "Surname"])
+                    user_signed_in.add_team()
+                elif menu.option == "11":
                     ui.Ui.print_table(user_signed_in.list_checkpoint_assignments(), ["Index", "Name", "Assignments"])
                     checkpoint_assignment_id = user_signed_in.get_checkpoint_id()
-                    ui.Ui.print_table(user_signed_in.list_students(), ["Index", "Name", "Surname"])
+                    ui.Ui.print_table(user_signed_in.list_students_simple_view(), ["Index", "Name", "Surname"])
                     user_signed_in.add_checkpoint_submission(checkpoint_assignment_id)
-                elif menu.option == "11":
+                elif menu.option == "12":
                     ui.Ui.print_table(user_signed_in.list_students_simple_view(), ["Index", "Name", "Surname"])
                     stats_table = user_signed_in.check_student_performance()
                     ui.Ui.print_table(stats_table, ["Name", "Surname", "Avg presence", "Avg grades", "Yellow cards", "Red cards"])
