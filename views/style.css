@@ -78,6 +78,29 @@ nav li {
 
 }
 
+table {
+    width: 600px;
+    border: 1px solid black;
+    border-collapse: collapse;
+    font-size: 16px;
+}
+section#content table, th, td {
+    padding: 10px;
+    border: 1px solid black;
+}
 
+section#content table td {
+    background-color: white;
+    padding: 5px;
+    border: 1px solid black;
 
+}
+
+section#content h3 {
+    font-size: 20px;
+}
+
+section#content form {
+    font-size: 16px;
+}
 
