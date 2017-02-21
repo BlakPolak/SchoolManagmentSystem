@@ -23,7 +23,7 @@ header {
 }
 header#login {
     text-align: left;
-    background-color: rgba(173, 62, 62, 0.19);
+    background-color: rgba(89, 100, 237, 0.12);
     min-height: 100px;
     margin: 0px;
     padding: 0px;
@@ -33,7 +33,7 @@ header#login {
 aside#menuBar{
     display: inline-block;
     background-color: rgba(193, 193, 193, 0);
-    width: 300px;
+    width: 200px;
     padding: 0px 5px 0px 0px;
     margin-bottom: 0px;
     
@@ -43,7 +43,7 @@ aside#menuBar{
 section#content{
     display: inline-block;
     background-color: rgba(181, 181, 181, 0.39);
-    width: 660px;
+    width: 760px;
     min-height: 960px;
     padding: 20px;
     
@@ -56,7 +56,11 @@ footer{
 }
 
 a {
- 
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+}
+a:hover {
+    color: rgba(255, 6, 6, 0.67);
 }
 
 
@@ -84,7 +88,9 @@ nav ul {
 
 nav li {
     list-style: none;
-    padding: 10px;
+    padding: 4px;
+    margin-left:20px;
+    
 
 }
 
