@@ -294,6 +294,8 @@ class Student(User):
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
         cursor.execute("SELECT ID, Name, Type, Delivery_date FROM `Assignment` WHERE Type='group'")
+        # cursor.execute("SELECT assignment.ID, assignment.Name, assignment.Type, assignment.Delivery_date, Submission.Result FROM `Assignment` "
+        #                "INNER JOIN Submission ON Submission.Result IS NULL WHERE Type='group'")
         group_assignments = cursor.fetchall()
         group_assignments_list = []
         for assignment in group_assignments:
