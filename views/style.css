@@ -1,0 +1,83 @@
+html {
+	margin: 40px;
+	padding: 0;
+	}
+
+body {
+  font-family: 'Lato', sans-serif;
+  background-color: #ffffff;;
+  background-attachment: fixed;
+  background-size: 1800px 920px;
+  width: 960px;
+  margin: 0 auto;
+}
+main{
+   display: flex;
+}
+header {
+    text-align: center;
+
+    
+}
+header#login {
+    text-align: left;
+    background-color: rgba(229, 207, 207, 0.88);
+    min-height: 100px;
+    
+}
+
+aside#menuBar{
+    display: inline-block;
+    background-color: #d1b3b3;
+    width: 300px;
+    padding: 20px;
+    
+}
+
+
+section#content{
+    display: inline-block;
+    background-color: #ba9077;
+    width: 660px;
+    min-height: 960px;
+    padding: 20px;
+    
+}
+
+footer{
+    background-color: #bf9797;
+    padding: 1px;
+
+}
+
+a {
+ 
+}
+
+
+p {
+ 
+    
+}
+
+
+nav {
+   background-color: rgba(237, 237, 237, 0.69);
+   text-align: left;
+   min-height: 960px;
+
+}
+
+nav ul {
+    padding: 10px;
+}
+
+nav li {
+    list-style: none;
+    padding: 10px;
+
+}
+
+
+
+
