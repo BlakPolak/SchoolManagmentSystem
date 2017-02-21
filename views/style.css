@@ -5,6 +5,7 @@ html {
 
 body {
   font-family: 'Lato', sans-serif;
+  background-image: url(white-wallpapers-4.jpg);
   background-color: #ffffff;;
   background-attachment: fixed;
   background-size: 1800px 920px;
@@ -16,28 +17,32 @@ main{
 }
 header {
     text-align: center;
+    margin-bottom:40px;
 
     
 }
 header#login {
     text-align: left;
-    background-color: rgba(229, 207, 207, 0.88);
+    background-color: rgba(173, 62, 62, 0.19);
     min-height: 100px;
+    margin: 0px;
+    padding: 0px;
     
 }
 
 aside#menuBar{
     display: inline-block;
-    background-color: #d1b3b3;
+    background-color: rgba(193, 193, 193, 0);
     width: 300px;
-    padding: 20px;
+    padding: 0px 5px 0px 0px;
+    margin-bottom: 0px;
     
 }
 
 
 section#content{
     display: inline-block;
-    background-color: #ba9077;
+    background-color: rgba(181, 181, 181, 0.39);
     width: 660px;
     min-height: 960px;
     padding: 20px;
@@ -45,7 +50,7 @@ section#content{
 }
 
 footer{
-    background-color: #bf9797;
+    background-color: rgba(2, 2, 2, 0.04);
     padding: 1px;
 
 }
@@ -62,9 +67,14 @@ p {
 
 
 nav {
-   background-color: rgba(237, 237, 237, 0.69);
+   background-color: rgba(24, 77, 255, 0.09);
    text-align: left;
    min-height: 960px;
+   padding: 1px;
+   padding-bottom: 1px;
+   margin-bottom: 0px;
+   margin-top: 5px;
+
 
 }
 
@@ -79,5 +89,27 @@ nav li {
 }
 
 
+table {
+    width: 600px;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+section#content table, th, td {
+    padding: 20px;
+    font-size: 16px;
+    border: 1px solid black;
+}
 
+section#content table td {
+    background-color: white;
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid black;
 
+}
+
+section#content h3 {
+    font-size: 20px;
+}
+
+/*dasdaasfkka*/
