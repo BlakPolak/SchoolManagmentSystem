@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Add student</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <header><img src="logo-large.png"/></header>
+        <main>
+            <aside id="menuBar">
+                <header id="login">
+                LOGGED PERSON
+                </header>
+                <nav>
+                    <ul>
+                        <li><a href="index.html"><b>Main page</b></a></li>
+                        <h3>Class</h3>
+                            <li><a href="list_attendance.html">listAttendance</a></li>
+                        <h3>Students</h3>
+                            <li><a href="list_students.html">listStudents</a></li>
+                            <li><a href="list_teams.html">listTeams</a></li>
+                        <h3>Mentors</h3>
+                            <li><a href="list_mentors.html">listMentors</a></li>
+                        <h3>Assignment</h3>
+                            <li><a href="list_assignment.html">listAssignment</a></li>
+                        <h3>Submission</h3>
+                            <li><a href="list_submission.html">listSubmission</a></li>
+                        <h3>Checkpoint</h3>
+                            <li><a href="list_checkpoint.html">listCheckpoint</a></li>
+                    </ul>
+                </nav>
+            </aside>
+            <section id="content">
+                <div class="content_title">
+                    <h2>Add new mentor</h2>
+                </div>
+                <form name="add_student" action="list_students.html">
+                    <fieldset>
+                        <legend>Add mentor data</legend>
+                        <label>Name</label><br><input type="text" id="name" value="type here"><br>
+                        <label>Surname</label><br><input type="text" id="surname" value="type here"><br>
+                        <label>Gender</label><br><input type="text" id="surname" value="type here"><br>
+                        <label>Birth date</label><br><input type="text" id="birthDate" value="type here"><br>
+                        <label>Email</label><br><input type="email" id="email" value="type here"><br>
+                        <label>Login</label><br><input type="text" id="login" value="type here"><br>
+                        <label>Password</label><br><input type="text" id="password" value="type here"><br>
+                        <input id="submit" type="submit" value="Add mentor">
+                    </fieldset>
+                </form>
+            </section>
+        </main>
+        <footer>
+            <p>&copy; JAKKOLWIEK</p>
+        </footer>
+    </body>
+</html>
