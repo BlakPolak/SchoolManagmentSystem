@@ -121,7 +121,93 @@ section#content h3 {
 
 section#content form {
     font-size: 16px;
->>>>>>> 2ed6c44f5e6489d9618ab59a454435b0fe906d70
 }
+
+
+  <style>
+        header#logo{
+            position:relative;
+            top: 0px;
+            left: 150px;
+            height: 0px;
+            width: 350px;
+            padding: 10px;
+            z-index: 0;
+            
+        }
+        .login{
+            position:relative;
+            top: 130px;
+            left: 300px;
+            height: 300px;
+            width: 350px;
+            padding: 10px;
+            z-index: 1;
+        }
+
+        .login input[type=text]{
+            width: 250px;
+            height: 30px;
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            border-radius: 2px;
+            color: #000000;
+            font-family: 'Lato', sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 4px;
+            margin-top: 10px;
+        }
+
+        .login input[type=password]{
+            width: 250px;
+            height: 30px;
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            border-radius: 2px;
+            color: #000000;
+            font-family: 'Lato', sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 4px;
+            margin-top: 10px;
+        }
+
+        .login input[type=button]{
+            width: 260px;
+            height: 35px;
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            border-radius: 2px;
+            color: #4e4e4e;
+            font-family: 'Lato', sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 6px;
+            margin-top: 10px;
+        }
+
+        .login input[type=button]:hover{
+            opacity: 0.8;
+        }
+
+        .login input[type=button]:active{
+            opacity: 0.6;
+        }
+
+        .login input[type=text]:focus{
+            outline: none;
+            border: 1px solid rgba(0, 0, 0, 0.9);
+        }
+
+        .login input[type=password]:focus{
+            outline: none;
+            border: 1px solid rgba(0, 0, 0, 0.9);
+        }
+
+        .login input[type=button]:focus{
+            outline: none;
+        }
 
 
