@@ -6,51 +6,100 @@
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
 
+    <style>
+        header#logo{
+            position:relative;
+            top: 0px;
+            left: 150px;
+            height: 0px;
+            width: 350px;
+            padding: 10px;
+            z-index: 0;
+            
+        }
+        .login{
+            position:relative;
+            top: 130px;
+            left: 300px;
+            height: 300px;
+            width: 350px;
+            padding: 10px;
+            z-index: 1;
+        }
+
+        .login input[type=text]{
+            width: 250px;
+            height: 30px;
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            border-radius: 2px;
+            color: #000000;
+            font-family: 'Lato', sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 4px;
+            margin-top: 10px;
+        }
+
+        .login input[type=password]{
+            width: 250px;
+            height: 30px;
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            border-radius: 2px;
+            color: #000000;
+            font-family: 'Lato', sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 4px;
+            margin-top: 10px;
+        }
+
+        .login input[type=button]{
+            width: 260px;
+            height: 35px;
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            border-radius: 2px;
+            color: #4e4e4e;
+            font-family: 'Lato', sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 6px;
+            margin-top: 10px;
+        }
+
+        .login input[type=button]:hover{
+            opacity: 0.8;
+        }
+
+        .login input[type=button]:active{
+            opacity: 0.6;
+        }
+
+        .login input[type=text]:focus{
+            outline: none;
+            border: 1px solid rgba(0, 0, 0, 0.9);
+        }
+
+        .login input[type=password]:focus{
+            outline: none;
+            border: 1px solid rgba(0, 0, 0, 0.9);
+        }
+
+        .login input[type=button]:focus{
+            outline: none;
+        }
+
+
+</style>
     <body>
-        <header><img src="logo-large.png"/></header>
-        <main>
-            <aside id="menuBar">
-                <header id="login">
-                LOGGED PERSON
-                </header>
-                <nav>
-                    <ul>
-                        <h3><a href="index.html"><b>Main page</b></a></h3>
-                        <h3>Class</h3>
-                            <li><a href="list_attendance.html">listAttendance</a></li>
-                        <h3>Students</h3>
-                            <li><a href="list_students.html">listStudents</a></li>
-                            <li><a href="list_teams.html">listTeams</a></li>
-                        <h3>Mentors</h3>
-                            <li><a href="list_mentors.html">listMentors</a></li>
-                        <h3>Assignment</h3>
-                            <li><a href="list_assignment.html">listAssignment</a></li>
-                        <h3>Submission</h3>
-                            <li><a href="list_submission.html">listSubmission</a></li>
-                        <h3>Checkpoint</h3>
-                            <li><a href="list_checkpoint.html">listCheckpoint</a></li>
-
-                    </ul>
-                </nav>
-
-            </aside>
-            <section id="content">
-                <table>
-                    <tr>
-                        <th>ID</th>
-                        <th>Student name</th>
-                        <th>Student surname</th>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Jan</td>
-                        <td>Kowalski</td>
-                    </tr>
-                </table>
-            </section>
-        </main>
-        <footer>
-            <p>copyright</p>
-        </footer>
+        <header id="logo"><img src="codecool_logo_symbol.png" height="550px"></header>
+        <div class="login">
+                <input type="text" placeholder="username" name="user"><br>
+                <input type="password" placeholder="password" name="password"><br>
+                <a href="main.html" target="self"><input type="button" value="Login"></a>
+        </div>
     </body>
 </html>

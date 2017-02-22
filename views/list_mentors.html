@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <style>
+            .content_title {
+                display: inline-block;
+                box-sizing: border-box;
+                width: 300px;
+                height: 90px;
+            }
+
+            .content_option {
+                display: inline-block;
+                box-sizing: border-box;
+                width: 300px;
+                height: 90px;
+                float: right;
+                text-align: right;
+                text-align: center;
+                vertical-align: middle;
+                line-height: 90px;
+                padding: 10px;
+            }
+            a, a:visited {
+                color: #3c87f9;
+                text-decoration: underline;
+            }
+            a:hover {
+                color: #63c2f9;
+            }
+            #content {
+                width: 100%;            }
+
+        </style>
+    </head>
+
+    <body>
+        <header><img src="logo-large.png"/></header>
+        <main>
+            <aside id="menuBar">
+                <header id="login">
+                LOGGED PERSON
+                </header>
+                <nav>
+                    <ul>
+                        <li><a href="index.html"><b>Main page</b></a></li>
+                        <h3>Class</h3>
+                            <li><a href="list_attendance.html">listAttendance</a></li>
+                        <h3>Students</h3>
+                            <li><a href="list_students.html">listStudents</a></li>
+                            <li><a href="list_teams.html">listTeams</a></li>
+                        <h3>Mentors</h3>
+                            <li><a href="list_mentors.html">listMentors</a></li>
+                        <h3>Assignment</h3>
+                            <li><a href="list_assignment.html">listAssignment</a></li>
+                        <h3>Submission</h3>
+                            <li><a href="list_submission.html">listSubmission</a></li>
+                        <h3>Checkpoint</h3>
+                            <li><a href="list_checkpoint.html">listCheckpoint</a></li>
+
+                    </ul>
+                </nav>
+
+            </aside>
+            <section id="content">
+                <div class="content_title">
+                    <h2>List of mentors</h2>
+                </div>
+                <div class="content_option">
+                    <a href="add_mentor.html">Add new mentor</a>
+                </div>
+                <table>
+                    <tr>
+                        <th>Index</th>
+                        <th>Mentor name</th>
+                        <th>Mentor surname</th>
+                        <th>Actions</th>
+
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Mateusz</td>
+                        <td><a href="view_mentor_details.html">Ostafil</a></td>
+                        <td><a href="edit_mentor.html">Edit</a> |
+                            <a href="remove.html">Remove</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Rafał</td>
+                        <td><a href="view_mentor_details.html">Stępień</a></td>
+                        <td><a href="edit_mentor.html">Edit</a> |
+                            <a href="remove.html">Remove</a>
+                        </td>
+                    </tr>
+                </table>
+            </section>
+        </main>
+        <footer>
+            <p>copyright</p>
+        </footer>
+    </body>
+</html>
