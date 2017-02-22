@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title></title>
+        <title>Edit student data</title>
         <meta charset="UTF-8">
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
-
     <body>
         <header><img src="logo-large.png"/></header>
         <main>
@@ -32,39 +31,26 @@
                             <li><a href="list_submission.html">listSubmission</a></li>
                         <h3>Checkpoint</h3>
                             <li><a href="list_checkpoint.html">listCheckpoint</a></li>
-
                     </ul>
                 </nav>
-
             </aside>
             <section id="content">
                 <div class="content_title">
-                    <h2>List of mentors</h2>
+                    <h2>Edit mentors data</h2>
                 </div>
-                <div class="content_option">
-                    <a href="add_mentor.html">Add new mentor</a>
-                </div>
-                <table>
-                    <tr>
-                        <th>Index</th>
-                        <th>Mentor name</th>
-                        <th>Mentor surname</th>
-                        <th>Actions</th>
-
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Mateusz</td>
-                        <td><a href="view_mentor_details.html">Ostafil</a></td>
-                        <td><a href="edit_mentor.html">Edit</a> | Remove</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Rafał</td>
-                        <td><a href="view_mentor_details.html">Stępień</a></td>
-                        <td><a href="edit_mentor.html">Edit</a> | Remove</td>
-                    </tr>
-                </table>
+                <form name="edit_student" action="">
+                    <fieldset>
+                        <legend>Edit mentor data</legend>
+                        <label>Name</label></br><input type="text" id="name" value="type here"><br>
+                        <label>Surname</label></br><input type="text" id="name" value="type here"><br>
+                        <label>Gender</label></br><input type="text" id="surname" value="type here"><br>
+                        <label>Birth date</label></br><input type="text" id="birthDate" value="type here"><br>
+                        <label>Email</label></br><input type="text" id="email" value="type here"><br>
+                        <label>Login</label></br><input type="text" id="login" value="type here"><br>
+                        <label>Password</label></br><input type="text" id="password" value="type here"><br>
+                        <input id="submit" type="submit" value="Update">
+                    </fieldset>
+                </form>
             </section>
         </main>
         <footer>
