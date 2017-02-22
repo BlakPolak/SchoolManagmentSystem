@@ -30,6 +30,7 @@ header#login {
     
 }
 
+
 aside#menuBar{
     display: inline-block;
     background-color: rgba(193, 193, 193, 0);
@@ -65,8 +66,6 @@ a:hover {
 
 
 p {
- 
-    
 }
 
 
@@ -78,8 +77,6 @@ nav {
    padding-bottom: 1px;
    margin-bottom: 0px;
    margin-top: 5px;
-
-
 }
 
 nav ul {
@@ -90,13 +87,11 @@ nav li {
     list-style: none;
     padding: 4px;
     margin-left:20px;
-    
-
 }
 
 
 table {
-    width: 600px;
+    width: 700px;
     border: 1px solid black;
     border-collapse: collapse;
 }
@@ -111,7 +106,6 @@ section#content table td {
     padding: 5px;
     font-size: 16px;
     border: 1px solid black;
-
 }
 
 
@@ -121,7 +115,24 @@ section#content h3 {
 
 section#content form {
     font-size: 16px;
->>>>>>> 2ed6c44f5e6489d9618ab59a454435b0fe906d70
 }
 
+            .content_title {
+                display: inline-block;
+                box-sizing: border-box;
+                width: 300px;
+                height: 90px;
+            }
 
+            .content_option {
+                display: inline-block;
+                box-sizing: border-box;
+                width: 300px;
+                height: 90px;
+                float: right;
+                /*text-align: right;*/
+                text-align: center;
+                vertical-align: middle;
+                line-height: 90px;
+                padding: 10px;
+            }
