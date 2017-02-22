@@ -137,7 +137,7 @@ section#content form {
     padding: 10px;
 }
 
-
+/*LOGO*/
 header#logo{
     position:relative;
     top: 0px;
@@ -223,4 +223,100 @@ header#logo{
     outline: none;
 }
 
+/*Attendance*/
 
+span.bottonCheckAttendence input[type=button] {
+    width: 230px;
+    height: 35px;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.58);
+    cursor: pointer;
+    border-radius: 2px;
+    color: #000000;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    font-weight: 200;
+    padding: 6px;
+    margin-top: 10px;
+}
+
+span.bottonCheckAttendence input[type=button]:hover{
+    opacity: 0.6;
+}
+
+span.bottonCheckAttendence input[type=button]:active{
+    opacity: 0.6;
+}
+span.bottonCheckAttendence input[type=button]:focus{
+    outline: none;
+}
+
+/*Grade checkpoint*/
+
+span.bottonGradeCheckpoint input[type=button] {
+    width: 200px;
+    height: 35px;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.58);
+    cursor: pointer;
+    border-radius: 2px;
+    color: #000000;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    font-weight: 200;
+    padding: 6px;
+    margin-top: 10px;
+}
+
+span.bottonGradeCheckpoint input[type=button]:hover{
+    opacity: 0.6;
+}
+
+span.bottonGradeCheckpoint input[type=button]:active{
+    opacity: 0.6;
+}
+span.bottonGradeCheckpoint input[type=button]:focus{
+    outline: none;
+}
+
+#rotate{
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    animation-name: rotate;
+    animation-duration: 12s;
+    animation-iteration-count: infinite;
+}
+
+@-webkit-keyframes rotate /* Safari and Chrome */ {
+    from {
+        -ms-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -ms-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+@keyframes rotate {
+    from {
+        -ms-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -ms-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
