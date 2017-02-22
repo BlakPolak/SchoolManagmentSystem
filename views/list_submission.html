@@ -1,10 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>List students</title>
+        <title></title>
         <meta charset="UTF-8">
         <link rel="stylesheet" type="text/css" href="style.css">
+        <style>
+            .content_title {
+                display: inline-block;
+                box-sizing: border-box;
+                width: 300px;
+                height: 90px;
+            }
+
+            .content_option {
+                display: inline-block;
+                box-sizing: border-box;
+                width: 300px;
+                height: 90px;
+                float: right;
+                text-align: right;
+                text-align: center;
+                vertical-align: middle;
+                line-height: 90px;
+                padding: 10px;
+            }
+            a, a:visited {
+                color: #3c87f9;
+                text-decoration: underline;
+            }
+            a:hover {
+                color: #63c2f9;
+            }
+            #content {
+                width: 100%;            }
+
+        </style>
     </head>
+
     <body>
         <header><img src="logo-large.png"/></header>
         <main>
@@ -30,31 +62,39 @@
                             <li><a href="list_checkpoint.html">listCheckpoint</a></li>
                     </ul>
                 </nav>
+
             </aside>
             <section id="content">
                 <div class="content_title">
-                    <h2>List of students</h2>
-                </div>
-                <div class="content_option">
-                    <a href="add_student.html">Add new student</a>
+                    <h2>List of submissions</h2>
                 </div>
                 <table>
                     <tr>
                         <th>Index</th>
+                        <th>Assignment name</th>
                         <th>Student name</th>
-                        <th>Student surname</th>
-                        <th>Actions</th>
+                        <th>Delivery date</th>
+                        <th>Grade</th>
+
                     </tr>
                     <tr>
                         <td>1</td>
-                        <td><a href="view_student_details.html">Jan</a></td>
-                        <td><a href="view_student_details.html">Kowalski</a></td>
-                        <td><a href="edit_student.html">Edit</a> |
-                            <a href="remove_student.html">Remove</a> |
-                            <a href="add_to_team.html">Add to team</a>
-                        </td>
+                        <td>Python OO Geometry</td>
+                        <td>Paweł Lasota</td>
+                        <td> 10-02-2017</td>
+                        <td><a href="grade.html">Grade</a></td>
+                        
+                    </tr>
+                    <tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Python</td>
+                        <td>Paweł Polakiewicz</td>
+                        <td>10-02-2017</td>
+                        <td><a href="grade.html">Grade</a></td>
                     </tr>
                 </table>
+                
             </section>
         </main>
         <footer>
