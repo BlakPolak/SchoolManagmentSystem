@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>List students</title>
+        <title></title>
         <meta charset="UTF-8">
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
+
     <body>
         <header><img src="logo-large.png"/></header>
         <main>
@@ -28,33 +29,19 @@
                             <li><a href="list_submission.html">listSubmission</a></li>
                         <h3>Checkpoint</h3>
                             <li><a href="list_checkpoint.html">listCheckpoint</a></li>
+
                     </ul>
                 </nav>
+
             </aside>
             <section id="content">
-                <div class="content_title">
-                    <h2>List of students</h2>
-                </div>
-                <div class="content_option">
-                    <a href="add_student.html">Add new student</a>
-                </div>
-                <table>
-                    <tr>
-                        <th>Index</th>
-                        <th>Student name</th>
-                        <th>Student surname</th>
-                        <th>Actions</th>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td><a href="view_student_details.html">Jan</a></td>
-                        <td><a href="view_student_details.html">Kowalski</a></td>
-                        <td><a href="edit_student.html">Edit</a> |
-                            <a href="remove_student.html">Remove</a> |
-                            <a href="add_to_team.html">Add to team</a>
-                        </td>
-                    </tr>
-                </table>
+                <form>
+                  <fieldset>
+                    <legend>Submit Assignment:</legend>
+                    Name: <input type="text"><br>
+                    Answer: <input type="text"><br>
+                  </fieldset>
+                </form> 
             </section>
         </main>
         <footer>

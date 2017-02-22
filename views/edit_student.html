@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>List students</title>
+        <title>Edit student data</title>
         <meta charset="UTF-8">
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
@@ -33,28 +33,20 @@
             </aside>
             <section id="content">
                 <div class="content_title">
-                    <h2>List of students</h2>
+                    <h2>Choosen student name, surname</h2>
                 </div>
-                <div class="content_option">
-                    <a href="add_student.html">Add new student</a>
-                </div>
-                <table>
-                    <tr>
-                        <th>Index</th>
-                        <th>Student name</th>
-                        <th>Student surname</th>
-                        <th>Actions</th>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td><a href="view_student_details.html">Jan</a></td>
-                        <td><a href="view_student_details.html">Kowalski</a></td>
-                        <td><a href="edit_student.html">Edit</a> |
-                            <a href="remove_student.html">Remove</a> |
-                            <a href="add_to_team.html">Add to team</a>
-                        </td>
-                    </tr>
-                </table>
+                <form name="edit_student" action="">
+                    <fieldset>
+                        <legend>Edit student data</legend>
+                        <label>Name</label></br><input type="text" id="name" value="type here"><br>
+                        <label>Gender</label></br><input type="text" id="surname" value="type here"><br>
+                        <label>Birth date</label></br><input type="text" id="birthDate" value="type here"><br>
+                        <label>Email</label></br><input type="text" id="email" value="type here"><br>
+                        <label>Login</label></br><input type="text" id="login" value="type here"><br>
+                        <label>Password</label></br><input type="text" id="password" value="type here"><br>
+                        <input id="submit" type="submit" value="Update">
+                    </fieldset>
+                </form>
             </section>
         </main>
         <footer>
