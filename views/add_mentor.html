@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title></title>
+        <title>Add student</title>
         <meta charset="UTF-8">
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
-
     <body>
         <header><img src="logo-large.png"/></header>
         <main>
@@ -14,7 +13,7 @@
                 LOGGED PERSON
                 <div class="content_option">
                    <a href="index.html">Logout</a>
-                </div>  
+                </div>
                 </header>
                 <nav>
                     <ul>
@@ -37,20 +36,28 @@
 
                     </ul>
                 </nav>
-
             </aside>
             <section id="content">
-                <form>
-                  <fieldset>
-                    <legend>Submit Assignment:</legend>
-                    Name: <input type="text"><br>
-                    Answer: <input type="text"><br>
-                  </fieldset>
-                </form> 
+                <div class="content_title">
+                    <h2>Add new mentor</h2>
+                </div>
+                <form name="add_student" action="list_students.html">
+                    <fieldset>
+                        <legend>Add mentor data</legend>
+                        <label>Name</label><br><input type="text" id="name" value="type here"><br>
+                        <label>Surname</label><br><input type="text" id="surname" value="type here"><br>
+                        <label>Gender</label><br><input type="text" id="surname" value="type here"><br>
+                        <label>Birth date</label><br><input type="text" id="birthDate" value="type here"><br>
+                        <label>Email</label><br><input type="email" id="email" value="type here"><br>
+                        <label>Login</label><br><input type="text" id="login" value="type here"><br>
+                        <label>Password</label><br><input type="text" id="password" value="type here"><br>
+                        <input id="submit" type="submit" value="Add mentor">
+                    </fieldset>
+                </form>
             </section>
         </main>
         <footer>
-            <p>copyright</p>
+            <p>&copy; JAKKOLWIEK</p>
         </footer>
     </body>
 </html>

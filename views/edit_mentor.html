@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Add student to team</title>
+        <title>Edit student data</title>
         <meta charset="UTF-8">
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
-
     <body>
         <header><img src="logo-large.png"/></header>
         <main>
@@ -37,22 +36,21 @@
             </aside>
             <section id="content">
                 <div class="content_title">
-                    <h2>Choose team to add [Student name, Student surname]</h2>
+                    <h2>Edit mentors data</h2>
                 </div>
-                <table>
-                    <tr>
-                        <th>Index</th>
-                        <th>Team name</th>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td><a href="student_added_to_team.html">Jakkolwiek</a></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td><a href="student_added_to_team.html">5am</a></td>
-                    </tr>
-                </table>
+                <form name="edit_student" action="">
+                    <fieldset>
+                        <legend>Edit mentor data</legend>
+                        <label>Name</label></br><input type="text" id="name" value="type here"><br>
+                        <label>Surname</label></br><input type="text" id="name" value="type here"><br>
+                        <label>Gender</label></br><input type="text" id="surname" value="type here"><br>
+                        <label>Birth date</label></br><input type="text" id="birthDate" value="type here"><br>
+                        <label>Email</label></br><input type="text" id="email" value="type here"><br>
+                        <label>Login</label></br><input type="text" id="login" value="type here"><br>
+                        <label>Password</label></br><input type="text" id="password" value="type here"><br>
+                        <input id="submit" type="submit" value="Update">
+                    </fieldset>
+                </form>
             </section>
         </main>
         <footer>
