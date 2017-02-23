@@ -8,12 +8,17 @@
 
     <body>
         <header id="logo"><img id="rotate" src="codecool_logo_symbol.png" height="550px"></header>
-        <div class="login" onKeyPress="return checkSubmit(event)">
-                <input type="text" placeholder="username" name="user" id="user_login"><br>
-                <input type="password" placeholder="password" name="password"><br>
-                <a href="main.html" target="self"><input type="button" value="Login"></a>
-        </div>
-    <script type="text/javascript">document.getElementById("user_login").focus();</script>
+
+        <form action="#" method="post">
+            <div class="login" onKeyPress="return checkSubmit(event)">
+                    <input type="text" placeholder="username" name="user" id="user_login"><br>
+                    <input type="password" placeholder="password" name="password"><br>
+                    <a href="main.html" target="self"><input type="button" value="Login"></a>
+            </div>
+        </form>
+
+    <script type="text/javascript">document.getElementById("user_login").focus();
+    </script>
     <script type='text/javascript' src='js/main.js'></script>
     </body>
 </html>
