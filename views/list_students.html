@@ -41,9 +41,7 @@
                 <div class="content_title">
                     <h2>List of students</h2>
                 </div>
-                <div class="content_option">
-                    <a href="add_student.html">Add new student</a>
-                </div>
+                <hr>
                 <table>
                     <tr>
                         <th>Index</th>
@@ -55,17 +53,27 @@
                         <td>1</td>
                         <td><a href="view_student_details.html">Jan</a></td>
                         <td><a href="view_student_details.html">Kowalski</a></td>
-                        <td><a href="edit_student.html">Edit</a> |
-                            <a href="" onclick="showConfirm()">Remove</a> |
-                            <a href="add_to_team.html">Add to team</a>
+                         <td>
+                            <span class="bottonStudents">
+                                <a href="edit_student.html" target="self"><input type="button" value="Edit"></a>
+                            </span>
+                              <span class="bottonStudents">
+                                <a href="" onclick="showConfirm()" target="self"><input type="button" value="Remove"></a>
+                            </span>
+                              <span class="bottonStudents">
+                                <a href="add_to_team.html" target="self"><input type="button" value="Add to team"></a>
+                            </span>
                         </td>
                     </tr>
                 </table>
+                <div class="content_option">
+                    <a href="add_student.html">Add new student</a>
+                </div>
             </section>
         </main>
         <footer>
-            <p>copyright</p>
-        </footer>
+           <p>&copy; JAKKOLWIEK 2017</p>
+       </footer>
     <script type='text/javascript' src='js/main.js'></script>
     </body>
 </html>
