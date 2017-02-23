@@ -43,9 +43,10 @@
                 <div class="content_title">
                     <h2>List of mentors</h2>
                 </div>
-                <div class="content_option">
-                    <a href="add_mentor.html">Add new mentor</a>
-                </div>
+                <hr>
+                <span class="bottonToNewView">
+                    <a href="add_mentor.html"><input type="button" value="Add new mentor"></a>
+                </span>
                 <table>
                     <tr>
                         <th>Index</th>
@@ -58,13 +59,28 @@
                         <td>1</td>
                         <td>Mateusz</td>
                         <td><a href="view_mentor_details.html">Ostafil</a></td>
-                        <td><a href="edit_mentor.html">Edit</a> | <a href="" onclick="showConfirm()">Remove</a></td>
+                        <td>                            
+                            <span class="bottonStudents">
+                                <a href="edit_mentor.html" onclick ="showConfirm()"><input type="button" value="Edit"></a>
+                            </span>
+                              <span class="bottonStudents">
+                                <a href="" onclick="showConfirm()"><input type="button" value="Remove"></a>
+                            </span></td>
                     </tr>
                     <tr>
                         <td>2</td>
                         <td>Rafał</td>
                         <td><a href="view_mentor_details.html">Stępień</a></td>
-                        <td><a href="edit_mentor.html">Edit</a> | <a href="" onclick="showConfirm()">Remove</a></td>
+                        <td>
+                            <span class="bottonStudents">
+                                <a href="edit_mentor.html" onclick ="showConfirm()"><input type="button" value="Edit"></a>
+                            </span>
+                              <span class="bottonStudents">
+                                <a href="" onclick="showConfirm()"><input type="button" value="Remove"></a>
+                            </span>
+                        </td>
+
+
                     </tr>
                 </table>
             </section>

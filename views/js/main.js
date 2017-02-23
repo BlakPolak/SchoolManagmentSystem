@@ -16,10 +16,10 @@ function checkSubmit(e) {
 }
 
 function markAttendance1() {
-
     var src_str = document.getElementById("attendanceIcon1").src;
     if (src_str.endsWith("green.png")) {
-        document.getElementById("attendanceIcon1").src="img/yellow.png";
+        document.getElementById("attendanceIcon1").src = "img/yellow.png";
+
     }
     else if (src_str.endsWith("yellow.png")) {
         document.getElementById("attendanceIcon1").src = "img/red.png";
@@ -27,8 +27,20 @@ function markAttendance1() {
     else if (src_str.endsWith("red.png")) {
         document.getElementById("attendanceIcon1").src = "img/green.png";
     }
-}
 
+    var radioObj = document.radio1.present;
+    for (var i = 0; i < radioObj.length; i++) {
+        if (radioObj[i].value == "late" && src_str.endsWith("green.png")) {
+            radioObj[i].checked = true;
+        }
+        else if (radioObj[i].value == "absent" && src_str.endsWith("yellow.png")) {
+            radioObj[i].checked = true;
+        }
+        else if (radioObj[i].value == "present" && src_str.endsWith("red.png")) {
+            radioObj[i].checked = true;
+        }
+    }
+}
 function markAttendance2() {
 
     var src_str = document.getElementById("attendanceIcon2").src;
@@ -40,6 +52,19 @@ function markAttendance2() {
     }
     else if (src_str.endsWith("red.png")) {
         document.getElementById("attendanceIcon2").src = "img/green.png";
+    }
+
+    var radioObj = document.radio2.present;
+    for (var i = 0; i < radioObj.length; i++) {
+        if (radioObj[i].value == "late" && src_str.endsWith("green.png")) {
+            radioObj[i].checked = true;
+        }
+        else if (radioObj[i].value == "absent" && src_str.endsWith("yellow.png")) {
+            radioObj[i].checked = true;
+        }
+        else if (radioObj[i].value == "present" && src_str.endsWith("red.png")) {
+            radioObj[i].checked = true;
+        }
     }
 }
 
@@ -55,6 +80,18 @@ function markCheckpoint1() {
     else if (src_str.endsWith("red.png")) {
         document.getElementById("checkpointIcon1").src = "img/green.png";
     }
+    var radioObj = document.radio1.card;
+    for (var i = 0; i < radioObj.length; i++) {
+        if (radioObj[i].value == "yellow" && src_str.endsWith("green.png")) {
+            radioObj[i].checked = true;
+        }
+        else if (radioObj[i].value == "red" && src_str.endsWith("yellow.png")) {
+            radioObj[i].checked = true;
+        }
+        else if (radioObj[i].value == "green" && src_str.endsWith("red.png")) {
+            radioObj[i].checked = true;
+        }
+    }
 }
 
 function markCheckpoint2() {
@@ -68,6 +105,18 @@ function markCheckpoint2() {
     }
     else if (src_str.endsWith("red.png")) {
         document.getElementById("checkpointIcon2").src = "img/green.png";
+    }
+    var radioObj = document.radio2.card;
+    for (var i = 0; i < radioObj.length; i++) {
+        if (radioObj[i].value == "yellow" && src_str.endsWith("green.png")) {
+            radioObj[i].checked = true;
+        }
+        else if (radioObj[i].value == "red" && src_str.endsWith("yellow.png")) {
+            radioObj[i].checked = true;
+        }
+        else if (radioObj[i].value == "green" && src_str.endsWith("red.png")) {
+            radioObj[i].checked = true;
+        }
     }
 }
 
