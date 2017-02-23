@@ -65,6 +65,9 @@ a:hover {
     color: rgba(255, 6, 6, 0.67);
 }
 
+
+
+
 h3 {
     font-size: 16px;
 }
@@ -133,9 +136,18 @@ section#content table td {
     font-size: 12px;
     border: 1px solid black;
 }
+
 textarea {
     width: 700px;
     height: 300px;
+
+
+section#content h1{
+    font-size: 20x;
+    text-transform: uppercase;
+    padding-top: 10px;
+    margin-bottom: 38px;
+    
 }
 
 section#content h2 {
