@@ -41,21 +41,25 @@
                 <div class="content_title">
                     <h2>Edit student data</h2>
                 </div>
+                <hr>
                 <form name="edit_student" action="#">
                     <fieldset>
                         <br><label>Name</label><br><br>
-                        <input type="text" id="name" value="type here"><br>
+                        <input type="text" id="name" value="type here" required><br>
                         <br><label>Gender</label><br><br>
-                        <input type="text" id="surname" value="type here"><br>
+                        <input type="text" id="surname" value="type here" required><br>
                         <br><label>Birth date</label><br><br>
-                        <input type="text" id="birthDate" value="type here"><br>
+                        <input type="text" id="birthDate" value="type here" required><br>
                         <br><label>Email</label><br><br>
-                        <input type="text" id="email" value="type here"><br>
+                        <input type="text" id="email" value="type here" required><br>
                         <br><label>Login</label><br><br>
-                        <input type="text" id="login" value="type here"><br>
+                        <input type="text" id="login" value="type here" required><br>
                         <br><label>Password</label><br><br>
-                        <input type="text" id="password" value="type here"><br>
-                        <br><br><input id="submit" type="submit" value="Update">
+                        <input type="text" id="password" value="type here" required><br>
+                        <br><br>
+                        <span class="bottonToNewView">
+                            <a href="#"><input type="button" value="Update"></a>
+                        </span>
                     </fieldset>
                 </form>
             </section>
