@@ -54,6 +54,7 @@ section#content{
 footer{
     background-color: rgba(2, 2, 2, 0.04);
     padding: 1px;
+    text-align: right;
 
 }
 
@@ -351,16 +352,6 @@ span.bottonStudents input[type=button]:active{
 span.bottonStudents input[type=button]:focus{
     outline: none;
 }
-
-
-
-
-
-
-
-
-
-
 
 
 #rotate{
