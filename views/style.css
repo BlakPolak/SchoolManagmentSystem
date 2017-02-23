@@ -27,6 +27,7 @@ header#login {
     min-height: 100px;
     margin: 0px;
     padding: 0px;
+    display: flex;
     
 }
 
