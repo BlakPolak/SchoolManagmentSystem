@@ -43,9 +43,41 @@ function markAttendance2() {
     }
 }
 
+function markCheckpoint1() {
+
+    var src_str = document.getElementById("checkpointIcon1").src;
+    if (src_str.endsWith("green.png")) {
+        document.getElementById("checkpointIcon1").src="img/yellow.png";
+    }
+    else if (src_str.endsWith("yellow.png")) {
+        document.getElementById("checkpointIcon1").src = "img/red.png";
+    }
+    else if (src_str.endsWith("red.png")) {
+        document.getElementById("checkpointIcon1").src = "img/green.png";
+    }
+}
+
+function markCheckpoint2() {
+
+    var src_str = document.getElementById("checkpointIcon2").src;
+    if (src_str.endsWith("green.png")) {
+        document.getElementById("checkpointIcon2").src="img/yellow.png";
+    }
+    else if (src_str.endsWith("yellow.png")) {
+        document.getElementById("checkpointIcon2").src = "img/red.png";
+    }
+    else if (src_str.endsWith("red.png")) {
+        document.getElementById("checkpointIcon2").src = "img/green.png";
+    }
+}
+
 function gradeSubmission() {
     var person = prompt("Enter grade: ", "");
     if (person != null) {
         document.getElementById("graded").innerText = "Assignment graded: " + person;
     }
 }
+
+function addToTeam(val) {
+    document.getElementById("added_to_team").innerText = "Student [name, surname] added to: " + val;
+    }
