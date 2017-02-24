@@ -12,46 +12,42 @@ body {
   width: 960px;
   margin: 0 auto;
 }
-main{
+
+main {
    display: flex;
 }
+
 header {
     text-align: center;
-    margin-bottom:40px;
-
-    
+    margin-bottom:40px;   
 }
+
 header#login {
     text-align: left;
     background-color: rgba(89, 100, 237, 0.12);
     min-height: 100px;
     margin: 0px;
     padding: 0px;
-    display: flex;
-    
+    display: flex;   
 }
 
-
-aside#menuBar{
+aside#menuBar {
     display: inline-block;
     background-color: rgba(193, 193, 193, 0);
     width: 200px;
     padding: 0px 5px 0px 0px;
-    margin-bottom: 0px;
-    
+    margin-bottom: 0px;   
 }
 
-
-section#content{
+section#content {
     display: inline-block;
     background-color: rgba(181, 181, 181, 0.39);
     width: 760px;
     min-height: 960px;
-    padding: 20px;
-    
+    padding: 20px;  
 }
 
-footer{
+footer {
     background-color: rgba(2, 2, 2, 0.04);
     padding: 1px;
     padding-right: 20px;
@@ -63,20 +59,20 @@ a {
   color: rgb(0, 0, 0);
   text-decoration: none;
 }
+
 a:hover {
     color: rgba(255, 6, 6, 0.67);
 }
-
-
-
 
 h3 {
     font-size: 16px;
 }
 
-p {
+br {
+    line-height: 0px;
+    margin: 0;
+    font-size: 1px;
 }
-
 
 nav {
    background-color: rgba(24, 77, 255, 0.09);
@@ -89,7 +85,6 @@ nav {
    text-transform: uppercase;
 }
 
-
 nav li {
     font-size: 14px;
     list-style: none;
@@ -97,12 +92,12 @@ nav li {
     margin-left:1px;
     margin-right:3px;
 }
+
 nav ul {
     list-style-type: none;
     margin: 0;
     padding: 1px;
     width: 200px;
-
 }
 
 nav li a {
@@ -118,24 +113,28 @@ nav li a:hover {
     color: #080808;
 }
 
-
-
-
 table {
     width: 700px;
-    border: 1px solid black;
+    border: 2px solid #000000;
     border-collapse: collapse;
 }
+
+section#content th {
+    background-color: rgba(39, 37, 37, 0.81);
+    color:white;
+    text-shadow: 0px 1px 1px  black; 
+}
+
 section#content table, th, td {
     padding: 10px;
-    font-size: 14px;
-    border: 1px solid black;
+    font-size: 16px;
+    border: 2px solid #7e7c7c;
 }
 
 section#content table td {
     background-color: white;
     padding: 5px;
-    font-size: 12px;
+    font-size: 14px;
     border: 1px solid black;
 }
 
@@ -144,8 +143,7 @@ textarea {
     height: 300px;
 }
 
-}
-section#content h1{
+section#content h1 {
     font-size: 20x;
     text-transform: uppercase;
     padding-top: 10px;
@@ -184,7 +182,7 @@ section#content form {
 }
 
 /*LOGO*/
-header#logo{
+header#logo {
     position:relative;
     top: 0px;
     left: 150px;
@@ -192,9 +190,9 @@ header#logo{
     width: 350px;
     padding: 10px;
     z-index: 0;
-
 }
-.login{
+
+.login {
     position:relative;
     top: 130px;
     left: 300px;
@@ -204,7 +202,7 @@ header#logo{
     z-index: 1;
 }
 
-.login input[type=text]{
+.login input[type=text] {
     width: 250px;
     height: 30px;
     background: rgba(0, 0, 0, 0.05);
@@ -218,7 +216,7 @@ header#logo{
     margin-top: 10px;
 }
 
-.login input[type=password]{
+.login input[type=password] {
     width: 250px;
     height: 30px;
     background: rgba(0, 0, 0, 0.05);
@@ -232,7 +230,7 @@ header#logo{
     margin-top: 10px;
 }
 
-.login input[type=button]{
+.login input[type=button] {
     width: 260px;
     height: 35px;
     background: rgba(0, 0, 0, 0.05);
@@ -247,25 +245,25 @@ header#logo{
     margin-top: 10px;
 }
 
-.login input[type=button]:hover{
+.login input[type=button]:hover {
     opacity: 0.8;
 }
 
-.login input[type=button]:active{
+.login input[type=button]:active {
     opacity: 0.6;
 }
 
-.login input[type=text]:focus{
+.login input[type=text]:focus {
     outline: none;
     border: 1px solid rgba(0, 0, 0, 0.9);
 }
 
-.login input[type=password]:focus{
+.login input[type=password]:focus {
     outline: none;
     border: 1px solid rgba(0, 0, 0, 0.9);
 }
 
-.login input[type=button]:focus{
+.login input[type=button]:focus {
     outline: none;
 }
 
@@ -287,14 +285,14 @@ span.bottonToNewView input[type=button] {
     margin-top: 1px;
 }
 
-span.bottonToNewView input[type=button]:hover{
+span.bottonToNewView input[type=button]:hover {
     opacity: 0.7;
 }
 
-span.bottonToNewView input[type=button]:active{
+span.bottonToNewView input[type=button]:active {
     opacity: 0.6;
 }
-span.bottonToNewView input[type=button]:focus{
+span.bottonToNewView input[type=button]:focus {
     outline: none;
 }
 
@@ -316,14 +314,14 @@ span.bottonGradeCheckpoint input[type=button] {
     margin-left: 43px;
 }
 
-span.bottonGradeCheckpoint input[type=button]:hover{
+span.bottonGradeCheckpoint input[type=button]:hover {
     opacity: 0.6;
 }
 
-span.bottonGradeCheckpoint input[type=button]:active{
+span.bottonGradeCheckpoint input[type=button]:active {
     opacity: 0.6;
 }
-span.bottonGradeCheckpoint input[type=button]:focus{
+span.bottonGradeCheckpoint input[type=button]:focus {
     outline: none;
 }
 
@@ -344,17 +342,16 @@ span.bottonStudents input[type=button] {
     margin-top: 1px;
 }
 
-span.bottonStudents input[type=button]:hover{
+span.bottonStudents input[type=button]:hover {
     opacity: 0.6;
 }
 
-span.bottonStudents input[type=button]:active{
+span.bottonStudents input[type=button]:active {
     opacity: 0.6;
 }
-span.bottonStudents input[type=button]:focus{
+span.bottonStudents input[type=button]:focus {
     outline: none;
 }
-
 
 span.bottonLogOut input[type=button] {
     width: 80px;
@@ -371,18 +368,18 @@ span.bottonLogOut input[type=button] {
     margin-top: 1px;
 }
 
-span.bottonLogOut input[type=button]:hover{
+span.bottonLogOut input[type=button]:hover {
     opacity: 0.6;
 }
 
-span.bottonLogOut input[type=button]:active{
+span.bottonLogOut input[type=button]:active {
     opacity: 0.6;
 }
-span.bottonLogOut input[type=button]:focus{
+span.bottonLogOut input[type=button]:focus {
     outline: none;
 }
 
-#rotate{
+#rotate {
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
