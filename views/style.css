@@ -142,7 +142,7 @@ textarea {
     width: 700px;
     height: 300px;
 
-
+}
 section#content h1{
     font-size: 20x;
     text-transform: uppercase;
@@ -353,6 +353,32 @@ span.bottonStudents input[type=button]:focus{
     outline: none;
 }
 
+
+span.bottonLogOut input[type=button] {
+    width: 80px;
+    height: 25px;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.58);
+    cursor: pointer;
+    border-radius: 2px;
+    color: #000000;
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    font-weight: 100px;
+    padding: 0px;
+    margin-top: 1px;
+}
+
+span.bottonLogOut input[type=button]:hover{
+    opacity: 0.6;
+}
+
+span.bottonLogOut input[type=button]:active{
+    opacity: 0.6;
+}
+span.bottonLogOut input[type=button]:focus{
+    outline: none;
+}
 
 #rotate{
     -webkit-border-radius: 50%;
