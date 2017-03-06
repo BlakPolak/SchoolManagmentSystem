@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+
+    <body>
+        <header><img src="logo-large.png"/></header>
+        <main>
+            <aside id="menuBar">
+                <header id="login">
+                <img src="img/foto.png" width="50%" height="50%">
+                <div class="content_option">
+                   <a href="index.html">Logout</a>
+                </div> 
+                </header>
+                <nav>
+                    <ul>
+                        <li><a href="main.html"><b>Main page</b></a></li>
+                        <h3>Class</h3>
+                            <li><a href="list_attendance.html">List attendance</a></li>
+                        <h3>Students</h3>
+                            <li><a href="list_students.html">List students</a></li>
+                            <li><a href="list_teams.html">List teams</a></li>
+                            <li><a href="view_my_grades.html">View my grades</a></li>
+                        <li><a href="view_my_attendance.html">View my attendance</a></li>
+                        <h3>Mentors</h3>
+                            <li><a href="list_mentors.html">List mentors</a></li>
+                        <h3>Assignment</h3>
+                            <li><a href="list_assignment.html">List assignment</a></li>
+                        <h3>Submission</h3>
+                            <li><a href="list_submission.html">List submission</a></li>
+                        <h3>Checkpoint</h3>
+                            <li><a href="list_checkpoint.html">List checkpoint</a></li>
+
+                    </ul>
+                </nav>
+
+            </aside>
+            <section id="content">
+                <div class="content_title">
+                    <h2>Python OO Geometry</h2>
+                </div>
+                <section id=assignment>
+                    <p>The story
+                    Do you love geometry? Our young friend Zigy (Zygfryd) loves it too. Unfortunately it's one-sided love. He's studying hard for his high-school exam, but with minor success. You've got to help him!
+                    But how? You'll write a Object Oriented Python Application to teach him geometry. Don't worry! Our Finnish software architect Linus Coolvalds has already created a boilerplate for you.</p>
+                </section>
+                <table>
+                    <tr>
+                        <th>Students results</th>
+                    <tr>
+                    <tr>
+                        <td>I hate geometry!!!!</td>
+                    </tr>
+                </table><br/>
+                <div class="content_option">
+                    <a onclick="gradeSubmission()" onmouseover="this.style.cursor='pointer'">Grade assignment</a>
+                </div>
+                <br/>
+                <label id="graded"></label>
+            </section>
+        </main>
+        <footer>
+            <p>&copy; JAKKOLWIEK 2017</p>
+        </footer>
+    <script type='text/javascript' src='js/main.js'></script>
+    </body>
+</html>
