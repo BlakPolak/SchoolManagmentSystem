@@ -1,0 +1,422 @@
+html {
+	margin: 40px;
+	padding: 0;
+	}
+
+body {
+  font-family: 'Lato', sans-serif;
+  background-image: url(white-wallpapers-4.jpg);
+  background-color: #ffffff;;
+  background-attachment: fixed;
+  background-size: 1800px 920px;
+  width: 960px;
+  margin: 0 auto;
+}
+
+main {
+   display: flex;
+}
+
+header {
+    text-align: center;
+    margin-bottom:40px;   
+}
+
+header#login {
+    text-align: left;
+    background-color: rgba(89, 100, 237, 0.12);
+    min-height: 100px;
+    margin: 0px;
+    padding: 0px;
+    display: flex;   
+}
+
+aside#menuBar {
+    display: inline-block;
+    background-color: rgba(193, 193, 193, 0);
+    width: 200px;
+    padding: 0px 5px 0px 0px;
+    margin-bottom: 0px;   
+}
+
+section#content {
+    display: inline-block;
+    background-color: rgba(181, 181, 181, 0.39);
+    width: 760px;
+    min-height: 960px;
+    padding: 20px;  
+}
+
+footer {
+    background-color: rgba(2, 2, 2, 0.04);
+    padding: 1px;
+    padding-right: 20px;
+    text-align: right;
+    font-weight: bold;
+}
+
+a {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+}
+
+a:hover {
+    color: rgba(255, 6, 6, 0.67);
+}
+
+h3 {
+    font-size: 16px;
+}
+
+br {
+    line-height: 0px;
+    margin: 0;
+    font-size: 1px;
+}
+
+nav {
+   background-color: rgba(24, 77, 255, 0.09);
+   text-align: left;
+   min-height: 960px;
+   padding: 1px;
+   padding-bottom: 1px;
+   margin-bottom: 0px;
+   margin-top: 5px;
+   text-transform: uppercase;
+}
+
+nav li {
+    font-size: 14px;
+    list-style: none;
+    padding: 2px;
+    margin-left:1px;
+    margin-right:3px;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 1px;
+    width: 200px;
+}
+
+nav li a {
+    display: block;
+    color: #000;
+    padding: 4px 0px 1px 2px;
+    text-decoration: none;
+}
+
+/* Change the link color on hover */
+nav li a:hover {
+    background-color: rgba(247, 40, 40, 0.8);
+    color: #080808;
+}
+
+table {
+    width: 700px;
+    border: 2px solid #000000;
+    border-collapse: collapse;
+}
+
+section#content th {
+    background-color: rgba(39, 37, 37, 0.81);
+    color:white;
+    text-shadow: 0px 1px 1px  black; 
+}
+
+section#content table, th, td {
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #7e7c7c;
+}
+
+section#content table td {
+    background-color: white;
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid black;
+}
+
+textarea {
+    width: 700px;
+    height: 300px;
+}
+
+section#content h1 {
+    font-size: 20x;
+    text-transform: uppercase;
+    padding-top: 10px;
+    margin-bottom: 38px;
+    
+}
+
+section#content h2 {
+    font-size: 18px;
+    text-transform: uppercase;
+    padding-top: 10px;
+}
+
+section#content form {
+    font-size: 16px;
+}
+
+.content_title {
+    display: inline-block;
+    box-sizing: border-box;
+    width: 300px;
+    height: 75px;
+}
+
+.content_option {
+    display: inline-block;
+    box-sizing: border-box;
+    width: 300px;
+    height: 90px;
+    float: right;
+    /*text-align: right;*/
+    text-align: center;
+    vertical-align: middle;
+    line-height: 90px;
+    padding: 10px;
+}
+
+/*LOGO*/
+header#logo {
+    position:relative;
+    top: 0px;
+    left: 150px;
+    height: 0px;
+    width: 350px;
+    padding: 10px;
+    z-index: 0;
+}
+
+.login {
+    position:relative;
+    top: 130px;
+    left: 300px;
+    height: 300px;
+    width: 350px;
+    padding: 10px;
+    z-index: 1;
+}
+
+.login input[type=text] {
+    width: 250px;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    border-radius: 2px;
+    color: #000000;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 4px;
+    margin-top: 10px;
+}
+
+.login input[type=password] {
+    width: 250px;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    border-radius: 2px;
+    color: #000000;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 4px;
+    margin-top: 10px;
+}
+
+.login input[type=button] {
+    width: 260px;
+    height: 35px;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    border-radius: 2px;
+    color: #4e4e4e;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 6px;
+    margin-top: 10px;
+}
+
+.login input[type=button]:hover {
+    opacity: 0.8;
+}
+
+.login input[type=button]:active {
+    opacity: 0.6;
+}
+
+.login input[type=text]:focus {
+    outline: none;
+    border: 1px solid rgba(0, 0, 0, 0.9);
+}
+
+.login input[type=password]:focus {
+    outline: none;
+    border: 1px solid rgba(0, 0, 0, 0.9);
+}
+
+.login input[type=button]:focus {
+    outline: none;
+}
+
+/*Attendance*/
+
+span.bottonToNewView input[type=button] {
+    width: 200px;
+    height: 25px;
+    background: rgba(255, 255, 255, 0.61);
+    border: 1px solid rgba(0, 0, 0, 0.51);
+    cursor: pointer;
+    border-radius: 1px;
+    color: #000000;
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    font-weight: 200;
+    padding: 4px;
+    margin-bottom: 10px;
+    margin-top: 1px;
+}
+
+span.bottonToNewView input[type=button]:hover {
+    opacity: 0.7;
+}
+
+span.bottonToNewView input[type=button]:active {
+    opacity: 0.6;
+}
+span.bottonToNewView input[type=button]:focus {
+    outline: none;
+}
+
+/*Grade checkpoint*/
+
+span.bottonGradeCheckpoint input[type=button] {
+    width: 150px;
+    height: 22px;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.58);
+    cursor: pointer;
+    border-radius: 2px;
+    color: #000000;
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    font-weight: 200;
+    padding: 1px;
+    margin-top: 1px;
+    margin-left: 43px;
+}
+
+span.bottonGradeCheckpoint input[type=button]:hover {
+    opacity: 0.6;
+}
+
+span.bottonGradeCheckpoint input[type=button]:active {
+    opacity: 0.6;
+}
+span.bottonGradeCheckpoint input[type=button]:focus {
+    outline: none;
+}
+
+/*"List students"*/
+
+span.bottonStudents input[type=button] {
+    width: 80px;
+    height: 25px;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.58);
+    cursor: pointer;
+    border-radius: 2px;
+    color: #000000;
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    font-weight: 100px;
+    padding: 0px;
+    margin-top: 1px;
+}
+
+span.bottonStudents input[type=button]:hover {
+    opacity: 0.6;
+}
+
+span.bottonStudents input[type=button]:active {
+    opacity: 0.6;
+}
+span.bottonStudents input[type=button]:focus {
+    outline: none;
+}
+
+span.bottonLogOut input[type=button] {
+    width: 80px;
+    height: 25px;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.58);
+    cursor: pointer;
+    border-radius: 2px;
+    color: #000000;
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    font-weight: 100px;
+    padding: 0px;
+    margin-top: 1px;
+}
+
+span.bottonLogOut input[type=button]:hover {
+    opacity: 0.6;
+}
+
+span.bottonLogOut input[type=button]:active {
+    opacity: 0.6;
+}
+span.bottonLogOut input[type=button]:focus {
+    outline: none;
+}
+
+#rotate {
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    animation-name: rotate;
+    animation-duration: 12s;
+    animation-iteration-count: infinite;
+}
+
+@-webkit-keyframes rotate /* Safari and Chrome */ {
+    from {
+        -ms-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -ms-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+@keyframes rotate {
+    from {
+        -ms-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -ms-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
