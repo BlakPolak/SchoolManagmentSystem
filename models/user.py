@@ -19,7 +19,10 @@ class User:
             login:login
             password: check_if_correct(password, str)
     """
-    def __init__(self, _id, name, surname, gender, birth_date, email, login, password):
+
+    path = "db/program.db"
+
+    def __init__(self, _id, name, surname, gender, birth_date, email, login, password, user_type):
         """
         Initialize user object
 
@@ -44,6 +47,34 @@ class User:
         self.email = email
         self.login = login
         self.password = self.check_if_correct(password, str)
+        self.user_type = user_type
+
+    @classmethod
+    def get_user(cls, login, password):
+        """ On successful authentication returns User or Manager object
+            Args:
+                login (str): login of the user
+                password (str): password of the user
+            Returns:
+                User (obj): if authentication passed
+                None: if authentication fails
+        """
+        conn = sqlite3.connect(cls.path)
+        cursor = conn.execute("SELECT * FROM user")
+        for row in cursor.fetchall():
+            if row[6] == login and row[7] == password:
+                conn.close()
+                if row[8] == "manager":
+                    return Manager(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
+                elif row[8] == "student":
+                    return Student(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
+                elif row[8] == "employee":
+                    return Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
+                elif row[8] == "mentor":
+                    return Mentor(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
+        conn.close()
+        return None
+
 
     @staticmethod
     def check_if_correct(validate, check_type):
@@ -98,7 +129,7 @@ class User:
 
 class Employee(User):
     """Class creates object employee"""
-    def __init__(self, _id, name, surname, gender, birth_date, email, login, password):
+    def __init__(self, _id, name, surname, gender, birth_date, email, login, password, user_type):
         """
         Initialize employee object that inherits from User class
 
@@ -113,7 +144,7 @@ class Employee(User):
             login:login
             password: check_if_correct(password, str)
         """
-        super().__init__(_id, name, surname, gender, birth_date, email, login, password)
+        super().__init__(_id, name, surname, gender, birth_date, email, login, password, user_type)
 
     def list_students(self):
         """
@@ -177,7 +208,7 @@ class Employee(User):
 
 class Student(User):
     """Class creates object student"""
-    def __init__(self, _id, name, surname, gender, birth_date, email, login, password):
+    def __init__(self, _id, name, surname, gender, birth_date, email, login, password, user_type):
         """
         Initialize student object that inherits from User class
 
@@ -192,7 +223,7 @@ class Student(User):
             login:login
             password: check_if_correct(password, str)
         """
-        super().__init__(_id, name, surname, gender, birth_date, email, login, password)
+        super().__init__(_id, name, surname, gender, birth_date, email, login, password, user_type)
         self.my_submissions_list = []
 
     def __str__(self):
@@ -389,7 +420,7 @@ class Student(User):
 
 class Mentor(Employee):
     """Class creates object mentor"""
-    def __init__(self, _id, name, surname, gender, birth_date, email, login, password):
+    def __init__(self, _id, name, surname, gender, birth_date, email, login, password, user_type):
         """
         Initialize mentor object that inherits from User class
 
@@ -404,7 +435,7 @@ class Mentor(Employee):
             login:login
             password: check_if_correct(password, str)
         """
-        super().__init__(_id, name, surname, gender, birth_date, email, login, password)
+        super().__init__(_id, name, surname, gender, birth_date, email, login, password, user_type)
 
     def add_student(self):
         """
@@ -775,7 +806,7 @@ class Mentor(Employee):
 
 class Manager(Employee):
     """Class creates object mentor"""
-    def __init__(self, _id, name, surname, gender, birth_date, email, login, password):
+    def __init__(self, _id, name, surname, gender, birth_date, email, login, password, user_type):
         """
         Initialize mentor object that inherits from User class
 
@@ -790,7 +821,7 @@ class Manager(Employee):
             login:login
             password: check_if_correct(password, str)
         """
-        super().__init__(_id, name, surname, gender, birth_date, email, login, password)
+        super().__init__(_id, name, surname, gender, birth_date, email, login, password, user_type)
 
     @staticmethod
     def add_mentor():

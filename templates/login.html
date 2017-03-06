@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}
+    Login
+{% endblock %}
+{% block main_content %}
+    <div class="col-md-3 col-md-offset-2">
+        <img src="{{ url_for('static', filename='img/login.png') }}" width="250" height="250">
+    </div>
+    <div class="col-md-4">
+        {% block content %}
+            {{ super() }}
+        {% endblock %}
+        <div class="row">
+            <div class="col-md-10">
+                <form id="login" class="" method="POST" role="form" action="{{ url_for("login") }}">
+                  <fieldset>
+                      <legend>Log in</legend>
+                          <div class="row">
+                              <div class="form-group col-xs-12">
+                              <label for="username"><span class="text-danger">*</span>Username:</label>
+                                  <div class="input-group">
+                                      <input class="form-control" id="username" type="text" name="username" placeholder="Username" required autofocus/>
+                                      <span class="input-group-btn">
+                                          <label class="btn btn-primary"><span class="glyphicon glyphicon-user" aria-hidden="true"></label>
+                                      </span>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="form-group col-xs-12">
+                                  <label for="password"><span class="text-danger">*</span>Password:</label>
+                                  <div class="input-group">
+                                      <input class="form-control" id="password" type="password" name="password" placeholder="Password" required/>
+                                      <span class="input-group-btn">
+                                          <label class="btn btn-primary"><span class="glyphicon glyphicon-lock" aria-hidden="true"></label>
+                                      </span>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="form-group col-xs-4">
+                                  <button class="btn btn-primary" type="submit">Submit</button>
+                              </div>
+                          </div>
+                  </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

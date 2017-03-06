@@ -2,7 +2,7 @@ import sqlite3
 
 
 class Data:
-    db = "program.db"
+    db = "db/program.db"
 
     def __init__(self):
         pass
