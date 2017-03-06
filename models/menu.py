@@ -1,5 +1,4 @@
-import user
-import ui
+from models import user, ui
 
 
 class Menu:

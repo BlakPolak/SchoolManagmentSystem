@@ -1,6 +1,7 @@
 import getpass
-from data import Data
-import user
+
+from models import user
+from models.data import Data
 
 
 class Ui:

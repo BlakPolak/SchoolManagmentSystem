@@ -1,7 +1,13 @@
-import program
-import ui
-import menu
+import os
 
+from flask import Flask
+from flask_jsglue import JSGlue
+
+from models import ui, menu
+
+app = Flask(__name__)
+app.secret_key = os.urandom(24)
+jsglue = JSGlue(app)
 
 def main():
     """Method starts program and checks users access"""

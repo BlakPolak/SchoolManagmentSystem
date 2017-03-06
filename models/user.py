@@ -1,9 +1,7 @@
-import ui
-import assignment
-import submission
 import datetime
-import attendance
 import sqlite3
+
+from models import ui
 
 
 class User:
