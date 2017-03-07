@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-    List of students
+    List of mentors
 {% endblock %}
 {% block navbar %}
     {{ super() }}
@@ -16,15 +16,15 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                {% if list_of_students %}
+                {% if list_of_mentors %}
                     <tbody>
                         <tr>
-{#                            <td><td><a class="btn btn-default" href="{{ url_for("add_new_student") }}" role="button" > Add new student</a></td></td>#}
+{#                            <td><td><a class="btn btn-default" href="{{ url_for("add_new_mentor") }}" role="button" > Add new student</a></td></td>#}
                         </tr>
-                    {% for student in list_of_students %}
+                    {% for mentor in list_of_mentors %}
                         <tr>
-                            <td>{{ student._id }}</td>
-{#                            <td><a href="{{ url_for("view_student_details") }}">{{ student.name }} {{ student.surname }}</a></td>#}
+                            <td>{{ mentor._id }}</td>
+{#                            <td><a href="{{ url_for("view_student_details") }}">{{ mentor.name }} {{ mentor.surname }}</a></td>#}
 {#                            <td><a class="btn btn-default" href="{{ url_for("edit_student") }}" role="button"> Edit</a></td>#}
 {#                            <td><a class="btn btn-default" href="{{ url_for("remove_student") }}" role="button" onclick="showConfirm()">Remove</a></td>#}
 {#                            <td><a class="btn btn-default" href="{{ url_for("add_to_team") }}" role="button">Add to team</a></td>#}

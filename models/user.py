@@ -940,17 +940,16 @@ class Manager(Employee):
              mentor_list
         """
         mentor_list = []
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         cursor.execute("SELECT * FROM `User` WHERE User_type='mentor'")
         mentors = cursor.fetchall()
-        n = 1
         for mentor in mentors:
-            mentor_list.append([str(n) + ".", mentor[1], mentor[2]])
-            n += 1
-        data.commit()
+            mentor_list.append(Mentor(mentor[0], mentor[1], mentor[2], mentor[3], mentor[4],
+                                      mentor[5], mentor[6], mentor[7], mentor[8]))
         data.close()
         return mentor_list
+
 
     @staticmethod
     def view_mentors_details():

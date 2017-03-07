@@ -57,6 +57,13 @@ def manager():
 def list_students():
     return render_template("list_students.html", list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
 
+@app.route("/list_mentors")
+def list_mentors():
+    return render_template("list_mentors.html", list_of_mentors=g.logged_user.list_mentors(), logged_user=g.logged_user)
+
+
+
+
 @app.route("/logout")
 def logout():
     """ Log out current user
