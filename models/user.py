@@ -146,7 +146,7 @@ class Employee(User):
         """
         super().__init__(_id, name, surname, gender, birth_date, email, login, password, user_type)
 
-    def list_students(self):
+    def get_students(self):
         """
         Return student list to display
 
@@ -154,14 +154,12 @@ class Employee(User):
                 student list
         """
         student_list = []
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        cursor.execute("SELECT * FROM `User` WHERE User_type='student'")
+        cursor.execute("SELECT * FROM User WHERE User_type='student'")
         students = cursor.fetchall()
-        n = 1
         for student in students:
-            student_list.append([str(n) + ".", student[1], student[2]])
-            n += 1
+            student_list.append(Student(student[0], student[1], student[2], student[3], student[4], student[5], student[6], student[7], student[8]))
         data.close()
         return student_list
 

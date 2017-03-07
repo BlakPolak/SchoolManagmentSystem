@@ -55,7 +55,7 @@ def manager():
 
 @app.route("/list_students")
 def list_students():
-    return render_template("list_students.html")
+    return render_template("list_students.html", list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
 
 @app.route("/logout")
 def logout():
