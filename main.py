@@ -57,12 +57,14 @@ def manager():
 def list_students():
     return render_template("list_students.html", list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
 
+
 @app.route("/list_mentors")
 def list_mentors():
     return render_template("list_mentors.html", list_of_mentors=g.logged_user.list_mentors(), logged_user=g.logged_user)
 
-
-
+@app.route('/list_students_employee')
+def list_students_employee():
+    return render_template('list_students_employee.html', list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
 
 @app.route("/logout")
 def logout():
@@ -87,12 +89,15 @@ def login():
             flash("Your login data was incorrect", "alert alert-danger text-centered")
     return render_template("login.html")
 
+
+
 @app.errorhandler(404)
 def page_not_found(error):
     """ Basic 404 error handle. Redirect to login page.
     """
     flash("Invalid address: "+str(error), "alert alert-danger text-centered")
     return render_template("login.html")
+
 
 
 if __name__ == "__main__":
