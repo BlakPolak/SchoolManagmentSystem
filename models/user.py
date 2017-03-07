@@ -282,7 +282,7 @@ class Student(User):
         assignments_to_submit = []
         for assignment in assignments:
             if assignment[0] not in self.list_submissions():
-                assignments_to_submit.append(list(assignment))
+                assignments_to_submit.append(assignment)
         data.close()
         return assignments_to_submit
 
@@ -395,7 +395,7 @@ class Student(User):
 
         """
         student_id = self._id
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect(User.path)
         cursor = data.cursor()
         cursor.execute("SELECT COUNT(Presence) FROM `Attendance` WHERE ID_Student='{}'"
                        "AND `Presence`= 0".format(student_id))
@@ -404,16 +404,10 @@ class Student(User):
         cursor.execute("SELECT COUNT(Presence) FROM `Attendance`")
         number_of_days = cursor.fetchall()
         days = float(number_of_days[0][0])
-        if days == 0:
-            print("No attendance!")
-            return
-        # TODO: new validation
-        percent_of_attendance = (number_of_presence / days) * 100
-        percent_of_attendance_list =[]
-        percent_of_attendance_list.append([percent_of_attendance])
+        attendance_in_percent = (number_of_presence / days) * 100
         data.commit()
         data.close()
-        return percent_of_attendance_list
+        return round(attendance_in_percent)
 
 
 class Mentor(Employee):
