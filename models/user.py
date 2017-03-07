@@ -2,6 +2,8 @@ import datetime
 import sqlite3
 
 from models import ui
+from models.student_statistic import StudentStatistic
+from models.team import Team
 
 
 class User:
@@ -163,6 +165,20 @@ class Employee(User):
         data.close()
         return student_list
 
+    def get_student(self, id):
+        """
+        Return student list to display
+
+        Returns:
+                student list
+        """
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT * FROM User WHERE ID='{}'".format(id))
+        student_row = cursor.fetchone()
+        student = Student(student_row[0], student_row[1], student_row[2], student_row[3], student_row[4], student_row[5], student_row[6], student_row[7], student_row[8])
+        data.close()
+        return student
 
     def list_students_simple_view(self):
         """
@@ -629,7 +645,7 @@ class Mentor(Employee):
         data.close()
         print("Assignment was added.")
 
-    def list_teams(self):
+    def get_teams(self):
         """
         Method allows mentor to list teams
 
@@ -639,13 +655,13 @@ class Mentor(Employee):
              None
         """
         team_list = []
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         cursor.execute("SELECT user.id, team_name, name, surname FROM teams "
                        "INNER JOIN user ON teams.id_student=user.id ORDER BY team_name")
         teams = cursor.fetchall()
         for team in teams:
-            team_list.append([team[0], team[1], team[2], team[3]])
+            team_list.append(Team(team[0], team[1], team[2], team[3]))
         data.close()
         return team_list
 
@@ -741,7 +757,7 @@ class Mentor(Employee):
             print("Checkpoint already graded.")
         data.close()
 
-    def check_student_performance(self):
+    def check_student_performance(self, student_id, date_from, date_to):
         """
         Method allows mentor to check performance of particular student by showing hes statistics
 
@@ -750,19 +766,15 @@ class Mentor(Employee):
         Return:
              None
         """
-        return_list = []
-        choosed_student = ui.Ui.get_inputs([""], "Choose student to check hes performance")
-        student_to_check_id = int(choosed_student[0])
-        period = ui.Ui.get_inputs(["Date from", "Date to"], "Enter dates for performance check")
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        cursor.execute("SELECT name, surname FROM user where ID={}".format(student_to_check_id))
+        cursor.execute("SELECT name, surname FROM user where ID={}".format(student_id))
         _data = cursor.fetchone()
         student_name = _data[0]
         student_surname = _data[1]
 
         cursor.execute("SELECT * FROM attendance where id_student={} AND date BETWEEN '{}' AND '{}'"
-                       .format(student_to_check_id, period[0], period[1]))
+                       .format(student_id, date_from, date_to))
         _data = cursor.fetchall()
         all_days = 0
         days_in_school = 0
@@ -770,10 +782,13 @@ class Mentor(Employee):
             all_days += 1
             if item[3] == "1":
                 days_in_school += 1
-        avg_days = round(days_in_school/all_days, 2)
+        if all_days == 0:
+            avg_days = 0
+        else:
+            avg_days = round(days_in_school/all_days, 2)
 
         cursor.execute("SELECT Grade FROM Submission where id_student={} AND Submittion_date BETWEEN '{}' AND '{}'"
-                       .format(student_to_check_id, period[0], period[1]))
+                       .format(student_id, date_from, date_to))
         _data = cursor.fetchall()
         grades_quantity = 0
         grades_sum = 0
@@ -786,7 +801,7 @@ class Mentor(Employee):
             grades_avg = 0
 
         cursor.execute("SELECT Card FROM Checkpoint_submittion where id_student={} AND date BETWEEN '{}' AND '{}'"
-                       .format(student_to_check_id, period[0], period[1]))
+                       .format(student_id, date_from, date_to))
         _data = cursor.fetchall()
         yellow_cards = 0
         red_cards = 0
@@ -796,10 +811,10 @@ class Mentor(Employee):
             elif item[0] == "red":
                 red_cards += 1
 
-        return_list.append([student_name, student_surname, avg_days,
-                            grades_avg, yellow_cards, red_cards])
+        student_statistics = StudentStatistic(student_id, student_name, student_surname, avg_days,
+                                      grades_avg, yellow_cards, red_cards)
         data.close()
-        return return_list
+        return student_statistics
 
 
 class Manager(Employee):

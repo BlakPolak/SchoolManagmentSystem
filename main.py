@@ -57,6 +57,33 @@ def manager():
 def list_students():
     return render_template("list_students.html", list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
 
+@app.route("/add_new_student", methods=["POST", "GET"])
+def add_new_student():
+    if request.method == "POST":
+        pass
+    return render_template("add_new_student.html", logged_user=g.logged_user)
+
+@app.route("/view_student_details")
+def view_student_details():
+    student = g.logged_user.get_student(request.args["id"])
+    return render_template("view_student_details.html", logged_user=g.logged_user, student=student)
+
+@app.route("/view_student_statistics", methods=["POST", "GET"])
+def view_student_statistics():
+    if request.method == "POST":
+        if request.form["date_from"] and request.form["date_to"]:
+            student_statistics = g.logged_user.check_student_performance(request.form["student_id"], request.form["date_from"], request.form["date_to"])
+            return render_template("view_student_statistics.html",
+                                   date_from=request.form["date_from"], date_to=request.form["date_to"],
+                                   logged_user=g.logged_user, student_statistics=student_statistics, student_id=request.form["student_id"])
+    return render_template("view_student_statistics.html", logged_user=g.logged_user, student_id=request.args["student_id"])
+
+
+@app.route("/list_teams", methods=["POST", "GET"])
+def list_teams():
+    list_of_teams = g.logged_user.get_teams()
+    return render_template("list_teams.html", list_of_teams=list_of_teams, logged_user=g.logged_user)
+
 @app.route("/logout")
 def logout():
     """ Log out current user

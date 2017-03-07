@@ -1,3 +1,11 @@
+function ShowStudentStatistics() {
+    var date_from = document.getElementById("date_from");
+    var date_to = document.getElementById("date_to");
+    if (date_from && date_to) {
+        window.location = Flask.url_for("view_student_statistics", {"date_from": date_from, "date_to": date_to})
+    }
+    return false
+}
 
 function showConfirm() {
     if (confirm("Are you sure") == false) {
