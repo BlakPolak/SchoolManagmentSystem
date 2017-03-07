@@ -62,6 +62,10 @@ def list_students():
 def list_mentors():
     return render_template("list_mentors.html", list_of_mentors=g.logged_user.list_mentors(), logged_user=g.logged_user)
 
+@app.route('/edit_mentor')
+def edit_mentor():
+    print ('I am in edit mentor')
+
 @app.route('/list_students_employee')
 def list_students_employee():
     return render_template('list_students_employee.html', list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
