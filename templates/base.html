@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        <title>{% block title %}{% endblock %}</title>
+    {% endblock %}
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-centered block logo">
+                <img src="{{ url_for('static', filename='img/logo-large.png') }}" class="logo"/>
+            </div>
+        </div>
+        <div class="row">
+        {% block main_content %}
+            <div class="col-md-3 block">
+                <div class="row">
+                    <div class="col-md-3 col-md-offset-1 block">
+                        <img src="{{ url_for('static', filename='img/foto.png') }}"/>
+                    </div>
+                    <div class="col-md-6 col-md-offset-1 block">
+                        {% block logged %}
+                            <div>Logged as <strong>{{ logged_user.name }}</strong></div>
+                            <div><a class="btn btn-default button-max-width" href="{{ url_for("logout") }}" role="button">Logout</a></div>
+                        {% endblock %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-1 block">
+                        {% block navbar %}
+                            {% if logged_user.user_type == "mentor" %}
+                                {% include "mentor_menu.html" %}
+                            {% elif logged_user.user_type == "manager" %}
+                                {% include "manager_menu.html" %}
+                            {% elif logged_user.user_type == "employee" %}
+                                {% include "employee_menu.html" %}
+                            {% elif logged_user.user_type == "student" %}
+                                {% include "student_menu.html" %}
+                            {% endif %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9 block">
+                    {% block content %}
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="{{ category }}" role="alert"><strong>{{ message }}</strong></div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                    {% endblock %}
+            </div>
+        {% endblock %}
+        </div>
+        <div class="row">
+            <div class="col-md-12 panel-footer footer-height block">
+                {% block footer %}Copyright &copy; Jakkolwiek 2017{% endblock %}
+            </div>
+        </div>
+    </div>
+{% block scripts %}
+{% endblock %}
+</body>
+</html>
