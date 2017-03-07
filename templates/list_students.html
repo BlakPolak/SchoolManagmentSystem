@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}
+    List of students
+{% endblock %}
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+    {{ super() }}
+    {% if list_of_items %}
+        <form method="post" class="manager">
+            <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Creation date</th>
+                    <th>Todo name</th>
+                    <th>Status</th>
+                    <th>Due Date</th>
+                    <th>Priority</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for item in list_of_items %}
+                    <tr>
+                        <td>{{ item.creation_date }}</td>
+                        <td>{{ item.name }}</td>
+                        {% if item.done=="True" %}
+                            <td><input type="checkbox" name="item_check" checked="checked" onchange="window.location='{{ url_for("toggle", todo_id=item.id, checked="False") }}';"></td>
+                        {% else %}
+                            <td><input type="checkbox" name="item_check" onchange="window.location='{{ url_for("toggle", todo_id=item.id, checked="True") }}';"></td>
+                        {% endif %}
+                        <td>{{ item.due_date }}</td>
+                        <td><input type="range" name="priority" min="0" max="10" value="{{ item.priority }}" disabled></td>
+                        <td><a class="btn btn-default" href="{{ url_for("remove", todo_id=item.id, choosed_list_id=choosed_list.todo_list_id) }}" id="remove_{{ item.id }}" role="button">Remove</a></td>
+                        <td><a class="btn btn-default" href="{{ url_for("edit", todo_id=item.id, choosed_list_id=choosed_list.todo_list_id) }}" role="button">Edit</a ></td>
+                    </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <a class="btn btn-default button-max-width" href="{{ url_for("add", choosed_list_id=choosed_list.todo_list_id) }}" role="button">Add new item</a>
+            <a class="btn btn-default button-max-width" href="{{ url_for("remove_list", choosed_list_id=choosed_list.todo_list_id) }}" role="button">Remove list</a>
+        </form>
+
+    {% elif choosed_list %}
+        <a class="btn btn-default button-max-width" href="{{ url_for("add", choosed_list_id=choosed_list.todo_list_id) }}" role="button">Add new item</a>
+        <a class="btn btn-default button-max-width" href="{{ url_for("remove_list", choosed_list_id=choosed_list.todo_list_id) }}" role="button">Remove list</a>
+    {% endif %}
+{% endblock %}
