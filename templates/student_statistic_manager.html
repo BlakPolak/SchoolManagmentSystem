@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}
+    List of students
+{% endblock %}
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+    {{ super() }}
+        <form method="post">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Index</th>
+
+                    </tr>
+                </thead>
+
+                    <tbody>
+                    {% for stat in stats %}
+                        <tr>
+                            <td> stat {{ stat }}</td>
+
+                        </tr>
+                    {% endfor %}
+                  </tbody>
+
+            </table>
+        </form>
+{% endblock %}

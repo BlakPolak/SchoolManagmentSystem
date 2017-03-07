@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}
+    List of students
+{% endblock %}
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+    {{ super() }}
+        <form method="post">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Index</th>
+                        <th>Student</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                {% if list_of_students %}
+                    <tbody>
+                    {% for student in list_of_students %}
+                        <tr>
+                            <td>{{ student._id }}</td>
+                            <td>{{ student.name }} {{ student.surname }}</td>
+                            <td><a class="btn btn-default" href="{{ url_for ('average_grades_manager') }}" role="button"> Average grade</a></td>
+                            <td><a class="btn btn-default"  href="{{ url_for ('student_statistic_manager') }}" role="button" onclick="showConfirm()">Student statistics</a></td>
+                        </tr>
+                    {% endfor %}
+                  </tbody>
+                {% endif %}
+            </table>
+        </form>
+{% endblock %}

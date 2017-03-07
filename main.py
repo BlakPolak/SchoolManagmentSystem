@@ -62,9 +62,21 @@ def list_students():
 def list_mentors():
     return render_template("list_mentors.html", list_of_mentors=g.logged_user.list_mentors(), logged_user=g.logged_user)
 
-@app.route('/list_students_employee')
-def list_students_employee():
-    return render_template('list_students_employee.html', list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
+
+@app.route("/list_students_manager")
+def list_students_manager():
+    return render_template("list_students_manager.html", list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
+
+
+@app.route('/student_statistic_manager')
+def student_statistic_manager():
+    return render_template('student_statistic_manager.html', stats=g.logged_user.full_stats_for_students(), logged_user=g.logged_user)
+
+
+@app.route('/average_grades_manager')
+def average_grades_manager():
+    return render_template('average_grades_manager.html', grades=g.logged_user.average_grade_for_student(), logged_user=g.logged_user)
+
 
 @app.route("/logout")
 def logout():
