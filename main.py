@@ -45,6 +45,15 @@ def mentor():
 def student():
     return render_template("student.html", logged_user=g.logged_user)
 
+@app.route("/view_my_attendance")
+def view_my_attendance():
+    return render_template("view_my_attendance.html", attendance=g.logged_user.check_my_attendance(), logged_user=g.logged_user)
+
+@app.route("/list_assignment")
+def list_assignment():
+    return render_template("list_assignment.html", assignment_list=g.logged_user.check_my_attendance(),
+                           logged_user=g.logged_user)
+
 @app.route("/employee")
 def employee():
     return render_template("employee.html", logged_user=g.logged_user)
