@@ -45,6 +45,15 @@ def mentor():
 def student():
     return render_template("student.html", logged_user=g.logged_user)
 
+@app.route("/view_my_attendance")
+def view_my_attendance():
+    return render_template("view_my_attendance.html", attendance=g.logged_user.check_my_attendance(), logged_user=g.logged_user)
+
+@app.route("/list_assignment")
+def list_assignment():
+    return render_template("list_assignment.html", assignment_list=g.logged_user.check_my_attendance(),
+                           logged_user=g.logged_user)
+
 @app.route("/employee")
 def employee():
     return render_template("employee.html", logged_user=g.logged_user)
@@ -84,6 +93,18 @@ def list_teams():
     list_of_teams = g.logged_user.get_teams()
     return render_template("list_teams.html", list_of_teams=list_of_teams, logged_user=g.logged_user)
 
+@app.route("/list_mentors")
+def list_mentors():
+    return render_template("list_mentors.html", list_of_mentors=g.logged_user.list_mentors(), logged_user=g.logged_user)
+
+@app.route('/edit_mentor')
+def edit_mentor():
+    print ('I am in edit mentor')
+
+@app.route('/list_students_employee')
+def list_students_employee():
+    return render_template('list_students_employee.html', list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
+
 @app.route("/logout")
 def logout():
     """ Log out current user
@@ -107,12 +128,15 @@ def login():
             flash("Your login data was incorrect", "alert alert-danger text-centered")
     return render_template("login.html")
 
+
+
 @app.errorhandler(404)
 def page_not_found(error):
     """ Basic 404 error handle. Redirect to login page.
     """
     flash("Invalid address: "+str(error), "alert alert-danger text-centered")
     return render_template("login.html")
+
 
 
 if __name__ == "__main__":

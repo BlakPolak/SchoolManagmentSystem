@@ -298,7 +298,7 @@ class Student(User):
         assignments_to_submit = []
         for assignment in assignments:
             if assignment[0] not in self.list_submissions():
-                assignments_to_submit.append(list(assignment))
+                assignments_to_submit.append(assignment)
         data.close()
         return assignments_to_submit
 
@@ -411,7 +411,7 @@ class Student(User):
 
         """
         student_id = self._id
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect(User.path)
         cursor = data.cursor()
         cursor.execute("SELECT COUNT(Presence) FROM `Attendance` WHERE ID_Student='{}'"
                        "AND `Presence`= 0".format(student_id))
@@ -420,16 +420,10 @@ class Student(User):
         cursor.execute("SELECT COUNT(Presence) FROM `Attendance`")
         number_of_days = cursor.fetchall()
         days = float(number_of_days[0][0])
-        if days == 0:
-            print("No attendance!")
-            return
-        # TODO: new validation
-        percent_of_attendance = (number_of_presence / days) * 100
-        percent_of_attendance_list =[]
-        percent_of_attendance_list.append([percent_of_attendance])
+        attendance_in_percent = (number_of_presence / days) * 100
         data.commit()
         data.close()
-        return percent_of_attendance_list
+        return round(attendance_in_percent)
 
 
 class Mentor(Employee):
@@ -794,7 +788,7 @@ class Mentor(Employee):
         grades_sum = 0
         for item in _data:
             grades_quantity += 1
-            grades_sum += item[0]
+            grades_sum += int(item[0])
         if grades_quantity:
             grades_avg = round(grades_sum/grades_quantity, 2)
         else:
@@ -955,17 +949,16 @@ class Manager(Employee):
              mentor_list
         """
         mentor_list = []
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         cursor.execute("SELECT * FROM `User` WHERE User_type='mentor'")
         mentors = cursor.fetchall()
-        n = 1
         for mentor in mentors:
-            mentor_list.append([str(n) + ".", mentor[1], mentor[2]])
-            n += 1
-        data.commit()
+            mentor_list.append(Mentor(mentor[0], mentor[1], mentor[2], mentor[3], mentor[4],
+                                      mentor[5], mentor[6], mentor[7], mentor[8]))
         data.close()
         return mentor_list
+
 
     @staticmethod
     def view_mentors_details():

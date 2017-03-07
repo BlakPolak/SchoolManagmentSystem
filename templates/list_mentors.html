@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}
+    List of mentors
+{% endblock %}
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+    {{ super() }}
+        <form method="post">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Index</th>
+                        <th>Student</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                {% if list_of_mentors %}
+                    <tbody>
+                        <tr>
+{#                            <td><td><a class="btn btn-default" href="{{ url_for("add_new_mentor") }}" role="button" > Add new student</a></td></td>#}
+                        </tr>
+                    {% for mentor in list_of_mentors %}
+                        <tr>
+                            <td>{{ mentor._id }}</td>
+                            <td>{{ mentor.name }} {{ mentor.surname }}</td>
+                            <td>
+                                <a class="btn btn-default" href="{{ url_for("edit_mentor") }}" role="button"> Edit</a>
+{#                                <a class="btn btn-default" href="{{ url_for("remove_mentor") }}" role="button" onclick="showConfirm()">Remove</a>#}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                  </tbody>
+                {% endif %}
+            </table>
+        </form>
+{% endblock %}
