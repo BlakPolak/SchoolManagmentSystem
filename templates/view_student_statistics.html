@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}
+    View student statistics
+{% endblock %}
+{% block content %}
+    <h2 class="content">View student statistics</h2>
+    {{ super() }}
+    {% if student_statistics %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Avg presence</th>
+                    <th>Avg grades</th>
+                    <th>Yellow cards</th>
+                    <th>Red cards</th>
+                </tr>
+            </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ student_statistics.student_name }}</td>
+                        <td>{{ student_statistics.student_surname }}</td>
+                        <td>{{ student_statistics.avg_days }}</td>
+                        <td>{{ student_statistics.grades_avg }}</td>
+                        <td>{{ student_statistics.yellow_cards }}</td>
+                        <td>{{ student_statistics.red_cards }}</td>
+                    </tr>
+              </tbody>
+        </table>
+    {% endif %}
+
+    <form class="manager" method="post">
+        <fieldset>
+            <legend>Provide dates for statistics</legend>
+        </fieldset>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date from</th>
+                    <th>Date to</th>
+                </tr>
+            </thead>
+                <tbody>
+                     <tr>
+                         <td>
+                             <input type="date" class="form-control" name="date_from" placeholder="Date from" required>
+                         </td>
+                         <td>
+                             <input type="date" class="form-control" name="date_to" placeholder="Date to" required>
+                         </td>
+                         <td>
+                             <button type="submit" class="btn btn-default button-max-width">Submit</button>
+                         </td>
+                         <td>
+                             <a href="{{ url_for('view_student_details', id=student_id) }}" class="btn btn-default button-max-width">Return to Details</a>
+                         </td>
+                    </tr>
+                </tbody>
+        </table>
+    <input type="hidden" name="student_id" value="{{ student_id }}">
+    </form>
+{% endblock %}
+{% block scripts %}
+{#    <script src="{{ url_for('static', filename='js/main.js') }}"></script>#}
+{% endblock %}

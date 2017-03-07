@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}
+    View student details
+{% endblock %}
+{% block content %}
+    <h2 class="content">View student details</h2>
+    {{ super() }}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Gender</th>
+                <th>Date of birth</th>
+                <th>Email</th>
+                <th>Login</th>
+                <th>Password</th>
+            </tr>
+        </thead>
+            <tbody>
+                <tr>
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.surname }}</td>
+                    <td>{{ student.gender }}</td>
+                    <td>{{ student.birth_date }}</td>
+                    <td>{{ student.email }}</td>
+                    <td>{{ student.login }}</td>
+                    <td>{{ student.password }}</td>
+                </tr>
+          </tbody>
+    <a class="btn btn-default" href="{{ url_for("view_student_statistics", student_id=student._id) }}" role="button">Student statistics</a>
+    </table>
+{% endblock %}

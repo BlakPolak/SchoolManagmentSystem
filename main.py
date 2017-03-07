@@ -45,6 +45,15 @@ def mentor():
 def student():
     return render_template("student.html", logged_user=g.logged_user)
 
+@app.route("/view_my_attendance")
+def view_my_attendance():
+    return render_template("view_my_attendance.html", attendance=g.logged_user.check_my_attendance(), logged_user=g.logged_user)
+
+@app.route("/list_assignment")
+def list_assignment():
+    return render_template("list_assignment.html", assignment_list=g.logged_user.check_my_attendance(),
+                           logged_user=g.logged_user)
+
 @app.route("/employee")
 def employee():
     return render_template("employee.html", logged_user=g.logged_user)
@@ -56,6 +65,33 @@ def manager():
 @app.route("/list_students")
 def list_students():
     return render_template("list_students.html", list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
+
+@app.route("/add_new_student", methods=["POST", "GET"])
+def add_new_student():
+    if request.method == "POST":
+        pass
+    return render_template("add_new_student.html", logged_user=g.logged_user)
+
+@app.route("/view_student_details")
+def view_student_details():
+    student = g.logged_user.get_student(request.args["id"])
+    return render_template("view_student_details.html", logged_user=g.logged_user, student=student)
+
+@app.route("/view_student_statistics", methods=["POST", "GET"])
+def view_student_statistics():
+    if request.method == "POST":
+        if request.form["date_from"] and request.form["date_to"]:
+            student_statistics = g.logged_user.check_student_performance(request.form["student_id"], request.form["date_from"], request.form["date_to"])
+            return render_template("view_student_statistics.html",
+                                   date_from=request.form["date_from"], date_to=request.form["date_to"],
+                                   logged_user=g.logged_user, student_statistics=student_statistics, student_id=request.form["student_id"])
+    return render_template("view_student_statistics.html", logged_user=g.logged_user, student_id=request.args["student_id"])
+
+
+@app.route("/list_teams", methods=["POST", "GET"])
+def list_teams():
+    list_of_teams = g.logged_user.get_teams()
+    return render_template("list_teams.html", list_of_teams=list_of_teams, logged_user=g.logged_user)
 
 
 @app.route("/list_mentors")
@@ -78,6 +114,16 @@ def average_grades_manager():
     return render_template('average_grades_manager.html', grades=g.logged_user.average_grade_for_student(), logged_user=g.logged_user)
 
 
+@app.route('/edit_mentor')
+def edit_mentor():
+    print ('I am in edit mentor')
+
+
+@app.route('/list_students_employee')
+def list_students_employee():
+    return render_template('list_students_employee.html', list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
+
+
 @app.route("/logout")
 def logout():
     """ Log out current user
@@ -85,6 +131,7 @@ def logout():
     session.pop("username", None)
     flash("Logged out successfully", "alert alert-success text-centered")
     return redirect(url_for("login"))
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -100,7 +147,6 @@ def login():
         else:
             flash("Your login data was incorrect", "alert alert-danger text-centered")
     return render_template("login.html")
-
 
 
 @app.errorhandler(404)

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}
+    Add new student
+{% endblock %}
+{% block content %}
+    <h1>Add new student</h1>
+    <h2 class="content">Add new Student</h2>
+    <form method="post" class="manager">
+        <div class="form-group">
+            <label>Name
+                <input type="text" class="form-control" name="name" placeholder="Student name" required>
+            </label>
+        </div>
+        <div class="form-group">
+            <label>Surname
+                <input type="text" class="form-control" name="surname" placeholder="Student surname" required>
+            </label>
+        </div>
+        <div class="form-group">
+            <label>Gender
+                <select class="form-control form-group" name="gender" required>
+                    <option selected>male</option>
+                    <option>female</option>
+                    <option>not sure</option>
+                </select>
+            </label>
+        </div>
+        <div class="form-group">
+            <label>Date of birth
+                <input type="date" class="form-control" name="birthdate" placeholder="Birth Date" required>
+            </label>
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" class="form-control" name="email" placeholder="Email input">
+        </div>
+        <div class="form-group">
+            <label>Login
+                <input type="text" class="form-control" name="login" placeholder="Login" required>
+            </label>
+        </div>
+        <div class="form-group">
+            <label>Password
+                <input type="password" class="form-control" name="password" placeholder="Password">
+            </label>
+        </div>
+        <button type="submit" class="btn btn-default button-max-width">Submit</button>
+    </form>
+{% endblock %}
