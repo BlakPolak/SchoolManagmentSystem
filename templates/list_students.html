@@ -1,4 +1,8 @@
 {% extends "base.html" %}
+{% block head %}
+    {{ super() }}
+    {{ JSGlue.include() }}
+{% endblock %}
 {% block title %}
     List of students
 {% endblock %}
@@ -18,20 +22,23 @@
                 </thead>
                 {% if list_of_students %}
                     <tbody>
-                        <tr>
-                            <!--<td><td><<a class="btn btn-default" href="{{ url_for("add_new_student") }}" role="button">Add new student</a></td></td>-->
-                        </tr>
                     {% for student in list_of_students %}
                         <tr>
                             <td>{{ student._id }}</td>
-                            <!--<td><a href="{{ url_for("view_student_details") }}">{{ student.name }} {{ student.surname }}</a></td>-->
-                            <!--<td><<a class="btn btn-default" href="{{ url_for("edit_student") }}" role="button">Edit</a></td>-->
-                            <!--<td><<a class="btn btn-default" href="{{ url_for("remove_student") }}" role="button" onclick="showConfirm()">Remove</a></td>-->
-                            <!--<td><<a class="btn btn-default" href="{{ url_for("add_to_team") }}" role="button">Add to team</a></td>-->
+                            <td><a href="{{ url_for("view_student_details", id=student._id) }}">{{ student.name }} {{ student.surname }}</a></td>
+                            <td><a class="btn btn-default" href="{{ url_for("edit_student", student_id=student._id) }}" role="button">Edit</a></td>
+                            <td><a class="btn btn-default" href="{{ url_for("remove_student", student_id=student._id) }}" role="button" onclick="return showConfirm()">Remove</a></td>
+                            <td><a class="btn btn-default" href="{{ url_for("add_to_team", student_id=student._id) }}" role="button">Add to team</a></td>
                         </tr>
                     {% endfor %}
-                  </tbody>
+                    <tr>
+                        <td><a class="btn btn-default" href="{{ url_for("add_new_student") }}" role="button">Add new student</a></td>
+                    </tr>
+                    </tbody>
                 {% endif %}
             </table>
         </form>
+{% endblock %}
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 {% endblock %}

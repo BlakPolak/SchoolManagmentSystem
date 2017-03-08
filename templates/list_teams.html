@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}
+    List of teams
+{% endblock %}
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+    {{ super() }}
+        <form method="post">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Team name</th>
+                        <th>Student ID</th>
+                        <th>Student name</th>
+                        <th>Student surname</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                    {% for team in list_of_teams %}
+                        <tr>
+                            <td>{{ team.team_name }}</td>
+                            <td>{{ team.student_id }}</td>
+                            <td>{{ team.student_name }}</td>
+                            <td>{{ team.student_surname }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+        </form>
+{% endblock %}
