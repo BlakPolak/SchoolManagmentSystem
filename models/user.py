@@ -972,42 +972,42 @@ class Manager(Employee):
         data.close()
         return mentors_details_list
 
-    @staticmethod
-    def average_grade_for_student():
-        """
-        Method display average grade for choosen student
-
-
-        Return:
-            average grade for student
-
-        """
-        options = ui.Ui.get_inputs([""], "Enter the number of student to see his average grade")
-
-        data = sqlite3.connect("db/program.db")
-        cursor = data.cursor()
-        records = cursor.execute("SELECT COUNT(`Name`) FROM `User` WHERE `User_Type` = 'student'")
-        records = records.fetchall()
-        number_of_records = int(records[0][0])
-
-        if int(options[0]) < 1 or int(options[0]) > number_of_records:
-            print("There is no such student on the list")
-            return
-
-        average_grade_list = []
-        cursor.execute("SELECT * FROM `User` WHERE `User_type`='student'")
-        students = cursor.fetchall()
-        student_id = students[int(options[0]) - 1][0]
-        student_name = students[int(options[0]) - 1][1]
-        student_surname = students[int(options[0]) - 1][2]
-        record = cursor.execute("SELECT AVG(Grade) FROM `Submission` WHERE `Grade` IS NOT NULL AND `ID_Student`='{}'"
-                       .format(student_id))
-        record = record.fetchall()
-        average_grade = int(record[0][0])
-        average_grade_list.append([student_name, student_surname, average_grade])
-        data.commit()
-        data.close()
-        return average_grade_list
+    # @staticmethod
+    # def average_grade_for_student():
+    #     """
+    #     Method display average grade for choosen student
+    #
+    #
+    #     Return:
+    #         average grade for student
+    #
+    #     """
+    #     options = ui.Ui.get_inputs([""], "Enter the number of student to see his average grade")
+    #
+    #     data = sqlite3.connect("db/program.db")
+    #     cursor = data.cursor()
+    #     records = cursor.execute("SELECT COUNT(`Name`) FROM `User` WHERE `User_Type` = 'student'")
+    #     records = records.fetchall()
+    #     number_of_records = int(records[0][0])
+    #
+    #     if int(options[0]) < 1 or int(options[0]) > number_of_records:
+    #         print("There is no such student on the list")
+    #         return
+    #
+    #     average_grade_list = []
+    #     cursor.execute("SELECT * FROM `User` WHERE `User_type`='student'")
+    #     students = cursor.fetchall()
+    #     student_id = students[int(options[0]) - 1][0]
+    #     student_name = students[int(options[0]) - 1][1]
+    #     student_surname = students[int(options[0]) - 1][2]
+    #     record = cursor.execute("SELECT AVG(Grade) FROM `Submission` WHERE `Grade` IS NOT NULL AND `ID_Student`='{}'"
+    #                    .format(student_id))
+    #     record = record.fetchall()
+    #     average_grade = int(record[0][0])
+    #     average_grade_list.append([student_name, student_surname, average_grade])
+    #     data.commit()
+    #     data.close()
+    #     return average_grade_list
 
 
     @staticmethod

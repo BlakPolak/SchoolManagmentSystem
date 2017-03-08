@@ -11,7 +11,15 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Details</th>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Gender</th>
+                        <th>Birth Date</th>
+                        <th>Email</th>
+                        <th>Login</th>
+                        <th>Password</th>
+                        <th>User Type</th>
 
                     </tr>
                 </thead>
@@ -19,7 +27,15 @@
                     <tbody>
 
                         <tr>
-                            <td></td>
+                            <td>{{ student._id }}</td>
+                            <td>{{ student.name }}</td>
+                            <td>{{ student.surname }}</td>
+                            <td>{{ student.gender }}</td>
+                            <td>{{ student.birth_date }}</td>
+                            <td>{{ student.email }}</td>
+                            <td>{{ student.login }}</td>
+                            <td>{{ student.password }}</td>
+                            <td>{{ student.user_type }}</td>
 
                         </tr>
 

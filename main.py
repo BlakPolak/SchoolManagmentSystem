@@ -279,8 +279,8 @@ def list_students_employee():
 
 @app.route('/student_details_employee/<student_id>')
 def student_details_employee(student_id):
-    student = Student.get_mentor_by_id(student_id)
-    return render_template('student_details_employee.html', list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
+    student = Employee.get_student(g.logged_user, student_id)
+    return render_template('student_details_employee.html', list_of_students=g.logged_user.get_students(), logged_user=g.logged_user, student=student)
 
 
 @app.route("/logout")
