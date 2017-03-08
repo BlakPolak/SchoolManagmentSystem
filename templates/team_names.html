@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}
+    List of teams
+{% endblock %}
+{% block head %}
+{{ super() }}
+{{ JSGlue.include() }}
+{% endblock %}
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+    {{ super() }}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Team name</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                    {% for team in list_of_teams %}
+                        <tr>
+                            <td><button onclick="return assignTeam(this.innerText)">{{ team.team_name }}</button></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+    <form>
+        <input id="student_id" type="hidden" value="{{ student_id }}">
+    </form>
+{% endblock %}
