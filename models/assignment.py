@@ -22,6 +22,7 @@ class Assignment:
         self.name = name
         self.max_points = max_points
         self.delivery_date = delivery_date
+        self.type = type
         self.content = content
         self.type = type
 
