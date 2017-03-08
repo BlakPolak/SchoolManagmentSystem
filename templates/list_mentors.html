@@ -8,6 +8,7 @@
 {% block content %}
     {{ super() }}
         <form method="post">
+            <a class="btn btn-default" href="{{ url_for("add_new_mentor") }}" role="button">Add new mentor</a>
             <table class="table">
                 <thead>
                     <tr>
@@ -32,8 +33,9 @@
                             </td>
                         </tr>
                     {% endfor %}
-                  </tbody>
+                    </tbody>
                 {% endif %}
             </table>
+
         </form>
 {% endblock %}

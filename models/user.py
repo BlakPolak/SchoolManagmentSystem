@@ -801,7 +801,7 @@ class Mentor(Employee):
     def get_mentor_by_id(cls, id):
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        cursor.execute("SELECT * FROM `User` WHERE id = ?;", (id,))
+        cursor.execute("SELECT * FROM `User` WHERE ID = ?;", (id,))
         mentor = cursor.fetchone()  # jak nie będzie działało to może fetchall i wtedy row = mentor[0]
         if mentor:
             return cls(mentor[0], mentor[1], mentor[2], mentor[3], mentor[4],
@@ -827,34 +827,18 @@ class Manager(Employee):
         """
         super().__init__(_id, name, surname, gender, birth_date, email, login, password, user_type)
 
-    @staticmethod
-    def add_mentor():
+
+    def add_mentor(self, name, surname, gender, birthdate, email, login, password):
         """
         Method allows manager to add mentor to mentors list
 
         Return:
              None
         """
-        options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
-                                    "Password"], "Provide information about new mentor")
-        if options[0].isalpha() and options[1].isalpha() and options[2] in ['male', 'female', 'not sure']:
-            if options[3].isalpha():
-                print('\nData should have format: YYYY-MM-DD\n')
-                return
-        else:
-            print('\nWrong input!\nName: only letters\nSurname: only letters\n'
-                  'Gender: you can choose only male, female or not sure\nData should have format: YYYY-MM-DD\n')
-            return
-
-        # new_mentor = Mentor(options[0], options[1], options[2], options[3], options[4], options[5],
-        #                     options[6])
-
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        cursor.execute("INSERT INTO `User`(Name, Surname, Gender, Birth_date, Email, Login, Password, User_type) "
-                       "VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')"
-                       .format(options[0], options[1], options[2], options[3],
-                               options[4], options[5], options[6], "mentor"))
+        cursor.execute("INSERT INTO `User` (`Name`, `Surname`, `Gender`, `Birth_date`, `Email`, `Login`, `Password`, `User_type`) "
+                       "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (name, surname, gender, birthdate, email, login, password, "mentor"))
         data.commit()
         data.close()
         print("Mentor was added.")

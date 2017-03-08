@@ -172,9 +172,7 @@ def list_mentors():
 
 @app.route('/edit_mentor/<mentor_id>', methods=["POST", "GET"])
 def edit_mentor(mentor_id):
-    print ('step1')
     if request.method == "POST":
-        print('wchodzę post')
         new_name = request.form["name"]
         new_surname= request.form["surname"]
         new_gender = request.form["gender"]
@@ -194,12 +192,24 @@ def edit_mentor(mentor_id):
         mentor_to_edit.password = new_password
         mentor_to_edit.edit_mentor()
         return redirect(url_for('list_mentors'))
-        # return render_template("list_mentors.html", list_of_mentors=g.logged_user.list_mentors(),
-        #                         logged_user=g.logged_user)
+
     if request.method == "GET":
-        print('robię Get')
         mentor_to_edit = Mentor.get_mentor_by_id(mentor_id)
         return render_template("edit_mentor.html", logged_user=g.logged_user, mentor_id=mentor_id, mentor=mentor_to_edit)
+
+@app.route('/add_new_mentor', methods=["POST", "GET"])
+def add_new_mentor():
+    if request.method == "POST":
+            name = request.form["name"]
+            surname = request.form["surname"]
+            gender = request.form["gender"]
+            birthdate = request.form["birthdate"]
+            email = request.form["email"]
+            login = request.form["login"]
+            password = request.form["password"]
+            g.logged_user.add_mentor(name, surname, gender, birthdate, email, login, password)
+            return redirect(url_for("list_mentors"))
+    return render_template("add_new_mentor.html")
 
 @app.route('/list_students_employee')
 def list_students_employee():
