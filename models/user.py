@@ -252,15 +252,13 @@ class Student(User):
 
         """
         grades_for_view = []
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect(User.path)
         cursor = data.cursor()
         cursor.execute("SELECT assignment.name, submission.grade FROM assignment INNER JOIN submission "
                        "ON submission.ID_assignment = assignment.ID WHERE ID_Student='{}'".format(self._id))
         grades = cursor.fetchall()
-        n = 1
         for grade in grades:
-            grades_for_view.append([str(n) + ".", grade[0], grade[1]])
-            n += 1
+            grades_for_view.append(grade)
         data.commit()
         data.close()
         return grades_for_view
@@ -273,7 +271,7 @@ class Student(User):
             list submitted assignment
 
         """
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect(User.path)
         cursor = data.cursor()
         cursor.execute("select ID_Assignment from `Submission` WHERE ID_Student='{}'".format(self._id))
         submissions = cursor.fetchall()
@@ -291,7 +289,7 @@ class Student(User):
             list not submitted assignment
 
         """
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect(User.path)
         cursor = data.cursor()
         cursor.execute("SELECT ID, Name, Type, Delivery_date FROM `Assignment`")
         assignments = cursor.fetchall()
@@ -310,7 +308,7 @@ class Student(User):
             assignment
 
         """
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect(User.path)
         cursor = data.cursor()
         if len(assignment) <= 1:
             print("You have no assignment to submitt!")
@@ -334,7 +332,7 @@ class Student(User):
             list assignment for group
 
         """
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect(User.path)
         cursor = data.cursor()
         cursor.execute("SELECT ID, Name, Type, Delivery_date FROM `Assignment` WHERE Type='group'")
         group_assignments = cursor.fetchall()
@@ -369,7 +367,7 @@ class Student(User):
             list student teammates
 
         """
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect(User.path)
         cursor = data.cursor()
         cursor.execute("SELECT Id_Student FROM `Teams` WHERE Team_name='{}'".format(team))
         teammates = cursor.fetchall()
@@ -388,7 +386,7 @@ class Student(User):
             teammates, group_submission
 
         """
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect(User.path)
         cursor = data.cursor()
         if len(group_submission) <= 1:
             print("You have no assignment to submitt!")
