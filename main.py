@@ -72,7 +72,7 @@ def manager():
 
 @app.route("/list_students")
 def list_students():
-    return render_template("list_students.html", list_of_students=g.logged_user.get_students())
+    return render_template("list_students_mentor.html", list_of_students=g.logged_user.get_students())
 
 @app.route("/add_new_student", methods=["POST", "GET"])
 def add_new_student():
@@ -164,6 +164,47 @@ def view_student_statistics():
 def list_teams():
     list_of_teams = g.logged_user.get_teams()
     return render_template("list_teams.html", list_of_teams=list_of_teams)
+
+@app.route("/list_mentors_assignments")
+def list_mentors_assignments():
+    list_of_assignments = g.logged_user.get_assignments()
+    return render_template("list_mentors_assignments.html", list_of_assignments=list_of_assignments)
+
+@app.route("/edit_assignment", methods=["GET", "POST"])
+def edit_assignment():
+    if request.method == "POST":
+        assignment_id = request.form["assignment_id"]
+        name = request.form["name"]
+        type = request.form["type"]
+        max_points = request.form["max_points"]
+        delivery_date = request.form["date"]
+        content = request.form["content"]
+        g.logged_user.update_assignment(assignment_id, name, type, max_points, delivery_date, content)
+        return redirect(url_for("list_mentors_assignments"))
+    assignment_id = request.args["assignment_id"]
+    assignment = g.logged_user.get_assignment(assignment_id)
+    return render_template("edit_assignment.html", assignment=assignment)
+
+@app.route("/remove_assignment")
+def remove_assignment():
+    assignment_id = request.args["assignment_id"]
+    g.logged_user.remove_assignment(assignment_id)
+    return redirect(url_for("list_mentors_assignments"))
+
+@app.route("/add_new_assignment", methods=["POST", "GET"])
+def add_new_assignment():
+    if request.method == "POST":
+        name = request.form["name"]
+        type = request.form["type"]
+        max_points = request.form["max_points"]
+        delivery_date = request.form["date"]
+        content = request.form["content"]
+        g.logged_user.add_new_assignment(name, type, max_points, delivery_date, content)
+        return redirect(url_for("list_mentors_assignments"))
+    return render_template("add_new_assignment.html")
+
+
+@app.route("/")
 
 @app.route("/list_mentors")
 def list_mentors():

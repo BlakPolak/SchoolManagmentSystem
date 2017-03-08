@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}
+    Edit assignment
+{% endblock %}
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+    {{ super() }}
+    <div class="content_title">
+        <h2>Edit assignment</h2>
+        <hr>
+    </div>
+    <form method="post">
+         <div class="form-group">
+             <label>Name
+                 <input type="text" name="name" class="form-control" value="{{ assignment.name }}" required>
+             </label>
+         </div>
+         <div class="form-group">
+             <label>Type
+                 <input type="text" name="type" class="form-control" value="{{ assignment.type }}" required>
+             </label>
+         </div>
+        <div class="form-group">
+            <label>Max points
+                <input type="text" class="form-control" name="max_points" value="{{ assignment.max_points }}" required>
+            </label>
+        </div>
+        <div class="form-group">
+            <label>Delivery date
+                <input type="date" class="form-control" name="date" value="{{ assignment.delivery_date }}" required>
+            </label>
+        </div>
+        <div class="form-group">
+            <label>Content
+                <input type="text" class="form-control" name="content" value="{{ assignment.content }}" required>
+            </label>
+        </div>
+        <input type="hidden" name="assignment_id" class="form-control" value="{{ assignment.id }}">
+        <div class="form-group">
+            <input class="btn btn-default" type="submit" value="Update Assignment">
+        </div>
+    </form>
+{% endblock %}
