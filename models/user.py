@@ -849,7 +849,7 @@ class Manager(Employee):
         # new_mentor = Mentor(options[0], options[1], options[2], options[3], options[4], options[5],
         #                     options[6])
 
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         cursor.execute("INSERT INTO `User`(Name, Surname, Gender, Birth_date, Email, Login, Password, User_type) "
                        "VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')"
@@ -869,7 +869,7 @@ class Manager(Employee):
         """
         options = ui.Ui.get_inputs([""], "Enter number to erase mentor from database")
 
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         records = cursor.execute("SELECT COUNT(`Name`) FROM `User` WHERE `User_Type` = 'mentor'")
         records = records.fetchall()
@@ -943,7 +943,7 @@ class Manager(Employee):
             student detail list
         """
         mentors_details_list = []
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         cursor.execute("SELECT * FROM `User` WHERE User_type='mentor'")
         mentors = cursor.fetchall()
@@ -968,7 +968,7 @@ class Manager(Employee):
         """
         options = ui.Ui.get_inputs([""], "Enter the number of student to see his average grade")
 
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         records = cursor.execute("SELECT COUNT(`Name`) FROM `User` WHERE `User_Type` = 'student'")
         records = records.fetchall()
@@ -1045,7 +1045,7 @@ class Manager(Employee):
 
         """
         grades_statistics = []
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         grades = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
                                             "FROM `Submission` INNER JOIN `User` ON `Submission`.ID_Mentor = User.ID"
@@ -1062,9 +1062,9 @@ class Manager(Employee):
     def full_stats_for_students(student_id):
 
         student_stats = []
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        grades = cursor.execute("SELECT `ID_Student`, `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
+        grades = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
                                 "FROM `Submission` INNER JOIN `User` ON `Submission`.ID_Student = User.ID"
                                 " WHERE ID_Student = {}".format(student_id))
         grades = grades.fetchall()

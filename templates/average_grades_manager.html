@@ -11,18 +11,18 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Index</th>
+                        <th>Average Grade for {{ stats[0][0] }} {{ stats[0][1] }}:</th>
 
                     </tr>
                 </thead>
 
                     <tbody>
-                    {% for grade in grades %}
+
                         <tr>
-                            <td> grade {{ grade }}</td>
+                            <td>{{ stats[0][3] }}</td>
 
                         </tr>
-                    {% endfor %}
+
                   </tbody>
 
             </table>

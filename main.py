@@ -179,12 +179,12 @@ def list_students_manager():
 
 @app.route('/student_statistic_manager/<int:student_id>')
 def student_statistic_manager(student_id):
-    return render_template('student_statistic_manager.html', stats=g.logged_user.full_stats_for_students(student_id), logged_user=g.logged_user, student_id=student_id)
+    return render_template('student_statistic_manager.html', stats=g.logged_user.full_stats_for_students(student_id), logged_user=g.logged_user)
 
 
-@app.route('/average_grades_manager')
-def average_grades_manager():
-    return render_template('average_grades_manager.html', grades=g.logged_user.average_grade_for_student(), logged_user=g.logged_user)
+@app.route('/average_grades_manager/<int:student_id>')
+def average_grades_manager(student_id):
+    return render_template('average_grades_manager.html', stats=g.logged_user.full_stats_for_students(student_id), logged_user=g.logged_user)
 
 
 @app.route('/edit_mentor/<mentor_id>', methods=["POST", "GET"])
