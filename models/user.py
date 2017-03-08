@@ -810,7 +810,24 @@ class Mentor(Employee):
         data.close()
         return student_statistics
 
-    @staticmethod
+    def edit_mentor(self):
+        """
+        Method allows manager to edit mentor specific data
+
+        Return:
+             None
+        """
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("UPDATE `User` SET `Name`=?, `Surname`=?, `Gender`=?, "
+                       "`Birth_date`=?,`Email`=?, `Login`=?, `Password`=?"
+                       " WHERE `ID`=?",
+                       (self.name, self.surname, self.gender, self.birth_date, self.email, self.login, self.password, self._id))
+        data.commit()
+        data.close()
+        print("Update completed")
+
+    @classmethod
     def get_mentor_by_id(cls, id):
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
@@ -903,52 +920,26 @@ class Manager(Employee):
         data.close()
         print("Mentor was erased.")
 
-    @staticmethod
-    def edit_mentor():
-        """
-        Method allows manager to edit mentor specific data
-
-        Return:
-             None
-        """
-
-        mentor_to_update = ui.Ui.get_inputs([""], "Enter number to edit mentor's data")
-
-        data = sqlite3.connect("program.db")
-        cursor = data.cursor()
-        records = cursor.execute("SELECT COUNT(`Name`) FROM `User` WHERE `User_Type` = 'mentor'")
-        records = records.fetchall()
-        number_of_records = int(records[0][0])
-
-        if int(mentor_to_update[0]) < 1 or int(mentor_to_update[0]) > number_of_records-1:
-            print("There is no such mentor number on the list")
-            return
-        options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
-                                    "Password"], "Edit information about student")
-        if options[0].isalpha() and options[1].isalpha() and options[2] in ['male', 'female', 'not sure']:
-            if options[3].isalpha():
-                print('Data should have format: YYYY-MM-DD')
-                return
-        else:
-            print('\nWrong input!\nName: only letters\nSurname: only letters\n'
-                  'Gender: you can choose only male, female or not sure\nData format: YYYY-MM-DD\n')
-            return
-
-        cursor.execute("SELECT * FROM `User` WHERE `User_type`='mentor'")
-        mentors = cursor.fetchall()
-        mentor_to_update_name = mentors[int(mentor_to_update[0]) - 1][1]
-        mentor_to_update_surname = mentors[int(mentor_to_update[0]) - 1][2]
-
-        cursor.execute(
-            "UPDATE `User` SET `Name`='{}', `Surname`='{}', `Gender`='{}', `Birth_date`='{}',"
-            " `Email`='{}', `Login`='{}', `Password`='{}' "
-            " WHERE "
-            "`Name`='{}' AND `Surname`='{}'"
-            .format(options[0], options[1], options[2], options[3],
-                    options[4], options[5], options[6], mentor_to_update_name, mentor_to_update_surname ))
-        data.commit()
-        data.close()
-        print("Update completed")
+ #do usuniecia- przeniesiono tą metode do Mentor
+    # def edit_mentor(self):
+    #     """
+    #     Method allows manager to edit mentor specific data
+    #
+    #     Return:
+    #          None
+    #     """
+    #     data = sqlite3.connect("db/program.db")
+    #     cursor = data.cursor()
+    #     cursor.execute(
+    #         "UPDATE `User` SET `Name`='{}', `Surname`='{}', `Gender`='{}', `Birth_date`='{}',"
+    #         " `Email`='{}', `Login`='{}', `Password`='{}' "
+    #         " WHERE "
+    #         "`Name`='{}' AND `Surname`='{}'"
+    #         .format(self.name, self.surname, self.gender, self.birth_date,
+    #                 self.email, self.login, self.password))
+    #     data.commit()
+    #     data.close()
+    #     print("Update completed")
 
     @staticmethod
     def list_mentors():

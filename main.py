@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, url_for, redirect, session, g, flash
-from models.user import User
+from models.user import *
 from models.data import Data
 from models.attendance import Attendance
 from models.submission import Submission
@@ -99,7 +99,9 @@ def list_mentors():
 
 @app.route('/edit_mentor/<mentor_id>', methods=["POST", "GET"])
 def edit_mentor(mentor_id):
+    print ('step1')
     if request.method == "POST":
+        print('wchodzę post')
         new_name = request.form["name"]
         new_surname= request.form["surname"]
         new_gender = request.form["gender"]
@@ -108,7 +110,7 @@ def edit_mentor(mentor_id):
         new_login = request.form["login"]
         new_password = request.form["password"]
 
-        mentor_to_edit = User.Mentor.get_mentor_by_id(mentor_id)
+        mentor_to_edit = Mentor.get_mentor_by_id(mentor_id)
 
         mentor_to_edit.name = new_name
         mentor_to_edit.surname = new_surname
@@ -117,8 +119,14 @@ def edit_mentor(mentor_id):
         mentor_to_edit.email = new_email
         mentor_to_edit.login = new_login
         mentor_to_edit.password = new_password
+        mentor_to_edit.edit_mentor()
+        return redirect(url_for('list_mentors'))
+        # return render_template("list_mentors.html", list_of_mentors=g.logged_user.list_mentors(),
+        #                         logged_user=g.logged_user)
     if request.method == "GET":
-        return render_template("edit_mentor.html", logged_user=g.logged_user, mentor_id= mentor_id)
+        print('robię Get')
+        mentor_to_edit = Mentor.get_mentor_by_id(mentor_id)
+        return render_template("edit_mentor.html", logged_user=g.logged_user, mentor_id=mentor_id, mentor=mentor_to_edit)
 
 @app.route('/list_students_employee')
 def list_students_employee():
