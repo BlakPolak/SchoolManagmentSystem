@@ -146,9 +146,28 @@ def list_teams():
 def list_mentors():
     return render_template("list_mentors.html", list_of_mentors=g.logged_user.list_mentors(), logged_user=g.logged_user)
 
-@app.route('/edit_mentor')
-def edit_mentor():
-    print ('I am in edit mentor')
+@app.route('/edit_mentor/<mentor_id>', methods=["POST", "GET"])
+def edit_mentor(mentor_id):
+    if request.method == "POST":
+        new_name = request.form["name"]
+        new_surname= request.form["surname"]
+        new_gender = request.form["gender"]
+        new_birthdate = request.form["birthdate"]
+        new_email = request.form["email"]
+        new_login = request.form["login"]
+        new_password = request.form["password"]
+
+        mentor_to_edit = User.Mentor.get_mentor_by_id(mentor_id)
+
+        mentor_to_edit.name = new_name
+        mentor_to_edit.surname = new_surname
+        mentor_to_edit.gender = new_gender
+        mentor_to_edit.birth_date = new_birthdate
+        mentor_to_edit.email = new_email
+        mentor_to_edit.login = new_login
+        mentor_to_edit.password = new_password
+    if request.method == "GET":
+        return render_template("edit_mentor.html", logged_user=g.logged_user, mentor_id= mentor_id)
 
 @app.route('/list_students_employee')
 def list_students_employee():

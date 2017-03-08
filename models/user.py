@@ -759,6 +759,16 @@ class Mentor(Employee):
         data.close()
         return student_statistics
 
+    @staticmethod
+    def get_mentor_by_id(cls, id):
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT * FROM `User` WHERE id = ?;", (id,))
+        mentor = cursor.fetchone()  # jak nie będzie działało to może fetchall i wtedy row = mentor[0]
+        if mentor:
+            return cls(mentor[0], mentor[1], mentor[2], mentor[3], mentor[4],
+                       mentor[5], mentor[6], mentor[7], mentor[8])
+
 
 class Manager(Employee):
     """Class creates object mentor"""
@@ -907,6 +917,8 @@ class Manager(Employee):
                                       mentor[5], mentor[6], mentor[7], mentor[8]))
         data.close()
         return mentor_list
+
+
 
 
     @staticmethod
