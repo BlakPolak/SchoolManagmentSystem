@@ -104,7 +104,7 @@ def list_students_manager():
     return render_template("list_students_manager.html", list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
 
 
-@app.route('/student_statistic_manager')
+@app.route('/student_statistic_manager/<student_id>')
 def student_statistic_manager():
     return render_template('student_statistic_manager.html', stats=g.logged_user.full_stats_for_students(), logged_user=g.logged_user)
 
@@ -122,6 +122,11 @@ def edit_mentor():
 @app.route('/list_students_employee')
 def list_students_employee():
     return render_template('list_students_employee.html', list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
+
+
+@app.route('/student_details_employee')
+def student_details_employee():
+    return render_template('student_details_employee.html', list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
 
 
 @app.route("/logout")

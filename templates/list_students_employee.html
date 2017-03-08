@@ -22,6 +22,7 @@
                         <tr>
                             <td>{{ student._id }}</td>
                             <td>{{ student.name }} {{ student.surname }}</td>
+                            <td><a class="btn btn-default" href="{{ url_for ('student_details_employee') }}" role="button"> Details</a></td>
                         </tr>
                     {% endfor %}
                   </tbody>

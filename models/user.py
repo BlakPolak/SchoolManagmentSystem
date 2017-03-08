@@ -1086,21 +1086,20 @@ class Manager(Employee):
         return list_to_print
 
     @staticmethod
-    def full_stats_for_students():
+    def full_stats_for_students(student_id):
 
         student_stats = []
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        grades = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
+        grades = cursor.execute("SELECT `ID_Student`, `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
                                 "FROM `Submission` INNER JOIN `User` ON `Submission`.ID_Student = User.ID"
-                                " GROUP BY `Name`")
+                                " WHERE ID_Student = {}".format(student_id))
         grades = grades.fetchall()
         for row in grades:
             student_stats.append(row)
-        list_to_print = []
-        for row in student_stats:
-            list_to_print.append([row[0], row[1], row[2], row[3]])
-        return list_to_print
+        return student_stats
+
+
 
         # # TODO: return list with percent of attendance for every student...
         # presence = cursor.execute("SELECT  `Name`, `Surname`, COUNT(CASE WHEN Presence = 1 THEN 1 ELSE NULL END)"
