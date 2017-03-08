@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request, url_for, redirect, session, g, flash
+from flask_jsglue import JSGlue
 from models.user import User
 from models.data import Data
 from models.attendance import Attendance
 from models.submission import Submission
-from flask_jsglue import JSGlue
 import os
 
 app = Flask(__name__)
@@ -39,7 +39,7 @@ def index():
 
 @app.route("/mentor")
 def mentor():
-    return render_template("mentor.html", logged_user=g.logged_user)
+    return render_template("mentor.html")
 
 @app.route("/student")
 def student():
@@ -64,13 +64,62 @@ def manager():
 
 @app.route("/list_students")
 def list_students():
-    return render_template("list_students.html", list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
+    return render_template("list_students.html", list_of_students=g.logged_user.get_students())
 
 @app.route("/add_new_student", methods=["POST", "GET"])
 def add_new_student():
     if request.method == "POST":
-        pass
-    return render_template("add_new_student.html", logged_user=g.logged_user)
+        name = request.form["name"]
+        surname = request.form["surname"]
+        gender = request.form["gender"]
+        birthdate = request.form["birthdate"]
+        email = request.form["email"]
+        login = request.form["login"]
+        password = request.form["password"]
+        g.logged_user.add_student(name, surname, gender, birthdate, email, login, password)
+        return redirect(url_for("list_students"))
+    return render_template("add_new_student.html")
+
+@app.route("/edit_student", methods=["POST", "GET"])
+def edit_student():
+    if request.method == "POST":
+        student_id = request.form["student_id"]
+        name = request.form["name"]
+        surname = request.form["surname"]
+        gender = request.form["gender"]
+        birthdate = request.form["birthdate"]
+        email = request.form["email"]
+        login = request.form["login"]
+        password = request.form["password"]
+        g.logged_user.update_student(student_id, name, surname, gender, birthdate, email, login, password)
+        return redirect(url_for("list_students"))
+    student_id = request.args["student_id"]
+    student = g.logged_user.get_student(student_id)
+    return render_template("edit_student.html", student=student)
+
+@app.route("/remove_student")
+def remove_student():
+    student_id = request.args["student_id"]
+    g.logged_user.remove_student(student_id)
+    return redirect("list_students")
+
+@app.route("/add_to_team")
+def add_to_team():
+    student_id = request.args["student_id"]
+    return redirect(url_for("teams_for_student", student_id=student_id))
+
+@app.route("/teams_for_student")
+def teams_for_student():
+    student_id = request.args["student_id"]
+    list_of_teams = g.logged_user.get_teams()
+    return render_template("team_names.html", list_of_teams=list_of_teams, student_id=student_id)
+
+@app.route("/assign_student_to_team")
+def assign_student_to_team():
+    student_id = request.args["student_id"]
+    team_name = request.args["team_name"]
+    g.logged_user.add_to_team(student_id, team_name)
+    return redirect(url_for("list_students"))
 
 @app.route("/view_student_details")
 def view_student_details():
@@ -91,7 +140,7 @@ def view_student_statistics():
 @app.route("/list_teams", methods=["POST", "GET"])
 def list_teams():
     list_of_teams = g.logged_user.get_teams()
-    return render_template("list_teams.html", list_of_teams=list_of_teams, logged_user=g.logged_user)
+    return render_template("list_teams.html", list_of_teams=list_of_teams)
 
 @app.route("/list_mentors")
 def list_mentors():
@@ -121,6 +170,7 @@ def login():
         logged_user = User.get_user(request.form["username"], request.form["password"])
         if logged_user:
             session["login"] = logged_user.login
+            session["type"] = logged_user.user_type
             app.config.logged_user = logged_user
             flash('You were successfully logged in', "alert alert-success text-centered")
             return redirect(url_for("index"))

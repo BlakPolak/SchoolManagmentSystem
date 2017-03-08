@@ -445,7 +445,7 @@ class Mentor(Employee):
         """
         super().__init__(_id, name, surname, gender, birth_date, email, login, password, user_type)
 
-    def add_student(self):
+    def add_student(self, name, surname, gender, birthdate, email, login, password):
         """
         Method allows mentor to add student to students list
 
@@ -454,27 +454,15 @@ class Mentor(Employee):
         Return:
              None
         """
-        options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
-                                    "Password"], "Provide information about new student")
 
-        if options[0].isalpha() and options[1].isalpha() and options[2] in ['male', 'female', 'not sure']:
-            if options[3].isalpha():
-                print('Data should have format: YYYY-MM-DD')
-                return
-        else:
-            print('\nWrong input!\nName: only letters\nSurname: only letters\n'
-                  'Gender: you can choose only male, female or not sure\nData format: YYYY-MM-DD\n')
-            return
 
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         cursor.execute("INSERT INTO `User` (`name`, `surname`, `gender`, `birth_date`, `email`, `login`, `password`, `user_type`) "
                        "VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')"
-                       .format(options[0], options[1], options[2], options[3],
-                               options[4], options[5], options[6], "student"))
+                       .format(name, surname, gender, birthdate, email, login, password, "student"))
         data.commit()
         data.close()
-        print("Student was added.")
 
     def check_attendance(self):
         """
@@ -505,7 +493,7 @@ class Mentor(Employee):
         print("Checking attendance finished")
 
 
-    def remove_student(self):
+    def remove_student(self, student_id):
         """
         Method allows mentor remove students from students list
 
@@ -514,27 +502,14 @@ class Mentor(Employee):
         Return:
              None
         """
-        self.list_students()
-        options = ui.Ui.get_inputs([""], "Enter number to erase student from database: ")
-        if int(options[0]) < 0 or int(options[0]) > len(self.list_students()):
-            print("There is no such student number on the list")
-            return
-
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        cursor.execute("SELECT * FROM `user` WHERE `user_type`='student'")
-        students = cursor.fetchall()
-        student_to_erase_name = students[int(options[0])-1][1]
-        student_to_erase_surname = students[int(options[0])-1][2]
-        print(student_to_erase_name, student_to_erase_surname)
-        cursor.execute("DELETE FROM `User` WHERE `name`='{}' AND `surname`='{}'"
-                       .format(student_to_erase_name, student_to_erase_surname))
+        cursor.execute("delete from User where ID='{}'".format(student_id))
         data.commit()
         data.close()
-        print("Student was erased.")
 
 
-    def edit_student(self):
+    def update_student(self, student_id, name, surname, gender, birthdate, email, login, password):
         """
         Method allows mentor edit students specific data
 
@@ -543,34 +518,13 @@ class Mentor(Employee):
         Return:
              None
         """
-        self.list_students()
-        choosed_student = ui.Ui.get_inputs([""], "Enter number to edit student's data")
-        options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
-                                    "Password"], "Edit information about student")
-        if options[0].isalpha() and options[1].isalpha() and options[2] in ['male', 'female', 'not sure']:
-            if options[3].isalpha():
-                print('Data should have format: YYYY-MM-DD')
-                return
-        else:
-            print('\nWrong input!\nName: only letters\nSurname: only letters\n'
-                  'Gender: you can choose only male, female or not sure\nData format: YYYY-MM-DD\n')
-            return
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        cursor.execute("SELECT * FROM `user` WHERE `user_type`='student'")
-        students = cursor.fetchall()
-        student_to_edit_name = students[int(choosed_student[0]) - 1][1]
-        student_to_edit_surname = students[int(choosed_student[0]) - 1][2]
-
         cursor.execute(
-            "UPDATE `User` SET `name`='{}', `surname`='{}', `gender`='{}', `birth_date`='{}', `email`='{}', `login`='{}', `password`='{}' "
-            " WHERE "
-            "`name`='{}' AND `surname`='{}'"
-            .format(options[0], options[1], options[2], options[3],
-                    options[4], options[5], options[6], student_to_edit_name, student_to_edit_surname))
+            "UPDATE User SET `name`='{}', `surname`='{}', `gender`='{}', `birth_date`='{}', `email`='{}', `login`='{}', `password`='{}' "
+            " WHERE id='{}'".format(name, surname, gender, birthdate, email, login, password, student_id))
         data.commit()
         data.close()
-        print("Update completed")
 
     def show_submissions_to_grade(self):
         """
@@ -659,23 +613,18 @@ class Mentor(Employee):
         data.close()
         return team_list
 
-    def add_team(self):
-        choosed_student_and_team = ui.Ui.get_inputs(["Enter number to add student to team: ", "Team name for student: "], "")
-        student_to_add_id = int(choosed_student_and_team[0]) # id student to add to team
-        data = sqlite3.connect("program.db")
+    def add_to_team(self, student_id, team_name):
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-
-        cursor.execute("SELECT * FROM teams WHERE ID_Student='{}'".format(student_to_add_id)) # check if student already is in team
+        cursor.execute("SELECT * FROM teams WHERE ID_Student='{}'".format(student_id)) # check if student already is in team
         team_row = cursor.fetchone()
         if team_row:
             cursor.execute("DELETE FROM teams WHERE ID_Student='{}'"
-                           .format(student_to_add_id))
-
+                           .format(student_id))
         cursor.execute("INSERT INTO teams (ID_Student, Team_name) VALUES ('{}', '{}')"
-                           .format(student_to_add_id, choosed_student_and_team[1]))
+                           .format(student_id, team_name))
         data.commit()
         data.close()
-        print("Team updated.")
 
 
     def list_checkpoint_assignments(self):

@@ -27,7 +27,7 @@
                     </div>
                     <div class="col-md-6 col-md-offset-1 block">
                         {% block logged %}
-                            <div>Logged as <strong>{{ logged_user.name }}</strong></div>
+                            <div>Logged as <strong>{{ session["login"] }}</strong></div>
                             <div><a class="btn btn-default button-max-width" href="{{ url_for("logout") }}" role="button">Logout</a></div>
                         {% endblock %}
                     </div>
@@ -35,13 +35,13 @@
                 <div class="row">
                     <div class="col-md-10 col-md-offset-1 block">
                         {% block navbar %}
-                            {% if logged_user.user_type == "mentor" %}
+                            {% if session["type"] == "mentor" %}
                                 {% include "mentor_menu.html" %}
-                            {% elif logged_user.user_type == "manager" %}
+                            {% elif session["type"] == "manager" %}
                                 {% include "manager_menu.html" %}
-                            {% elif logged_user.user_type == "employee" %}
+                            {% elif session["type"] == "employee" %}
                                 {% include "employee_menu.html" %}
-                            {% elif logged_user.user_type == "student" %}
+                            {% elif session["type"] == "student" %}
                                 {% include "student_menu.html" %}
                             {% endif %}
                         {% endblock %}
@@ -68,6 +68,7 @@
         </div>
     </div>
 {% block scripts %}
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 {% endblock %}
 </body>
 </html>
