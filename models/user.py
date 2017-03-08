@@ -606,7 +606,7 @@ class Mentor(Employee):
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         cursor.execute("SELECT user.id, team_name, name, surname FROM teams "
-                       "INNER JOIN user ON teams.id_student=user.id ORDER BY team_name")
+                       "LEFT JOIN user ON teams.id_student=user.id ORDER BY team_name")
         teams = cursor.fetchall()
         for team in teams:
             team_list.append(Team(team[0], team[1], team[2], team[3]))
@@ -623,6 +623,25 @@ class Mentor(Employee):
                            .format(student_id))
         cursor.execute("INSERT INTO teams (ID_Student, Team_name) VALUES ('{}', '{}')"
                            .format(student_id, team_name))
+        data.commit()
+        data.close()
+
+    def add_team(self, new_team):
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT * FROM teams WHERE Team_Name='{}'".format(new_team)) # check if student already is in team
+        team_row = cursor.fetchone()
+        if team_row:
+            data.close()
+            return None
+        cursor.execute("INSERT INTO teams (Team_name, ID_Student) VALUES ('{}', '{}')".format(new_team, "<empty>"))
+        data.commit()
+        data.close()
+
+    def remove_team(self, team_name):
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("delete FROM teams WHERE Team_Name='{}'".format(team_name))
         data.commit()
         data.close()
 
