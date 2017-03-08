@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}
+    List of students
+{% endblock %}
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+    {{ super() }}
+        <form method="post">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Student statistics</th>
+
+                    </tr>
+                </thead>
+                    {% for student in list_of_students %}
+
+                        <tbody>
+
+                            <tr>
+                                <td> {{ student.name }}</td>
+
+                            </tr>
+
+                        </tbody>
+
+                    {% endfor %}
+
+            </table>
+        </form>
+{% endblock %}

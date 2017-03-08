@@ -13,16 +13,17 @@
                     <tr>
                         <th>Index</th>
                         <th>Student</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 {% if list_of_students %}
                     <tbody>
-
                     {% for student in list_of_students %}
                         <tr>
                             <td>{{ student._id }}</td>
                             <td>{{ student.name }} {{ student.surname }}</td>
-                            <td><a class="btn btn-default" href="{{ url_for ('student_details_employee') }}" role="button"> Details</a></td>
+                            <td><a class="btn btn-default" href="{{ url_for ('average_grades_manager') }}" role="button"> Average grade</a></td>
+                            <td><a class="btn btn-default"  href="{{ url_for ('student_statistic_manager', student_id=student._id) }}" role="button">Student statistics</a></td>
                         </tr>
                     {% endfor %}
                   </tbody>

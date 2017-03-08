@@ -12,21 +12,19 @@
                 <thead>
                     <tr>
                         <th>Index</th>
-                        <th>Student</th>
+
                     </tr>
                 </thead>
-                {% if list_of_students %}
-                    <tbody>
 
-                    {% for student in list_of_students %}
+                    <tbody>
+                    {% for grade in grades %}
                         <tr>
-                            <td>{{ student._id }}</td>
-                            <td>{{ student.name }} {{ student.surname }}</td>
-                            <td><a class="btn btn-default" href="{{ url_for ('student_details_employee') }}" role="button"> Details</a></td>
+                            <td> grade {{ grade }}</td>
+
                         </tr>
                     {% endfor %}
                   </tbody>
-                {% endif %}
+
             </table>
         </form>
 {% endblock %}
