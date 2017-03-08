@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 {% block title %}
-    Add new student
+    Edit student
 {% endblock %}
 {% block content %}
-    <h2 class="content">Add new Student</h2>
+    <h2 class="content">Edit Student</h2>
     <form method="post" class="manager">
         <div class="form-group">
             <label>Name
-                <input type="text" class="form-control" name="name" placeholder="Student name" required>
+                <input type="text" class="form-control" name="name" placeholder="{{ student.name }}" required>
             </label>
         </div>
         <div class="form-group">
             <label>Surname
-                <input type="text" class="form-control" name="surname" placeholder="Student surname" required>
+                <input type="text" class="form-control" name="surname" placeholder="{{ student.surname }}" required>
             </label>
         </div>
         <div class="form-group">
@@ -26,23 +26,24 @@
         </div>
         <div class="form-group">
             <label>Date of birth
-                <input type="date" class="form-control" name="birthdate" placeholder="Birth Date" required>
+                <input type="date" class="form-control" name="birthdate" placeholder="{{ student.birth_date }}" required>
             </label>
         </div>
         <div class="form-group">
             <label>Email</label>
-            <input type="email" class="form-control" name="email" placeholder="Email input">
+            <input type="email" class="form-control" name="email" placeholder="{{ student.email }}">
         </div>
         <div class="form-group">
             <label>Login
-                <input type="text" class="form-control" name="login" placeholder="Login" required>
+                <input type="text" class="form-control" name="login" placeholder="{{ student.login }}" required>
             </label>
         </div>
         <div class="form-group">
             <label>Password
-                <input type="password" class="form-control" name="password" placeholder="Password">
+                <input type="password" class="form-control" name="password" placeholder="{{ student.password }}">
             </label>
         </div>
-        <button type="submit" class="btn btn-default button-max-width">Submit</button>
+        <input type="hidden" name="student_id" value="{{ student._id }}">
+        <button type="submit" class="btn btn-default button-max-width">Update student</button>
     </form>
 {% endblock %}

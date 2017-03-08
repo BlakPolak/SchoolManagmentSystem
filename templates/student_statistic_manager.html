@@ -11,19 +11,22 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Index</th>
+                        <th>Student statistics</th>
 
                     </tr>
                 </thead>
+                    {% for student in list_of_students %}
 
-                    <tbody>
+                        <tbody>
 
-                        <tr>
-                            <td></td>
+                            <tr>
+                                <td> {{ student.name }}</td>
 
-                        </tr>
+                            </tr>
 
-                  </tbody>
+                        </tbody>
+
+                    {% endfor %}
 
             </table>
         </form>

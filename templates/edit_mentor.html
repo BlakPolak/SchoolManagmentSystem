@@ -1,66 +1,55 @@
 {% extends "base.html" %}
 {% block title %}
-    List of mentors
+    Edit mentor
 {% endblock %}
 {% block navbar %}
     {{ super() }}
 {% endblock %}
 {% block content %}
     {{ super() }}
-    <div class="content_title">
-        <h2>Edit mentors data</h2>
-        <hr>
-    </div>
-    <form name="edit_mentor" action="/edit_mentor" method="POST">
-         <div class="form-group">
-            <label>Name</label>
-            <input type="text" class="form-control" placeholder="Jan" required>
-         </div>
-         <div class="form-group">
-            <label>Surname</label>
-            <input type="text" class="form-control" placeholder="Kowalski" required>
-         </div>
-         <div class="form-group">
-            <label>Gender</label>
-            <input type="text" class="form-control" placeholder="male/female/not sure" required>
+        <div class="content_title">
+            <h2>Edit mentors data</h2>
+            <hr>
         </div>
-        <div class="input-append date form_datetime" class="form-group">
-            <label>Birth date</label>
-            <input size="16" type="text" value="" readonly required>
-            <span class="add-on"><i class="icon-th"></i></span>
-        </div>
-        <div class="form-group">
-            <label>Email address</label>
-            <input type="email" class="form-control" placeholder="you@web.com" required>
-        </div>
-        <div class="form-group">
-            <label>Login</label>
-            <input type="text" class="form-control" placeholder="Login" required>
-        </div>
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" class="form-control" placeholder="Password" required>
-        </div>
-            <input class="btn btn-default" type="submit" value="Update">
-    </form>
-    <script type="text/javascript">
-        $(".form_datetime").datetimepicker({
-            format: "dd MM yyyy"
-        });
-    </script>
+        action="/edit/{{ item_id }}"
+        <form name="edit_mentor"  action="/edit_mentor/{{mentor._id}}" method="POST">
+             <div class="form-group">
+                <label>Name</label>
+                <input type="text" name = "name" class="form-control" value="{{ mentor.name }}" required>
+             </div>
+             <div class="form-group">
+                <label>Surname</label>
+                <input type="text" name = "surname" class="form-control"  value="{{ mentor.surname }}" required>
+             </div>
+             <div class="form-group">
+                <label>Gender
+                    <select class="form-control form-group" name="gender" value="{{ mentor.gender}}" required>
+                        <option>male</option>
+                        <option>female</option>
+                        <option>not sure</option>
+                    </select>
+                </label>
+            </div>
+            <div class="form-group">
+                <label>Date of birth</label>
+                <input type="date" class="form-control" name="birthdate" value="{{ mentor.birth_date}}" required>
+
+            </div>
+            <div class="form-group">
+                <label>Email address</label>
+                <input type="email" class="form-control" name= "email" value="{{ mentor.email}}" required>
+            </div>
+            <div class="form-group">
+                <label>Login</label>
+                <input type="text" class="form-control" name= "login" value="{{ mentor.login}}" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="text" class="form-control" name= "password" value="{{ mentor.password}}" required>
+            </div>
+                <input class="btn btn-default" type="submit" value="Update">
+        </form>
+
 {% endblock %}
-                <form name="edit_student" action="">
-                    <fieldset
-                        <br><label>Password</label><br><input type="text" id="password" value="type here"><br>
-                        <br><br>
-                        <span class="bottonToNewView">
-                            <a href="#"><input type="button" value="Update"></a>
-                        </span>
-                    </fieldset>
-                </form>
-            </section>
-<div class="input-append date form_datetime">
-    <input size="16" type="text" value="" readonly>
-    <span class="add-on"><i class="icon-th"></i></span>
-</div>
+
 

@@ -26,8 +26,9 @@
                             <td>{{ mentor._id }}</td>
                             <td>{{ mentor.name }} {{ mentor.surname }}</td>
                             <td>
-                                <a class="btn btn-default" href="{{ url_for("edit_mentor") }}" role="button"> Edit</a>
+                                <a class="btn btn-default" href="edit_mentor/{{mentor._id}}" role="button"> Edit</a>
 {#                                <a class="btn btn-default" href="{{ url_for("remove_mentor") }}" role="button" onclick="showConfirm()">Remove</a>#}
+
                             </td>
                         </tr>
                     {% endfor %}
