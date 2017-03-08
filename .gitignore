@@ -1,6 +1,7 @@
 .idea/
 csv_lists/
 db/program.db
+db/
 # Created by https://www.gitignore.io/api/python,pycharm,osx
 
 ### Python ###

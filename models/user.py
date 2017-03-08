@@ -5,6 +5,7 @@ from models import ui
 from models.student_statistic import StudentStatistic
 from models.graded_assignment import gradedAssignment
 from models.team import Team
+from models.assignment import Assignment
 
 
 class User:
@@ -647,6 +648,52 @@ class Mentor(Employee):
         data.commit()
         data.close()
 
+    def get_assignments(self):
+        list_of_assignments = []
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("select * from Assignment")
+        for row in cursor.fetchall():
+            new_assignment = Assignment(row[0], row[1], row[2], row[3], row[4], row[5])
+            list_of_assignments.append(new_assignment)
+        data.close()
+        return list_of_assignments
+
+    def get_assignment(self, assignment_id):
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("select * from Assignment where ID=?", (assignment_id,))
+        row = cursor.fetchone()
+        if row:
+            assignment = Assignment(row[0], row[1], row[2], row[3], row[4], row[5])
+        data.close()
+        return assignment
+
+    def remove_assignment(self, assignment_id):
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("delete from  Assignment where ID=?", (assignment_id,))
+        data.commit()
+        data.close()
+
+
+    def update_assignment(self, assignment_id, name, type, max_points, delivery_date, content):
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("update Assignment set Name=?, Type=?, Max_points=?, Delivery_date=?, "
+                       " Content=? where ID=?", (name, type, max_points, delivery_date, content, assignment_id))
+        data.commit()
+        data.close()
+
+
+    def add_new_assignment(self, name, type, max_points, delivery_date, content):
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("insert into Assignment (Name, Type, Max_points, Delivery_date, "
+                       " Content) values(?, ?, ?, ?, ?)", (name, type, max_points, delivery_date, content))
+        data.commit()
+        data.close()
+
 
     def list_checkpoint_assignments(self):
         """
@@ -801,7 +848,7 @@ class Mentor(Employee):
     def get_mentor_by_id(cls, id):
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        cursor.execute("SELECT * FROM `User` WHERE id = ?;", (id,))
+        cursor.execute("SELECT * FROM `User` WHERE ID = ?;", (id,))
         mentor = cursor.fetchone()  # jak nie będzie działało to może fetchall i wtedy row = mentor[0]
         if mentor:
             return cls(mentor[0], mentor[1], mentor[2], mentor[3], mentor[4],
@@ -827,34 +874,18 @@ class Manager(Employee):
         """
         super().__init__(_id, name, surname, gender, birth_date, email, login, password, user_type)
 
-    @staticmethod
-    def add_mentor():
+
+    def add_mentor(self, name, surname, gender, birthdate, email, login, password):
         """
         Method allows manager to add mentor to mentors list
 
         Return:
              None
         """
-        options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
-                                    "Password"], "Provide information about new mentor")
-        if options[0].isalpha() and options[1].isalpha() and options[2] in ['male', 'female', 'not sure']:
-            if options[3].isalpha():
-                print('\nData should have format: YYYY-MM-DD\n')
-                return
-        else:
-            print('\nWrong input!\nName: only letters\nSurname: only letters\n'
-                  'Gender: you can choose only male, female or not sure\nData should have format: YYYY-MM-DD\n')
-            return
-
-        # new_mentor = Mentor(options[0], options[1], options[2], options[3], options[4], options[5],
-        #                     options[6])
-
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        cursor.execute("INSERT INTO `User`(Name, Surname, Gender, Birth_date, Email, Login, Password, User_type) "
-                       "VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')"
-                       .format(options[0], options[1], options[2], options[3],
-                               options[4], options[5], options[6], "mentor"))
+        cursor.execute("INSERT INTO `User` (`Name`, `Surname`, `Gender`, `Birth_date`, `Email`, `Login`, `Password`, `User_type`) "
+                       "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (name, surname, gender, birthdate, email, login, password, "mentor"))
         data.commit()
         data.close()
         print("Mentor was added.")
@@ -867,25 +898,10 @@ class Manager(Employee):
         Return:
              None
         """
-        options = ui.Ui.get_inputs([""], "Enter number to erase mentor from database")
 
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        records = cursor.execute("SELECT COUNT(`Name`) FROM `User` WHERE `User_Type` = 'mentor'")
-        records = records.fetchall()
-        number_of_records = int(records[0][0])
-
-        if int(options[0]) < 0 or int(options[0]) > number_of_records-1:
-            print("There is no such mentor number on the list")
-            return
-
-
-        cursor.execute("SELECT * FROM `User` WHERE `User_type`='mentor'")
-        mentors = cursor.fetchall()
-        mentor_name = mentors[int(options[0]) - 1][1]
-        mentor_surname = mentors[int(options[0]) - 1][2]
-        cursor.execute("DELETE FROM `User` WHERE `Name`='{}' AND `Surname`='{}'"
-                       .format(mentor_name, mentor_surname))
+        cursor.execute("DELETE FROM User WHERE ID=?", (id,))
         data.commit()
         data.close()
         print("Mentor was erased.")

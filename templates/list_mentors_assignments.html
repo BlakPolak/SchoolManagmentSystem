@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block head %}
+    {{ super() }}
+    {{ JSGlue.include() }}
+{% endblock %}
+{% block title %}
+    List of students
+{% endblock %}
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+    {{ super() }}
+        <form method="post">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Max. points</th>
+                        <th>Delivery date</th>
+                        <th>Content</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                {% if list_of_assignments %}
+                    <tbody>
+                    {% for assignment in list_of_assignments %}
+                        <tr>
+                            <td>{{ assignment.id }}</td>
+                            <td>{{ assignment.name }}</td>
+                            <td>{{ assignment.type }}</td>
+                            <td>{{ assignment.max_points }}</td>
+                            <td>{{ assignment.delivery_date }}</td>
+                            <td>{{ assignment.content }}</td>
+                            <td><a class="btn btn-default" href="{{ url_for("edit_assignment", assignment_id=assignment.id) }}" role="button">Edit</a></td>
+                            <td><a class="btn btn-default" href="{{ url_for("remove_assignment", assignment_id=assignment.id) }}" role="button">Remove</a></td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td><a class="btn btn-default" href="{{ url_for("add_new_assignment") }}" role="button">Add new assignment</a></td>
+                    </tr>
+                    </tbody>
+                {% endif %}
+            </table>
+        </form>
+{% endblock %}
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}

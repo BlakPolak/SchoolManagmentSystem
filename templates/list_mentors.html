@@ -8,6 +8,7 @@
 {% block content %}
     {{ super() }}
         <form method="post">
+            <a class="btn btn-default" href="{{ url_for("add_new_mentor") }}" role="button">Add new mentor</a>
             <table class="table">
                 <thead>
                     <tr>
@@ -27,13 +28,14 @@
                             <td>{{ mentor.name }} {{ mentor.surname }}</td>
                             <td>
                                 <a class="btn btn-default" href="edit_mentor/{{mentor._id}}" role="button"> Edit</a>
-{#                                <a class="btn btn-default" href="{{ url_for("remove_mentor") }}" role="button" onclick="showConfirm()">Remove</a>#}
+                                <a class="btn btn-default" href="remove_mentor/{{mentor._id}}" role="button" onclick="showConfirm()">Remove</a>
 
                             </td>
                         </tr>
                     {% endfor %}
-                  </tbody>
+                    </tbody>
                 {% endif %}
             </table>
+
         </form>
 {% endblock %}
