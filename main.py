@@ -166,7 +166,6 @@ def list_teams():
     list_of_teams = g.logged_user.get_teams()
     return render_template("list_teams.html", list_of_teams=list_of_teams)
 
-<<<<<<< HEAD
 @app.route("/list_mentors_assignments")
 def list_mentors_assignments():
     list_of_assignments = g.logged_user.get_assignments()
@@ -204,11 +203,6 @@ def add_new_assignment():
         g.logged_user.add_new_assignment(name, type, max_points, delivery_date, content)
         return redirect(url_for("list_mentors_assignments"))
     return render_template("add_new_assignment.html")
-
-
-@app.route("/")
-=======
->>>>>>> cf844f50ea7f61e30e460165fc09b80cb463d829
 
 @app.route("/list_mentors")
 def list_mentors():
