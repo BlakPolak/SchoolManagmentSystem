@@ -107,10 +107,11 @@ def edit_student():
     return render_template("edit_student.html", student=student)
 
 @app.route("/remove_student")
-def remove_student():
-    student_id = request.args["student_id"]
-    g.logged_user.remove_student(student_id)
-    return redirect("list_students")
+def remove_mentor():
+    pass
+    # student_id = request.args["student_id"]
+    # g.logged_user.remove_student(student_id)
+    # return redirect("list_students")
 
 @app.route("/add_to_team")
 def add_to_team():
