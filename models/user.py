@@ -42,15 +42,15 @@ class User:
             password: check_if_correct(password, str)
         """
         self._id = _id
-        self.name = self.check_if_correct(name, str)
-        self.surname = self.check_if_correct(surname, str)
+        self.name = name             #self.check_if_correct(name, str)
+        self.surname = surname         #self.check_if_correct(surname, str)
         self.check_gender(gender)
         self.gender = gender
         self.date_validate(birth_date)
         self.birth_date = birth_date
         self.email = email
         self.login = login
-        self.password = self.check_if_correct(password, str)
+        self.password = password  #self.check_if_correct(password, str)
         self.user_type = user_type
 
     @classmethod
@@ -80,28 +80,28 @@ class User:
         return None
 
 
-    @staticmethod
-    def check_if_correct(validate, check_type):
-        """
-        Checks if variable is expected type and convert it to integer type if it contains just digits
-
-        Args:
-            validate: variable to check
-            check_type: expected type of variable
-
-        Returns:
-            validated variable
-        """
-        if type(validate) != check_type:
-            raise TypeError("Wrong format for: " + str(validate))
-        elif type(validate) == check_type:
-            if validate.isdigit():
-                validate = int(validate)
-                return validate
-            elif all(i.isalpha() or i.isspace() for i in validate):
-                return validate
-            else:
-                raise TypeError("Wrong format for: " + str(validate))
+    # @staticmethod
+    # def check_if_correct(validate, check_type):
+    #     """
+    #     Checks if variable is expected type and convert it to integer type if it contains just digits
+    #
+    #     Args:
+    #         validate: variable to check
+    #         check_type: expected type of variable
+    #
+    #     Returns:
+    #         validated variable
+    #     """
+    #     if type(validate) != check_type:
+    #         raise TypeError("Wrong format for: " + str(validate))
+    #     elif type(validate) == check_type:
+    #         if validate.isdigit():
+    #             validate = int(validate)
+    #             return validate
+    #         elif all(i.isalpha() or i.isspace() for i in validate):
+    #             return validate
+    #         else:
+    #             raise TypeError("Wrong format for: " + str(validate))
 
     def check_gender(self, gender):
         """
@@ -890,8 +890,8 @@ class Manager(Employee):
         data.close()
         print("Mentor was added.")
 
-    @staticmethod
-    def remove_mentor():
+
+    def remove_mentor(self, mentor_id):
         """
         Method allows manager to remove mentor from mentors list
 
@@ -900,7 +900,7 @@ class Manager(Employee):
         """
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        cursor.execute("DELETE FROM User WHERE ID=?", (id,))
+        cursor.execute("DELETE FROM User WHERE ID=?", (mentor_id,))
         data.commit()
         data.close()
         print("Mentor was erased.")
