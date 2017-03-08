@@ -851,25 +851,9 @@ class Manager(Employee):
         Return:
              None
         """
-        options = ui.Ui.get_inputs([""], "Enter number to erase mentor from database")
-
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        records = cursor.execute("SELECT COUNT(`Name`) FROM `User` WHERE `User_Type` = 'mentor'")
-        records = records.fetchall()
-        number_of_records = int(records[0][0])
-
-        if int(options[0]) < 0 or int(options[0]) > number_of_records-1:
-            print("There is no such mentor number on the list")
-            return
-
-
-        cursor.execute("SELECT * FROM `User` WHERE `User_type`='mentor'")
-        mentors = cursor.fetchall()
-        mentor_name = mentors[int(options[0]) - 1][1]
-        mentor_surname = mentors[int(options[0]) - 1][2]
-        cursor.execute("DELETE FROM `User` WHERE `Name`='{}' AND `Surname`='{}'"
-                       .format(mentor_name, mentor_surname))
+        cursor.execute("DELETE FROM User WHERE ID=?", (id,))
         data.commit()
         data.close()
         print("Mentor was erased.")

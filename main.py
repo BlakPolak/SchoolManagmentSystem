@@ -228,6 +228,12 @@ def add_new_mentor():
             return redirect(url_for("list_mentors"))
     return render_template("add_new_mentor.html")
 
+@app.route("/remove_mentor")
+def remove_student():
+    mentor_id = request.args["mentor_id"]
+    g.logged_user.remove_student(mentor_id)
+    return redirect("list_students")
+
 @app.route('/list_students_employee')
 def list_students_employee():
     return render_template('list_students_employee.html', list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
