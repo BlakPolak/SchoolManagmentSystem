@@ -5,6 +5,7 @@ from models import ui
 from models.student_statistic import StudentStatistic
 from models.graded_assignment import gradedAssignment
 from models.team import Team
+from models.assignment import Assignment
 
 
 class User:
@@ -644,6 +645,52 @@ class Mentor(Employee):
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         cursor.execute("delete FROM teams WHERE Team_Name='{}'".format(team_name))
+        data.commit()
+        data.close()
+
+    def get_assignments(self):
+        list_of_assignments = []
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("select * from Assignment")
+        for row in cursor.fetchall():
+            new_assignment = Assignment(row[0], row[1], row[2], row[3], row[4], row[5])
+            list_of_assignments.append(new_assignment)
+        data.close()
+        return list_of_assignments
+
+    def get_assignment(self, assignment_id):
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("select * from Assignment where ID=?", (assignment_id,))
+        row = cursor.fetchone()
+        if row:
+            assignment = Assignment(row[0], row[1], row[2], row[3], row[4], row[5])
+        data.close()
+        return assignment
+
+    def remove_assignment(self, assignment_id):
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("delete from  Assignment where ID=?", (assignment_id,))
+        data.commit()
+        data.close()
+
+
+    def update_assignment(self, assignment_id, name, type, max_points, delivery_date, content):
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("update Assignment set Name=?, Type=?, Max_points=?, Delivery_date=?, "
+                       " Content=? where ID=?", (name, type, max_points, delivery_date, content, assignment_id))
+        data.commit()
+        data.close()
+
+
+    def add_new_assignment(self, name, type, max_points, delivery_date, content):
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("insert into Assignment (Name, Type, Max_points, Delivery_date, "
+                       " Content) values(?, ?, ?, ?, ?)", (name, type, max_points, delivery_date, content))
         data.commit()
         data.close()
 
