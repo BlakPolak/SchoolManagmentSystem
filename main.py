@@ -129,6 +129,21 @@ def assign_student_to_team():
     g.logged_user.add_to_team(student_id, team_name)
     return redirect(url_for("list_students"))
 
+@app.route("/add_new_team", methods=["POST", "GET"])
+def add_new_team():
+    if request.method == "POST":
+        new_team = request.form["name"]
+        g.logged_user.add_team(new_team)
+        return redirect(url_for("list_teams"))
+    return render_template("add_new_team.html")
+
+@app.route("/remove_team")
+def remove_team():
+    team_name = request.args["team_name"]
+    g.logged_user.remove_team(team_name)
+    return redirect(url_for("list_teams"))
+
+
 @app.route("/view_student_details")
 def view_student_details():
     student = g.logged_user.get_student(request.args["id"])
