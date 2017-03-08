@@ -22,7 +22,7 @@
                         <tr>
                             <td>{{ student._id }}</td>
                             <td>{{ student.name }} {{ student.surname }}</td>
-                            <td><a class="btn btn-default" href="{{ url_for ('average_grades_manager') }}" role="button"> Average grade</a></td>
+                            <td><a class="btn btn-default" href="{{ url_for ('average_grades_manager', student_id=student._id) }}" role="button"> Average grade</a></td>
                             <td><a class="btn btn-default"  href="{{ url_for ('student_statistic_manager', student_id=student._id) }}" role="button">Student statistics</a></td>
 
                         </tr>

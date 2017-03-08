@@ -11,22 +11,26 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Student statistics</th>
+                        <th>Student Statistics for {{ stats[0][0] }} {{ stats[0][1] }}:</th>
+
+                    </tr>
 
                     </tr>
                 </thead>
-                    {% for student in list_of_students %}
+
+
 
                         <tbody>
 
                             <tr>
-                                <td> {{ student.name }}</td>
+                                <td> Number of Grades: {{ stats[0][2] }}</td>
+                                <td> Average Grade: {{ stats[0][3] }}</td>
 
                             </tr>
 
                         </tbody>
 
-                    {% endfor %}
+
 
             </table>
         </form>
