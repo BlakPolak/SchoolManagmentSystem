@@ -1,7 +1,7 @@
 
 function showConfirm() {
     if (confirm("Are you sure") == false) {
-        window.location="list_students.html";
+        window.location="list_students_mentor.html";
     }
     // else{
     //     window.location="remove_student.html";

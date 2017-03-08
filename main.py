@@ -81,7 +81,7 @@ def manager():
 
 @app.route("/list_students")
 def list_students():
-    return render_template("list_students.html", list_of_students=g.logged_user.get_students())
+    return render_template("list_students_mentor.html", list_of_students=g.logged_user.get_students())
 
 @app.route("/add_new_student", methods=["POST", "GET"])
 def add_new_student():
@@ -115,10 +115,11 @@ def edit_student():
     return render_template("edit_student.html", student=student)
 
 @app.route("/remove_student")
-def remove_student():
-    student_id = request.args["student_id"]
-    g.logged_user.remove_student(student_id)
-    return redirect("list_students")
+def remove_mentor():
+    pass
+    # student_id = request.args["student_id"]
+    # g.logged_user.remove_student(student_id)
+    # return redirect("list_students")
 
 @app.route("/add_to_team")
 def add_to_team():
@@ -174,15 +175,67 @@ def list_teams():
     list_of_teams = g.logged_user.get_teams()
     return render_template("list_teams.html", list_of_teams=list_of_teams)
 
+@app.route("/list_mentors_assignments")
+def list_mentors_assignments():
+    list_of_assignments = g.logged_user.get_assignments()
+    return render_template("list_mentors_assignments.html", list_of_assignments=list_of_assignments)
+
+@app.route("/edit_assignment", methods=["GET", "POST"])
+def edit_assignment():
+    if request.method == "POST":
+        assignment_id = request.form["assignment_id"]
+        name = request.form["name"]
+        type = request.form["type"]
+        max_points = request.form["max_points"]
+        delivery_date = request.form["date"]
+        content = request.form["content"]
+        g.logged_user.update_assignment(assignment_id, name, type, max_points, delivery_date, content)
+        return redirect(url_for("list_mentors_assignments"))
+    assignment_id = request.args["assignment_id"]
+    assignment = g.logged_user.get_assignment(assignment_id)
+    return render_template("edit_assignment.html", assignment=assignment)
+
+@app.route("/remove_assignment")
+def remove_assignment():
+    assignment_id = request.args["assignment_id"]
+    g.logged_user.remove_assignment(assignment_id)
+    return redirect(url_for("list_mentors_assignments"))
+
+@app.route("/add_new_assignment", methods=["POST", "GET"])
+def add_new_assignment():
+    if request.method == "POST":
+        name = request.form["name"]
+        type = request.form["type"]
+        max_points = request.form["max_points"]
+        delivery_date = request.form["date"]
+        content = request.form["content"]
+        g.logged_user.add_new_assignment(name, type, max_points, delivery_date, content)
+        return redirect(url_for("list_mentors_assignments"))
+    return render_template("add_new_assignment.html")
+
 @app.route("/list_mentors")
 def list_mentors():
     return render_template("list_mentors.html", list_of_mentors=g.logged_user.list_mentors(), logged_user=g.logged_user)
 
+
+@app.route("/list_students_manager")
+def list_students_manager():
+    return render_template("list_students_manager.html", list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
+
+
+@app.route('/student_statistic_manager/<int:student_id>')
+def student_statistic_manager(student_id):
+    return render_template('student_statistic_manager.html', stats=g.logged_user.full_stats_for_students(student_id), logged_user=g.logged_user)
+
+
+@app.route('/average_grades_manager/<int:student_id>')
+def average_grades_manager(student_id):
+    return render_template('average_grades_manager.html', stats=g.logged_user.full_stats_for_students(student_id), logged_user=g.logged_user)
+
+
 @app.route('/edit_mentor/<mentor_id>', methods=["POST", "GET"])
 def edit_mentor(mentor_id):
-    print ('step1')
     if request.method == "POST":
-        print('wchodzę post')
         new_name = request.form["name"]
         new_surname= request.form["surname"]
         new_gender = request.form["gender"]
@@ -202,16 +255,41 @@ def edit_mentor(mentor_id):
         mentor_to_edit.password = new_password
         mentor_to_edit.edit_mentor()
         return redirect(url_for('list_mentors'))
-        # return render_template("list_mentors.html", list_of_mentors=g.logged_user.list_mentors(),
-        #                         logged_user=g.logged_user)
+
     if request.method == "GET":
-        print('robię Get')
         mentor_to_edit = Mentor.get_mentor_by_id(mentor_id)
         return render_template("edit_mentor.html", logged_user=g.logged_user, mentor_id=mentor_id, mentor=mentor_to_edit)
+
+@app.route('/add_new_mentor', methods=["POST", "GET"])
+def add_new_mentor():
+    if request.method == "POST":
+            name = request.form["name"]
+            surname = request.form["surname"]
+            gender = request.form["gender"]
+            birthdate = request.form["birthdate"]
+            email = request.form["email"]
+            login = request.form["login"]
+            password = request.form["password"]
+            g.logged_user.add_mentor(name, surname, gender, birthdate, email, login, password)
+            return redirect(url_for("list_mentors"))
+    return render_template("add_new_mentor.html")
+
+@app.route("/remove_mentor")
+def remove_student():
+    mentor_id = request.args["mentor_id"]
+    g.logged_user.remove_student(mentor_id)
+    return redirect("list_students")
 
 @app.route('/list_students_employee')
 def list_students_employee():
     return render_template('list_students_employee.html', list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
+
+
+@app.route('/student_details_employee/<student_id>')
+def student_details_employee(student_id):
+    student = Student.get_mentor_by_id(student_id)
+    return render_template('student_details_employee.html', list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
+
 
 @app.route("/logout")
 def logout():
@@ -220,6 +298,7 @@ def logout():
     session.pop("username", None)
     flash("Logged out successfully", "alert alert-success text-centered")
     return redirect(url_for("login"))
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -236,7 +315,6 @@ def login():
         else:
             flash("Your login data was incorrect", "alert alert-danger text-centered")
     return render_template("login.html")
-
 
 
 @app.errorhandler(404)

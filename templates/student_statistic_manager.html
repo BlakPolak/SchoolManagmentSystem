@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}
+    List of students
+{% endblock %}
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+    {{ super() }}
+        <form method="post">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Student Statistics for {{ stats[0][0] }} {{ stats[0][1] }}:</th>
+
+                    </tr>
+
+                    </tr>
+                </thead>
+
+
+
+                        <tbody>
+
+                            <tr>
+                                <td> Number of Grades: {{ stats[0][2] }}</td>
+                                <td> Average Grade: {{ stats[0][3] }}</td>
+
+                            </tr>
+
+                        </tbody>
+
+
+
+            </table>
+        </form>
+{% endblock %}
