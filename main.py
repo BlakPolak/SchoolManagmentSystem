@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, url_for, redirect, session, g, flash
+from models.user import *
 from flask_jsglue import JSGlue
 from models.user import User
 from models.data import Data
@@ -165,6 +166,7 @@ def list_teams():
     list_of_teams = g.logged_user.get_teams()
     return render_template("list_teams.html", list_of_teams=list_of_teams)
 
+<<<<<<< HEAD
 @app.route("/list_mentors_assignments")
 def list_mentors_assignments():
     list_of_assignments = g.logged_user.get_assignments()
@@ -205,14 +207,34 @@ def add_new_assignment():
 
 
 @app.route("/")
+=======
+>>>>>>> cf844f50ea7f61e30e460165fc09b80cb463d829
 
 @app.route("/list_mentors")
 def list_mentors():
     return render_template("list_mentors.html", list_of_mentors=g.logged_user.list_mentors(), logged_user=g.logged_user)
 
+
+@app.route("/list_students_manager")
+def list_students_manager():
+    return render_template("list_students_manager.html", list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
+
+
+@app.route('/student_statistic_manager/<int:student_id>')
+def student_statistic_manager(student_id):
+    return render_template('student_statistic_manager.html', stats=g.logged_user.full_stats_for_students(student_id), logged_user=g.logged_user, student_id=student_id)
+
+
+@app.route('/average_grades_manager')
+def average_grades_manager():
+    return render_template('average_grades_manager.html', grades=g.logged_user.average_grade_for_student(), logged_user=g.logged_user)
+
+
 @app.route('/edit_mentor/<mentor_id>', methods=["POST", "GET"])
 def edit_mentor(mentor_id):
+    print ('step1')
     if request.method == "POST":
+        print('wchodzę post')
         new_name = request.form["name"]
         new_surname= request.form["surname"]
         new_gender = request.form["gender"]
@@ -221,7 +243,7 @@ def edit_mentor(mentor_id):
         new_login = request.form["login"]
         new_password = request.form["password"]
 
-        mentor_to_edit = User.Mentor.get_mentor_by_id(mentor_id)
+        mentor_to_edit = Mentor.get_mentor_by_id(mentor_id)
 
         mentor_to_edit.name = new_name
         mentor_to_edit.surname = new_surname
@@ -230,12 +252,27 @@ def edit_mentor(mentor_id):
         mentor_to_edit.email = new_email
         mentor_to_edit.login = new_login
         mentor_to_edit.password = new_password
+        mentor_to_edit.edit_mentor()
+        return redirect(url_for('list_mentors'))
+        # return render_template("list_mentors.html", list_of_mentors=g.logged_user.list_mentors(),
+        #                         logged_user=g.logged_user)
     if request.method == "GET":
-        return render_template("edit_mentor.html", logged_user=g.logged_user, mentor_id= mentor_id)
+        print('robię Get')
+        mentor_to_edit = Mentor.get_mentor_by_id(mentor_id)
+        return render_template("edit_mentor.html", logged_user=g.logged_user, mentor_id=mentor_id, mentor=mentor_to_edit)
+
+
 
 @app.route('/list_students_employee')
 def list_students_employee():
     return render_template('list_students_employee.html', list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
+
+
+@app.route('/student_details_employee/<student_id>')
+def student_details_employee(student_id):
+    student = Student.get_mentor_by_id(student_id)
+    return render_template('student_details_employee.html', list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
+
 
 @app.route("/logout")
 def logout():
@@ -244,6 +281,7 @@ def logout():
     session.pop("username", None)
     flash("Logged out successfully", "alert alert-success text-centered")
     return redirect(url_for("login"))
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -260,7 +298,6 @@ def login():
         else:
             flash("Your login data was incorrect", "alert alert-danger text-centered")
     return render_template("login.html")
-
 
 
 @app.errorhandler(404)

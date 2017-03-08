@@ -3,6 +3,7 @@ import sqlite3
 
 from models import ui
 from models.student_statistic import StudentStatistic
+from models.graded_assignment import gradedAssignment
 from models.team import Team
 from models.assignment import Assignment
 
@@ -252,17 +253,20 @@ class Student(User):
             table submitted assignment with grades
 
         """
-        grades_for_view = []
+
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
         cursor.execute("SELECT assignment.name, submission.grade FROM assignment INNER JOIN submission "
                        "ON submission.ID_assignment = assignment.ID WHERE ID_Student='{}'".format(self._id))
         grades = cursor.fetchall()
-        for grade in grades:
-            grades_for_view.append(grade)
-        data.commit()
+        student_all_grades = []
+        for row in grades:
+            assignment_name = row[0]
+            assignment_grade = row[1]
+            student_grade = gradedAssignment(assignment_name, assignment_grade)
+            student_all_grades.append(student_grade)
         data.close()
-        return grades_for_view
+        return student_all_grades
 
     def list_submissions(self): #to refactor - move to class submission as class method
         """
@@ -823,7 +827,24 @@ class Mentor(Employee):
         data.close()
         return student_statistics
 
-    @staticmethod
+    def edit_mentor(self):
+        """
+        Method allows manager to edit mentor specific data
+
+        Return:
+             None
+        """
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("UPDATE `User` SET `Name`=?, `Surname`=?, `Gender`=?, "
+                       "`Birth_date`=?,`Email`=?, `Login`=?, `Password`=?"
+                       " WHERE `ID`=?",
+                       (self.name, self.surname, self.gender, self.birth_date, self.email, self.login, self.password, self._id))
+        data.commit()
+        data.close()
+        print("Update completed")
+
+    @classmethod
     def get_mentor_by_id(cls, id):
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
@@ -916,52 +937,26 @@ class Manager(Employee):
         data.close()
         print("Mentor was erased.")
 
-    @staticmethod
-    def edit_mentor():
-        """
-        Method allows manager to edit mentor specific data
-
-        Return:
-             None
-        """
-
-        mentor_to_update = ui.Ui.get_inputs([""], "Enter number to edit mentor's data")
-
-        data = sqlite3.connect("program.db")
-        cursor = data.cursor()
-        records = cursor.execute("SELECT COUNT(`Name`) FROM `User` WHERE `User_Type` = 'mentor'")
-        records = records.fetchall()
-        number_of_records = int(records[0][0])
-
-        if int(mentor_to_update[0]) < 1 or int(mentor_to_update[0]) > number_of_records-1:
-            print("There is no such mentor number on the list")
-            return
-        options = ui.Ui.get_inputs(["Name", "Surname", "Gender", "Birth date", "Email", "Login",
-                                    "Password"], "Edit information about student")
-        if options[0].isalpha() and options[1].isalpha() and options[2] in ['male', 'female', 'not sure']:
-            if options[3].isalpha():
-                print('Data should have format: YYYY-MM-DD')
-                return
-        else:
-            print('\nWrong input!\nName: only letters\nSurname: only letters\n'
-                  'Gender: you can choose only male, female or not sure\nData format: YYYY-MM-DD\n')
-            return
-
-        cursor.execute("SELECT * FROM `User` WHERE `User_type`='mentor'")
-        mentors = cursor.fetchall()
-        mentor_to_update_name = mentors[int(mentor_to_update[0]) - 1][1]
-        mentor_to_update_surname = mentors[int(mentor_to_update[0]) - 1][2]
-
-        cursor.execute(
-            "UPDATE `User` SET `Name`='{}', `Surname`='{}', `Gender`='{}', `Birth_date`='{}',"
-            " `Email`='{}', `Login`='{}', `Password`='{}' "
-            " WHERE "
-            "`Name`='{}' AND `Surname`='{}'"
-            .format(options[0], options[1], options[2], options[3],
-                    options[4], options[5], options[6], mentor_to_update_name, mentor_to_update_surname ))
-        data.commit()
-        data.close()
-        print("Update completed")
+ #do usuniecia- przeniesiono tą metode do Mentor
+    # def edit_mentor(self):
+    #     """
+    #     Method allows manager to edit mentor specific data
+    #
+    #     Return:
+    #          None
+    #     """
+    #     data = sqlite3.connect("db/program.db")
+    #     cursor = data.cursor()
+    #     cursor.execute(
+    #         "UPDATE `User` SET `Name`='{}', `Surname`='{}', `Gender`='{}', `Birth_date`='{}',"
+    #         " `Email`='{}', `Login`='{}', `Password`='{}' "
+    #         " WHERE "
+    #         "`Name`='{}' AND `Surname`='{}'"
+    #         .format(self.name, self.surname, self.gender, self.birth_date,
+    #                 self.email, self.login, self.password))
+    #     data.commit()
+    #     data.close()
+    #     print("Update completed")
 
     @staticmethod
     def list_mentors():
@@ -1111,21 +1106,20 @@ class Manager(Employee):
         return list_to_print
 
     @staticmethod
-    def full_stats_for_students():
+    def full_stats_for_students(student_id):
 
         student_stats = []
         data = sqlite3.connect("program.db")
         cursor = data.cursor()
-        grades = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
+        grades = cursor.execute("SELECT `ID_Student`, `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
                                 "FROM `Submission` INNER JOIN `User` ON `Submission`.ID_Student = User.ID"
-                                " GROUP BY `Name`")
+                                " WHERE ID_Student = {}".format(student_id))
         grades = grades.fetchall()
         for row in grades:
             student_stats.append(row)
-        list_to_print = []
-        for row in student_stats:
-            list_to_print.append([row[0], row[1], row[2], row[3]])
-        return list_to_print
+        return student_stats
+
+
 
         # # TODO: return list with percent of attendance for every student...
         # presence = cursor.execute("SELECT  `Name`, `Surname`, COUNT(CASE WHEN Presence = 1 THEN 1 ELSE NULL END)"

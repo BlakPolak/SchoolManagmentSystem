@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-    My grades
+    List of students
 {% endblock %}
 {% block navbar %}
     {{ super() }}
@@ -11,16 +11,20 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Name of assignment</th>
-                        <th>Grade</th>
+                        <th>Details</th>
+
                     </tr>
                 </thead>
-                {% for assignment in student_grades %}
+
                     <tbody>
-                        <td>{{ assignment.name }}</td>
-                        <td>{{ assignment.grade }}</td>
-                    </tbody>
-                {% endfor %}
+
+                        <tr>
+                            <td></td>
+
+                        </tr>
+
+                  </tbody>
+
             </table>
         </form>
 {% endblock %}
