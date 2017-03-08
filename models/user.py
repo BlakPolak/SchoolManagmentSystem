@@ -3,6 +3,7 @@ import sqlite3
 
 from models import ui
 from models.student_statistic import StudentStatistic
+from models.graded_assignment import gradedAssignment
 from models.team import Team
 
 
@@ -251,17 +252,20 @@ class Student(User):
             table submitted assignment with grades
 
         """
-        grades_for_view = []
+
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
         cursor.execute("SELECT assignment.name, submission.grade FROM assignment INNER JOIN submission "
                        "ON submission.ID_assignment = assignment.ID WHERE ID_Student='{}'".format(self._id))
         grades = cursor.fetchall()
-        for grade in grades:
-            grades_for_view.append(grade)
-        data.commit()
+        student_all_grades = []
+        for row in grades:
+            assignment_name = row[0]
+            assignment_grade = row[1]
+            student_grade = gradedAssignment(assignment_name, assignment_grade)
+            student_all_grades.append(student_grade)
         data.close()
-        return grades_for_view
+        return student_all_grades
 
     def list_submissions(self): #to refactor - move to class submission as class method
         """

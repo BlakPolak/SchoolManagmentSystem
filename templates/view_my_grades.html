@@ -15,12 +15,12 @@
                         <th>Grade</th>
                     </tr>
                 </thead>
-                {% if student_grades %}
+                {% for assignment in student_grades %}
                     <tbody>
-                        <td>{{ student_grades[0][0] }}</td>
-                        <td>{{ student_grades[0][1] }}</td>
+                        <td>{{ assignment.name }}</td>
+                        <td>{{ assignment.grade }}</td>
                     </tbody>
-                {% endif %}
+                {% endfor %}
             </table>
         </form>
 {% endblock %}
