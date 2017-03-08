@@ -4,6 +4,7 @@ import sqlite3
 from models import ui
 from models.student_statistic import StudentStatistic
 from models.graded_assignment import gradedAssignment
+from models.assignment import Assignment
 from models.team import Team
 
 
@@ -295,16 +296,21 @@ class Student(User):
         """
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        cursor.execute("SELECT ID, Name, Type, Delivery_date FROM `Assignment`")
+        cursor.execute("select * from assignment where ID not in (select id_assignment from submission where id_student=?);", (self._id,))
         assignments = cursor.fetchall()
         assignments_to_submit = []
-        for assignment in assignments:
-            if assignment[0] not in self.list_submissions():
-                assignments_to_submit.append(assignment)
+        for row in assignments:
+            assignment_name = row[1]
+            assignment_type = row[2]
+            assignment_max_points = row[3]
+            assignment_delivery_date = row[4]
+            assignment_content = row[5]
+            assignment = Assignment(assignment_name, assignment_max_points, assignment_delivery_date, assignment_type, assignment_content)
+            assignments_to_submit.append(assignment)
         data.close()
         return assignments_to_submit
 
-    def submit_assignment(self, assignment):
+    def submit_assignment(self):
         """
         Method allows student to submit assignment
 
@@ -314,17 +320,9 @@ class Student(User):
         """
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        if len(assignment) <= 1:
-            print("You have no assignment to submitt!")
-            return
-        assignment_id = ui.Ui.get_inputs([""], "Enter number to choose assignment to submit: ")
-        # if assignment_id not in assignment or assignment_id <= 0:
-        #     print("Try again with right index!")
-        #     return
-        result = ui.Ui.get_inputs(["Content"], "Provide information about new assignment")
         submission_date = datetime.date.today()
         cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
-                       "VALUES ('{}', '{}', '{}', '{}')".format(self._id, assignment_id[0], result[0], submission_date))
+                       "VALUES ('{}', '{}', '{}', '{}')".format(self._id, assignment_id, result, submission_date))
         data.commit()
         data.close()
 

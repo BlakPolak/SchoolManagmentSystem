@@ -7,7 +7,7 @@ class Assignment:
           delivery_date: stories date of delivery
           content: stories content of assignment
     """
-    def __init__(self, name, max_points, delivery_date, content):
+    def __init__(self, name, max_points, delivery_date, type, content):
         """
         Initialize object args
             Args:
@@ -21,6 +21,7 @@ class Assignment:
         self.name = name
         self.max_points = max_points
         self.delivery_date = delivery_date
+        self.type = type
         self.content = content
 
     def __str__(self):
