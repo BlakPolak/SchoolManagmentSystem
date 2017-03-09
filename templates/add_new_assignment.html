@@ -7,41 +7,40 @@
 {% endblock %}
 {% block content %}
     {{ super() }}
-    <div class="content_title">
-        <h2>Add new assignment</h2>
-        <hr>
-    </div>
     <form method="post">
-         <div class="form-group">
+    <table class="table">
+        <tr><td>
+        <h2>Add new assignment</h2>
+        </td>
+        </tr>
+        <tr>
+            <td>
              <label>Name
-                 <input type="text" name="name" class="form-control" placeholder="Assignment name" required>
+                 <input type="text" name="name" size="35" class="form-control" placeholder="Assignment name" required>
              </label>
-         </div>
-         <div class="form-group">
+            </td>
+        </tr><tr><td>
              <label>Type
-                 <select name="type" required>
+                 <select name="type" class="form-control form-group select" required>
                      <option>individual</option>
                      <option>group</option>
                  </select>
              </label>
-         </div>
-        <div class="form-group">
+    </td></tr><tr><td>
             <label>Max points
-                <input type="text" class="form-control" name="max_points" placeholder="Assignment max points" required>
+                <input type="text" class="form-control" size="35" name="max_points" placeholder="Assignment max points" required>
             </label>
-        </div>
-        <div class="form-group">
+    </td></tr><tr><td>
             <label>Delivery date
-                <input type="date" class="form-control" name="date" placeholder="Assignment delivery date" required>
+                <input type="date" class="form-control select" name="date" placeholder="Assignment delivery date" required>
             </label>
-        </div>
-        <div class="form-group">
+    </td></tr><tr><td>
             <label>Content
-                <input type="text" class="form-control" name="content" placeholder="Assignment content" required>
+                <input type="text" class="form-control" size="35" name="content" placeholder="Assignment content" required>
             </label>
-        </div>
-        <div class="form-group">
-            <input class="btn btn-default" type="submit" value="Add Assignment">
-        </div>
+    </td></tr><tr><td>
+            <input class="btn btn-default btn-lg btn-block" type="submit" value="Add Assignment">
+            </td></tr>
+    </table>
     </form>
 {% endblock %}

@@ -4,13 +4,15 @@
 {% endblock %}
 {% block content %}
     {{ super() }}
+    <form method="post" class="form">
     <h2 class="content">Add new team</h2>
-    <form method="post" class="manager">
         <div class="form-group">
             <label>Name
-                <input type="text" class="form-control" name="name" placeholder="Team name" required>
+                <input type="text" class="form-control" name="name" placeholder="Team name" size="35" required autofocus>
             </label>
+            <button type="submit" class="btn btn-default btn-lg btn-block" style="width: 30%; display: inline-block;">Add Team</button>
         </div>
-        <button type="submit" class="btn btn-default button-max-width">Add Team</button>
+
     </form>
+
 {% endblock %}

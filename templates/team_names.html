@@ -13,14 +13,12 @@
     {{ super() }}
             <table class="table">
                 <thead>
-                    <tr>
-                        <th>Team name</th>
-                    </tr>
+                <tr><td><h2>Choose team to assign student</h2></td></tr>
                 </thead>
                     <tbody>
                     {% for team in list_of_teams %}
                         <tr>
-                            <td><button onclick="return assignTeam(this.innerText)">{{ team.team_name }}</button></td>
+                            <td><button class="btn btn-default btn-lg btn-block" onclick="return assignTeam(this.innerText)">{{ team.team_name }}</button></td>
                         </tr>
                     {% endfor %}
                     </tbody>
