@@ -306,6 +306,17 @@ def remove_mentor():
     g.logged_user.remove_mentor(mentor_id)
     return redirect("list_mentors")
 
+@app.route("/checkpoint_stats_for_mentors")
+def checkpoint_stats_for_mentors():
+    list_of_statistics = g.logged_user.which_mentor_is_a_monster()
+    return render_template("checkpoint_stats_for_mentors.html", list_of_statistics=list_of_statistics)
+
+@app.route("/grade_stats_for_mentors")
+def grade_stats_for_mentors():
+    list_of_statistics = g.logged_user.grades_stats_for_mentors()
+    return render_template("grade_stats_for_mentors.html", list_of_statistics=list_of_statistics)
+
+
 @app.route('/list_students_employee')
 def list_students_employee():
     return render_template('list_students_employee.html', list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)

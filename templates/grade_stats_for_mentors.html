@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>{% extends "base.html" %}
+{% block title %}
+    Grade statistics for mentors
+{% endblock %}
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+    {{ super() }}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Mentor Name</th>
+                        <th>Mentor Surname</th>
+                        <th>Number of grades</th>
+                        <th>Average grade</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                    {% if list_of_statistics %}
+                    {% for statistic in list_of_statistics %}
+                        <tr>
+                            <td>{{ statistic.name }}</td>
+                            <td>{{ statistic.surname }}</td>
+                            <td>{{ statistic.number_of_grades }}</td>
+                            <td>{{ statistic.average_grade }}</td>
+                        </tr>
+                    {% endfor %}
+                    {% endif %}
+                    </tbody>
+            </table>
+{% endblock %}

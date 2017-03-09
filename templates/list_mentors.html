@@ -9,8 +9,8 @@
     {{ super() }}
         <form method="post">
             <a class="btn btn-default" href="{{ url_for("add_new_mentor") }}" role="button">Add new mentor</a>
-            <a class="btn btn-default" href="#" role="button"> Grade stats</a>
-            <a class="btn btn-default" href="#" role="button"> Checkpoint stats</a>
+            <a class="btn btn-default" href="{{ url_for("grade_stats_for_mentors") }}" role="button"> Grade stats</a>
+            <a class="btn btn-default" href="{{ url_for("checkpoint_stats_for_mentors") }}" role="button"> Checkpoint stats</a>
             <table class="table">
                 <thead>
                     <tr>

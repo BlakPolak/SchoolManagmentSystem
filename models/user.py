@@ -8,6 +8,8 @@ from models.assignment import Assignment
 from models.team import Team
 from models.assignment import Assignment
 from models.gradeable_submissions import GradeableSubmissions
+from models.checkpoints_stats_for_mentors import CheckpointStatsForMentors
+from models.grade_stats_for_mentors import GradeStatsForMentors
 from models.submission import Submission
 from models.checkpoint_assignment import CheckpointAssignment
 
@@ -1082,10 +1084,10 @@ class Manager(Employee):
            list with card statistics
 
        """
-        list_to_print = []
+        checkpoint_stats_list = []
         cards_statistics = {}
         mentors = []
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         cards = cursor.execute("SELECT `Name`, `Surname`, `Card` "
                                "FROM `Checkpoint_submittion` "
@@ -1106,11 +1108,11 @@ class Manager(Employee):
                     if str(row[2]) == 'green':
                         cards_statistics[mentor][2] += 1
         for key, value in cards_statistics.items():
-            temp = [key, value[0], value[1], value[2]]
-            list_to_print.append(temp)
+            statistic_for_mentor = CheckpointStatsForMentors(key, value[0], value[1], value[2])
+            checkpoint_stats_list.append(statistic_for_mentor)
         data.commit()
         data.close()
-        return list_to_print
+        return checkpoint_stats_list
 
     @staticmethod
     def grades_stats_for_mentors():
@@ -1128,15 +1130,14 @@ class Manager(Employee):
         grades = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
                                             "FROM `Submission` INNER JOIN `User` ON `Submission`.ID_Mentor = User.ID"
                                             " GROUP BY `Name`")
-        list_to_print = []
+
         grades = grades.fetchall()
         for row in grades:
-            grades_statistics.append(row)
-        for row in grades_statistics:
-            list_to_print.append([row[0], row[1], row[2], row[3]])
-        return list_to_print
+            grades_statistics.append(GradeStatsForMentors(row[0], row[1], row[2], row[3]))
+        return grades_statistics
 
-    @staticmethod
+
+
     def full_stats_for_students(student_id):
 
         student_stats = []
