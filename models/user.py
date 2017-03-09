@@ -12,6 +12,7 @@ from models.checkpoints_stats_for_mentors import CheckpointStatsForMentors
 from models.grade_stats_for_mentors import GradeStatsForMentors
 from models.submission import Submission
 from models.checkpoint_assignment import CheckpointAssignment
+from models.student_grades import StudentGrades
 
 
 class User:
@@ -1136,20 +1137,15 @@ class Manager(Employee):
             grades_statistics.append(GradeStatsForMentors(row[0], row[1], row[2], row[3]))
         return grades_statistics
 
-
-
-    def full_stats_for_students(student_id):
-
-        student_stats = []
+    def full_stats_for_student(self, student_id):
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         grades = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
                                 "FROM `Submission` INNER JOIN `User` ON `Submission`.ID_Student = User.ID"
-                                " WHERE ID_Student = {}".format(student_id))
+                                " WHERE ID_Student = ?", (student_id,))
         grades = grades.fetchall()
-        for row in grades:
-            student_stats.append(row)
-        return student_stats
+        student_grades = StudentGrades(grades[0][0], grades[0][1], grades[0][2], grades[0][3])
+        return student_grades
 
 
 
