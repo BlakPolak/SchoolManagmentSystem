@@ -62,14 +62,24 @@ def view_my_attendance():
 def list_assignment():
     return render_template("list_assignment.html", assignment_list=g.logged_user.list_assignments_to_submit(), logged_user=g.logged_user)
 
-@app.route("/submit_assignment", methods=["POST", "GET"])
-def submit_assignment():
+
+@app.route("/list_group_assignment")
+def list_group_assignment():
+    return render_template("list_group_assignment.html", group_assignment=g.logged_user.list_group_assignment(), logged_user=g.logged_user)
+
+
+@app.route("/submit_assignment/<assignment_id>", methods=["POST", "GET"])
+def submit_assignment(assignment_id):
+    assignment = Assignment.get_assignment_by_id(g.logged_user, assignment_id)
     if request.method == "POST":
         result = request.form["result"]
-        g.logged_user.add_student(result)
-        return redirect(url_for("list_assignment"))
+        id_assignment = assignment.id
+        g.logged_user.submit_assignment(result, id_assignment)
+        return list_assignment()
     return render_template("submit_assignment.html", assignment_list=g.logged_user.list_assignments_to_submit(),
-                           logged_user=g.logged_user)
+                           logged_user=g.logged_user, assignment=assignment)
+
+
 
 @app.route("/employee")
 def employee():
