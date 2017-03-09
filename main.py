@@ -140,6 +140,19 @@ def remove_student():
     g.logged_user.remove_student(student_id)
     return redirect("list_students")
 
+@app.route("/check_students_attendance", methods=["POST", "GET"])
+def check_students_attendance():
+    if request.method == "POST":
+        attendance_list = []
+        for key, value in request.form.items():
+            attendance_list.append([key, value])
+        zm = g.logged_user.save_attendance(attendance_list)
+        if not zm:
+            flash("Youve checked attendance today!", "alert alert-danger text-centered")
+        else:
+            flash("Attendance done!", "alert alert-success text-centered")
+    return render_template("check_students_attendance.html", list_of_students=g.logged_user.get_students())
+
 @app.route("/add_to_team")
 def add_to_team():
     student_id = request.args["student_id"]

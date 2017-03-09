@@ -52,9 +52,7 @@ class User:
         self._id = _id
         self.name = name             #self.check_if_correct(name, str)
         self.surname = surname         #self.check_if_correct(surname, str)
-        self.check_gender(gender)
         self.gender = gender
-        self.date_validate(birth_date)
         self.birth_date = birth_date
         self.email = email
         self.login = login
@@ -111,32 +109,32 @@ class User:
     #         else:
     #             raise TypeError("Wrong format for: " + str(validate))
 
-    def check_gender(self, gender):
-        """
-        Checks if variable is correct type of gender, if not - it raises an error
+    # def check_gender(self, gender):
+    #     """
+    #     Checks if variable is correct type of gender, if not - it raises an error
+    #
+    #     Args:
+    #         gender: variable to check
+    #
+    #     Returns:
+    #         None
+    #     """
+    #     gender_list = ['male', 'female', 'not sure']
+    #     if gender.lower() not in gender_list:
+    #         raise NameError('Gender should be: male, female, not sure')
 
-        Args:
-            gender: variable to check
-
-        Returns:
-            None
-        """
-        gender_list = ['male', 'female', 'not sure']
-        if gender.lower() not in gender_list:
-            raise NameError('Gender should be: male, female, not sure')
-
-    def date_validate(self, birth_date):
-        """
-        Checks if data format is correct
-
-        Args:
-            birth_date: variable to check
-
-        Returns:
-         True if data format is correct
-        """
-        if datetime.datetime.strptime(birth_date, '%Y-%m-%d').strftime('%Y-%m-%d'):
-            return True
+    # def date_validate(self, birth_date):
+    #     """
+    #     Checks if data format is correct
+    #
+    #     Args:
+    #         birth_date: variable to check
+    #
+    #     Returns:
+    #      True if data format is correct
+    #     """
+    #     if datetime.datetime.strptime(birth_date, '%Y-%m-%d').strftime('%Y-%m-%d'):
+    #         return True
 
 
 class Employee(User):
@@ -276,24 +274,6 @@ class Student(User):
         data.close()
         return student_all_grades
 
-    # def list_submissions(self):
-    #     """
-    #     Method returns list of all student submission
-    #
-    #     Return:
-    #         list submitted assignment
-    #
-    #     """
-    #     data = sqlite3.connect(User.path)
-    #     cursor = data.cursor()
-    #     cursor.execute("select ID_Assignment from `Submission` WHERE ID_Student='{}'".format(self._id))
-    #     submissions = cursor.fetchall()
-    #     submissions_list = []
-    #     for element in submissions:
-    #         submissions_list.append(element[0])
-    #     data.close()
-    #     return submissions_list
-
     def list_assignments_to_submit(self):
         """
         Method returns list of all student submission
@@ -399,6 +379,7 @@ class Student(User):
         data.close()
         return teammates_list
 
+<<<<<<< HEAD
 
     def add_group_assignment(self, id_assignment, result):
         """
@@ -416,6 +397,25 @@ class Student(User):
                             "VALUES (?, ?, ?, ?)", (teammate, id_assignment, result, submission_date))
         data.commit()
         data.close()
+=======
+    # def add_group_assignment(self, teammates, group_submission):
+    #     """
+    #     Method allows student to submit assignment for each team member
+    #
+    #     Args:
+    #         teammates.py, group_submission
+    #
+    #     """
+    #     data = sqlite3.connect(User.path)
+    #     cursor = data.cursor()
+    #     submission_date = datetime.date.today()
+    #     id_student = list_student_teammates
+    #     for
+    #     cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
+    #                    "VALUES (?, ?, ?, ?)", (id_student, id_assignment, result, submission_date))
+    #     data.commit()
+    #     data.close()
+>>>>>>> b726d4236c381533ceaf18059e878f652f5fc6ed
 
     def check_my_attendance(self):
         """
@@ -519,9 +519,34 @@ class Mentor(Employee):
         """
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        cursor.execute("delete from User where ID='{}'".format(student_id))
+        cursor.execute("delete from User where ID=?", (student_id,))
+        cursor.execute("delete from Submission where ID_Student=?", (student_id,))
+        cursor.execute("delete from teams where ID_Student=?", (student_id,))
+        cursor.execute("delete from Checkpoint_submittion where ID_Student=?", (student_id,))
         data.commit()
         data.close()
+
+    def save_attendance(self, attendance_list):
+        data = sqlite3.connect("db/program.db")
+        for index, item in enumerate(attendance_list):
+            if item[1] == "present":
+                attendance_list[index][1] = 1
+            elif item[1] == "absent":
+                attendance_list[index][1] = 0
+            else:
+                attendance_list[index][1] = 2
+        cursor = data.cursor()
+        cursor.execute("select * from Attendance where date=?", (str(datetime.date.today()),))
+        rows = cursor.fetchall()
+        if len(rows) > 0:
+            return False
+        for row in attendance_list:
+            cursor.execute("insert into Attendance (ID_Student, Date, Presence) values(?, ?, ?)", (row[0], str(datetime.date.today()), row[1]))
+        data.commit()
+        data.close()
+        return True
+
+
 
 
     def update_student(self, student_id, name, surname, gender, birthdate, email, login, password):
@@ -554,11 +579,11 @@ class Mentor(Employee):
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         submissions_not_graded = cursor.execute(
-"SELECT Submission.id, Assignment.ID, Assignment.Name, Assignment.delivery_date, User.Name, User.Surname, Submission.Submittion_date "
-"FROM Submission "
-"LEFT JOIN Assignment ON Assignment.ID=Submission.ID "
-"INNER JOIN User ON user.ID=Submission.ID_Student "
-"WHERE Submission.Grade IS NULL OR Submission.Grade=''").fetchall()
+                        "SELECT Submission.id, Assignment.ID, Assignment.Name, Assignment.delivery_date, User.Name, User.Surname, Submission.Submittion_date "
+                        "FROM Submission "
+                        "LEFT JOIN Assignment ON Assignment.ID=Submission.ID "
+                        "INNER JOIN User ON user.ID=Submission.ID_Student "
+                        "WHERE Submission.Grade IS NULL OR Submission.Grade=''").fetchall()
         if len(submissions_not_graded) == 0:
             return None
         for submission in submissions_not_graded:
@@ -1009,26 +1034,6 @@ class Manager(Employee):
         data.close()
         print("Mentor was erased.")
 
- #do usuniecia- przeniesiono tą metode do Mentor
-    # def edit_mentor(self):
-    #     """
-    #     Method allows manager to edit mentor specific data
-    #
-    #     Return:
-    #          None
-    #     """
-    #     data = sqlite3.connect("db/program.db")
-    #     cursor = data.cursor()
-    #     cursor.execute(
-    #         "UPDATE `User` SET `Name`='{}', `Surname`='{}', `Gender`='{}', `Birth_date`='{}',"
-    #         " `Email`='{}', `Login`='{}', `Password`='{}' "
-    #         " WHERE "
-    #         "`Name`='{}' AND `Surname`='{}'"
-    #         .format(self.name, self.surname, self.gender, self.birth_date,
-    #                 self.email, self.login, self.password))
-    #     data.commit()
-    #     data.close()
-    #     print("Update completed")
 
     @staticmethod
     def list_mentors():
@@ -1175,7 +1180,9 @@ class Manager(Employee):
             grades_statistics.append(GradeStatsForMentors(row[0], row[1], row[2], row[3]))
         return grades_statistics
 
+
     def full_stats_for_student(self, student_id):
+
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         grades = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
