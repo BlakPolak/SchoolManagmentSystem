@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block head %}
+    {{ super() }}
+    {{ JSGlue.include() }}
+{% endblock %}
+{% block title %}
+    List of students
+{% endblock %}
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+    {{ super() }}
+        <form method="post">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Index</th>
+                        <th>Student</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                {% if list_of_students %}
+                    <tbody>
+                    {% for student in list_of_students %}
+                        <tr>
+                            <td>{{ student._id }}</td>
+                            <td>{{ student.name }} {{ student.surname }}</td>
+                            <td>
+                                <label>Status<br>
+                                    <input type="radio" name="{{ student._id }}" value="present" checked="checked"> Present<br>
+                                    <input type="radio" name="{{ student._id }}" value="absent"> Absent<br>
+                                    <input type="radio" name="{{ student._id }}" value="late"> Late
+                                </label>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td>
+                            <input class="btn btn-default" type="submit" value="Update attendance">
+                        </td>
+                    </tr>
+                    </tbody>
+                {% endif %}
+            </table>
+        </form>
+{% endblock %}
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}

@@ -364,7 +364,7 @@ class Student(User):
         Method returns all students from the same team
 
         Return:
-            list student teammates
+            list student teammates.py
 
         """
         data = sqlite3.connect(User.path)
@@ -383,17 +383,16 @@ class Student(User):
         Method allows student to submit assignment for each team member
 
         Args:
-            teammates, group_submission
+            teammates.py, group_submission
 
         """
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        # assignment_id =
-        # result =
         submission_date = datetime.date.today()
-        for row in teammates:
-            cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
-                           "VALUES ('{}', '{}', '{}', '{}')".format(row, assignment_id[0], result[0], submission_date))
+        id_student = list_student_teammates
+        for
+        cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
+                       "VALUES (?, ?, ?, ?)", (id_student, id_assignment, result, submission_date))
         data.commit()
         data.close()
 
@@ -499,9 +498,34 @@ class Mentor(Employee):
         """
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        cursor.execute("delete from User where ID='{}'".format(student_id))
+        cursor.execute("delete from User where ID=?", (student_id,))
+        cursor.execute("delete from Submission where ID_Student=?", (student_id,))
+        cursor.execute("delete from teams where ID_Student=?", (student_id,))
+        cursor.execute("delete from Checkpoint_submittion where ID_Student=?", (student_id,))
         data.commit()
         data.close()
+
+    def save_attendance(self, attendance_list):
+        data = sqlite3.connect("db/program.db")
+        for index, item in enumerate(attendance_list):
+            if item[1] == "present":
+                attendance_list[index][1] = 1
+            elif item[1] == "absent":
+                attendance_list[index][1] = 0
+            else:
+                attendance_list[index][1] = 2
+        cursor = data.cursor()
+        cursor.execute("select * from Attendance where date=?", (str(datetime.date.today()),))
+        rows = cursor.fetchall()
+        if len(rows) > 0:
+            return False
+        for row in attendance_list:
+            cursor.execute("insert into Attendance (ID_Student, Date, Presence) values(?, ?, ?)", (row[0], str(datetime.date.today()), row[1]))
+        data.commit()
+        data.close()
+        return True
+
+
 
 
     def update_student(self, student_id, name, surname, gender, birthdate, email, login, password):
