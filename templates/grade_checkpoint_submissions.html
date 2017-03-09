@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}
+    Grade checkpoint submissions
+{% endblock %}
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+    {{ super() }}
+        <form method="post">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Checkpoint name</th>
+                        <th>Student name</th>
+                        <th>Student surname</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                    {% if submissions_for_grade %}
+                    {% for submission in submissions_for_grade %}
+                        <tr>
+                            <td>{{ submission.checkpoint_assignment_name }}</td>
+                            <td>{{ submission.student_name }}</td>
+                            <td>{{ submission.student_surname }}</td>
+                            <td>
+                                <select name="{{ submission.checkpoint_submission_id }}">
+                                    <option>green</option>
+                                    <option>yellow</option>
+                                    <option>red</option>
+                                </select>
+{#                                <a class="btn btn-default" href="{{ url_for("grade_checkpoint_submission", submission_id=submission.checkpoint_submission_id) }}" role="button">Grade</a>#}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    {% endif %}
+                    </tbody>
+            </table>
+        <input class="btn btn-default" type="submit" value="Grade submissions">
+        </form>
+{% endblock %}
