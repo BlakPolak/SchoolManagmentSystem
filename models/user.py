@@ -379,7 +379,6 @@ class Student(User):
         data.close()
         return teammates_list
 
-<<<<<<< HEAD
 
     def add_group_assignment(self, id_assignment, result):
         """
@@ -397,7 +396,7 @@ class Student(User):
                             "VALUES (?, ?, ?, ?)", (teammate, id_assignment, result, submission_date))
         data.commit()
         data.close()
-=======
+
     # def add_group_assignment(self, teammates, group_submission):
     #     """
     #     Method allows student to submit assignment for each team member
@@ -415,7 +414,7 @@ class Student(User):
     #                    "VALUES (?, ?, ?, ?)", (id_student, id_assignment, result, submission_date))
     #     data.commit()
     #     data.close()
->>>>>>> b726d4236c381533ceaf18059e878f652f5fc6ed
+
 
     def check_my_attendance(self):
         """
