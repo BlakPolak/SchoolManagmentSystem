@@ -12,6 +12,7 @@ from models.checkpoints_stats_for_mentors import CheckpointStatsForMentors
 from models.grade_stats_for_mentors import GradeStatsForMentors
 from models.submission import Submission
 from models.checkpoint_assignment import CheckpointAssignment
+from models.gradeable_checkpoint_submission import GradeableCheckpointSubmission
 
 
 class User:
@@ -568,6 +569,37 @@ class Mentor(Employee):
             submission = Submission(row[2], row[1], row[5], row[3], row[4], row[0])
         data.close()
         return submission
+
+
+    def get_checkpoint_submissions_to_grade(self, checkpoint_assignment_id):
+        submission_list = []
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("select Checkpoint_submittion.id, Checkpoint_assignment.name, user.Name, user.Surname "
+                       "from Checkpoint_submittion "
+                       "inner join User on user.ID=Checkpoint_submittion.ID_Student "
+                       "inner join Checkpoint_assignment on Checkpoint_assignment.ID=Checkpoint_submittion.ID_Assignment"
+                       " where (checkpoint_submittion.card='' or checkpoint_submittion.card is null) "
+                       "and checkpoint_submittion.id_assignment=?", (checkpoint_assignment_id,))
+        rows = cursor.fetchall()
+        if rows:
+            for row in rows:
+                submission_list.append(GradeableCheckpointSubmission(row[0], row[1], row[2], row[3]))
+        data.close()
+        return submission_list
+
+
+    def grade_checkpoint_submission(self, list_of_notes):
+        submission_list = []
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        for row in list_of_notes:
+            cursor.execute("update Checkpoint_submittion set card=? where id=?", (row[1], row[0]))
+        data.commit()
+        data.close()
+        return submission_list
+
+
 
     def grade_submission(self, assignment_id, grade):
         """
