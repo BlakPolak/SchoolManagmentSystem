@@ -182,7 +182,7 @@ class Employee(User):
         """
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        cursor.execute("SELECT * FROM User WHERE ID='{}'".format(id))
+        cursor.execute("SELECT * FROM User WHERE ID=?", (id,))
         student_row = cursor.fetchone()
         student = Student(student_row[0], student_row[1], student_row[2], student_row[3], student_row[4], student_row[5], student_row[6], student_row[7], student_row[8])
         data.close()
@@ -263,7 +263,7 @@ class Student(User):
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
         cursor.execute("SELECT assignment.name, submission.grade FROM assignment INNER JOIN submission "
-                       "ON submission.ID_assignment = assignment.ID WHERE ID_Student='{}'".format(self._id))
+                       "ON submission.ID_assignment = assignment.ID WHERE ID_Student=?", (self._id, ))
         grades = cursor.fetchall()
         student_all_grades = []
         for row in grades:
@@ -353,7 +353,7 @@ class Student(User):
         """
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        cursor.execute("SELECT `Team_Name` FROM `Teams` WHERE ID_Student='{}'".format(self._id))
+        cursor.execute("SELECT `Team_Name` FROM `Teams` WHERE ID_Student=?", (self._id,))
         teams = cursor.fetchall()
         data.commit()
         data.close()
@@ -370,7 +370,7 @@ class Student(User):
         """
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        cursor.execute("SELECT Id_Student FROM `Teams` WHERE Team_name='{}'".format(self.find_student_team()))
+        cursor.execute("SELECT Id_Student FROM `Teams` WHERE Team_name=?", (self.find_student_team(),))
         teammates = cursor.fetchall()
         teammates_list = []
         for mate in teammates:
@@ -427,8 +427,8 @@ class Student(User):
         student_id = self._id
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        cursor.execute("SELECT COUNT(Presence) FROM `Attendance` WHERE ID_Student='{}'"
-                       "AND `Presence`= 0".format(student_id))
+        cursor.execute("SELECT COUNT(Presence) FROM `Attendance` WHERE ID_Student=?"
+                       "AND `Presence`= 0", (student_id,))
         presence = cursor.fetchall()
         number_of_presence = float(presence[0][0])
         cursor.execute("SELECT COUNT(Presence) FROM `Attendance`")
@@ -473,8 +473,7 @@ class Mentor(Employee):
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         cursor.execute("INSERT INTO `User` (`name`, `surname`, `gender`, `birth_date`, `email`, `login`, `password`, `user_type`) "
-                       "VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')"
-                       .format(name, surname, gender, birthdate, email, login, password, "student"))
+                       "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (name, surname, gender, birthdate, email, login, password, "student"))
         data.commit()
         data.close()
 
@@ -499,8 +498,8 @@ class Mentor(Employee):
         presences = ui.Ui.get_inputs(students_list, "Starting attendance check (mark 0 for absence, 1 for present)")
         i = 0
         for presence in presences:
-            cursor.execute("INSERT INTO attendance (ID_Student, Date, Presence) VALUES ('{}', '{}', '{}')"
-                           .format(ids[i], str(datetime.date.today()), presence))
+            cursor.execute("INSERT INTO attendance (ID_Student, Date, Presence) VALUES (?, ?, ?)",
+                           (ids[i], str(datetime.date.today()), presence))
             i += 1
         data.commit()
         data.close()
@@ -560,8 +559,8 @@ class Mentor(Employee):
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         cursor.execute(
-            "UPDATE User SET `name`='{}', `surname`='{}', `gender`='{}', `birth_date`='{}', `email`='{}', `login`='{}', `password`='{}' "
-            " WHERE id='{}'".format(name, surname, gender, birthdate, email, login, password, student_id))
+            "UPDATE User SET `name`=?, `surname`='?, `gender`=?, `birth_date`=?, `email`=?, `login`=?, `password`=? "
+            " WHERE id=?".format(name, surname, gender, birthdate, email, login, password, student_id))
         data.commit()
         data.close()
 
@@ -643,7 +642,7 @@ class Mentor(Employee):
         """
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        cursor.execute("UPDATE Submission SET Grade={} WHERE ID={}".format(grade, assignment_id))
+        cursor.execute("UPDATE Submission SET Grade=? WHERE ID=?", (grade, assignment_id))
         data.commit()
         data.close()
 
@@ -662,9 +661,8 @@ class Mentor(Employee):
         cursor = data.cursor()
         cursor.execute(
             "INSERT INTO `assignment` (`name`, `type`, `max_points`, `delivery_date`, `content`) "
-            "VALUES ('{}', '{}', '{}', '{}', '{}')"
-            .format(options[0], options[1], options[2], options[3],
-                    options[4]))
+            "VALUES (?, ?, ?, ?, ?)",
+            (options[0], options[1], options[2], options[3], options[4]))
         data.commit()
         data.close()
         print("Assignment was added.")
@@ -717,32 +715,30 @@ class Mentor(Employee):
     def add_to_team(self, student_id, team_name):
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        cursor.execute("SELECT * FROM teams WHERE ID_Student='{}'".format(student_id)) # check if student already is in team
+        cursor.execute("SELECT * FROM teams WHERE ID_Student=?", (student_id,)) # check if student already is in team
         team_row = cursor.fetchone()
         if team_row:
-            cursor.execute("DELETE FROM teams WHERE ID_Student='{}'"
-                           .format(student_id))
-        cursor.execute("INSERT INTO teams (ID_Student, Team_name) VALUES ('{}', '{}')"
-                           .format(student_id, team_name))
+            cursor.execute("DELETE FROM teams WHERE ID_Student=?", (student_id,))
+        cursor.execute("INSERT INTO teams (ID_Student, Team_name) VALUES (?, ?)", (student_id, team_name))
         data.commit()
         data.close()
 
     def add_team(self, new_team):
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        cursor.execute("SELECT * FROM teams WHERE Team_Name='{}'".format(new_team)) # check if student already is in team
+        cursor.execute("SELECT * FROM teams WHERE Team_Name=?", (new_team,)) # check if student already is in team
         team_row = cursor.fetchone()
         if team_row:
             data.close()
             return None
-        cursor.execute("INSERT INTO teams (Team_name, ID_Student) VALUES ('{}', '{}')".format(new_team, "<empty>"))
+        cursor.execute("INSERT INTO teams (Team_name, ID_Student) VALUES (?, ?)", (new_team, "<empty>"))
         data.commit()
         data.close()
 
     def remove_team(self, team_name):
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        cursor.execute("delete FROM teams WHERE Team_Name='{}'".format(team_name))
+        cursor.execute("delete FROM teams WHERE Team_Name=?", (team_name))
         data.commit()
         data.close()
 
@@ -881,14 +877,13 @@ class Mentor(Employee):
         card = ui.Ui.get_inputs([""], "Choose card to add (Enter to not assign)")
 
         cursor.execute("SELECT * FROM Checkpoint_submittion "
-                       "WHERE ID_Student='{}' AND ID_Assignment='{}'"
-                       .format(student_to_add_id, checkpoint_assignment_id))
+                       "WHERE ID_Student=? AND ID_Assignment=?", (student_to_add_id, checkpoint_assignment_id))
 
         _data = cursor.fetchone()
         if _data is None:
             cursor.execute("INSERT INTO Checkpoint_submittion (ID_Student, Date, Card, ID_Mentor, ID_Assignment) "
-                           "VALUES ('{}', '{}', '{}', '{}', '{}')"
-                           .format(student_to_add_id, datetime.date.today(), card[0], self._id, checkpoint_assignment_id))
+                           "VALUES (?, ?, ?, ?, ?)",
+                           (student_to_add_id, datetime.date.today(), card[0], self._id, checkpoint_assignment_id))
             data.commit()
             print("Checkpoint submission added.")
         else:
@@ -906,13 +901,13 @@ class Mentor(Employee):
         """
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        cursor.execute("SELECT name, surname FROM user where ID={}".format(student_id))
+        cursor.execute("SELECT name, surname FROM user where ID=?", (student_id))
         _data = cursor.fetchone()
         student_name = _data[0]
         student_surname = _data[1]
 
-        cursor.execute("SELECT * FROM attendance where id_student={} AND date BETWEEN '{}' AND '{}'"
-                       .format(student_id, date_from, date_to))
+        cursor.execute("SELECT * FROM attendance where id_student=? AND date BETWEEN ? AND ?",
+                       (student_id, date_from, date_to))
         _data = cursor.fetchall()
         all_days = 0
         days_in_school = 0
@@ -925,8 +920,8 @@ class Mentor(Employee):
         else:
             avg_days = round(days_in_school/all_days, 2)
 
-        cursor.execute("SELECT Grade FROM Submission where id_student={} AND Submittion_date BETWEEN '{}' AND '{}'"
-                       .format(student_id, date_from, date_to))
+        cursor.execute("SELECT Grade FROM Submission where id_student=? AND Submittion_date BETWEEN ? AND ?",
+                       (student_id, date_from, date_to))
         _data = cursor.fetchall()
         grades_quantity = 0
         grades_sum = 0
@@ -938,8 +933,8 @@ class Mentor(Employee):
         else:
             grades_avg = 0
 
-        cursor.execute("SELECT Card FROM Checkpoint_submittion where id_student={} AND date BETWEEN '{}' AND '{}'"
-                       .format(student_id, date_from, date_to))
+        cursor.execute("SELECT Card FROM Checkpoint_submittion where id_student=? AND date BETWEEN ? AND ?",
+                       (student_id, date_from, date_to))
         _data = cursor.fetchall()
         yellow_cards = 0
         red_cards = 0
