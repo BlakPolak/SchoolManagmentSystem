@@ -371,15 +371,16 @@ class Student(User):
             team name as list
 
         """
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        cursor.execute("SELECT team_name FROM `Teams` WHERE ID_Student='{}'".format(self._id))
+        cursor.execute("SELECT `Team_Name` FROM `Teams` WHERE ID_Student='{}'".format(self._id))
         teams = cursor.fetchall()
         data.commit()
         data.close()
-        return teams[0][0]
+        team = teams[0][0]
+        return team
 
-    def find_students_teammates(self, team):
+    def find_students_teammates(self):
         """
         Method returns all students from the same team
 
@@ -389,7 +390,7 @@ class Student(User):
         """
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        cursor.execute("SELECT Id_Student FROM `Teams` WHERE Team_name='{}'".format(team))
+        cursor.execute("SELECT Id_Student FROM `Teams` WHERE Team_name='{}'".format(self.find_student_team()))
         teammates = cursor.fetchall()
         teammates_list = []
         for mate in teammates:
@@ -398,7 +399,8 @@ class Student(User):
         data.close()
         return teammates_list
 
-    def add_group_assignment(self, teammates, group_submission):
+
+    def add_group_assignment(self, id_assignment, result):
         """
         Method allows student to submit assignment for each team member
 
@@ -409,10 +411,9 @@ class Student(User):
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
         submission_date = datetime.date.today()
-        id_student = list_student_teammates
-        for
-        cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
-                       "VALUES (?, ?, ?, ?)", (id_student, id_assignment, result, submission_date))
+        for teammate in self.find_students_teammates():
+            cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
+                            "VALUES (?, ?, ?, ?)", (teammate, id_assignment, result, submission_date))
         data.commit()
         data.close()
 
