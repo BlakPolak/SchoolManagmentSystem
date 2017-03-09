@@ -305,7 +305,7 @@ class Student(User):
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
         cursor.execute("select * from assignment where ID not in "
-                       "(select id_assignment from submission where id_student=? AND type='individual');", (self._id,))
+                       "(select id_assignment from submission where id_student=?) AND type='individual';", (self._id,))
         assignments = cursor.fetchall()
         assignments_to_submit = []
         for row in assignments:
@@ -348,7 +348,7 @@ class Student(User):
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
         cursor.execute("select * from assignment where ID not in "
-                       "(select id_assignment from submission where id_student=? And type='group');", (self._id,))
+                       "(select id_assignment from submission where id_student=?) And type='group';", (self._id,))
         assignments = cursor.fetchall()
         group_assignments_to_submit = []
         for row in assignments:
