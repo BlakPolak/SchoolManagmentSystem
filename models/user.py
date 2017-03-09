@@ -947,28 +947,28 @@ class Manager(Employee):
 
 
 
-    @staticmethod
-    def view_mentors_details():
-        """
-        Returns mentors details list to display
-
-        Returns:
-
-            student detail list
-        """
-        mentors_details_list = []
-        data = sqlite3.connect("db/program.db")
-        cursor = data.cursor()
-        cursor.execute("SELECT * FROM `User` WHERE User_type='mentor'")
-        mentors = cursor.fetchall()
-        n = 1
-        for mentor in mentors:
-            mentors_details_list.append([str(n) + ".", mentor[1], mentor[2], mentor[3], mentor[4],
-                                         mentor[5], mentor[6], mentor[7]])
-            n += 1
-        data.commit()
-        data.close()
-        return mentors_details_list
+    # @staticmethod
+    # def view_mentors_details():
+    #     """
+    #     Returns mentors details list to display
+    #
+    #     Returns:
+    #
+    #         student detail list
+    #     """
+    #     mentors_details_list = []
+    #     data = sqlite3.connect("db/program.db")
+    #     cursor = data.cursor()
+    #     cursor.execute("SELECT * FROM `User` WHERE User_type='mentor'")
+    #     mentors = cursor.fetchall()
+    #     n = 1
+    #     for mentor in mentors:
+    #         mentors_details_list.append([str(n) + ".", mentor[1], mentor[2], mentor[3], mentor[4],
+    #                                      mentor[5], mentor[6], mentor[7]])
+    #         n += 1
+    #     data.commit()
+    #     data.close()
+    #     return mentors_details_list
 
     # @staticmethod
     # def average_grade_for_student():

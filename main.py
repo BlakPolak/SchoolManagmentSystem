@@ -283,6 +283,12 @@ def remove_mentor():
 def list_students_employee():
     return render_template('list_students_employee.html', list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
 
+@app.route('/view_mentors_details')
+def view_mentors_details():
+    mentor = Mentor.get_mentor_by_id(request.args["id"])
+    return render_template("view_mentors_details.html", logged_user=g.logged_user, mentor=mentor)
+
+
 
 @app.route('/student_details_employee/<student_id>')
 def student_details_employee(student_id):

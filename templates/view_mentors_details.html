@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block title %}
-    View student details
+    View mentor details
 {% endblock %}
 {% block content %}
-    <h2 class="content">View student details</h2>
+    <h2 class="content">View mentor details</h2>
     {{ super() }}
     <table class="table">
         <thead>
@@ -28,6 +28,5 @@
                     <td>{{ mentor.password }}</td>
                 </tr>
           </tbody>
-    <a class="btn btn-default" href="{{ url_for("view_mentors_details", mentor_id=mentor._id) }}" role="button">Student statistics</a>
     </table>
 {% endblock %}
