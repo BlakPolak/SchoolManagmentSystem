@@ -128,7 +128,7 @@ def add_to_team():
 @app.route("/teams_for_student")
 def teams_for_student():
     student_id = request.args["student_id"]
-    list_of_teams = g.logged_user.get_teams()
+    list_of_teams = g.logged_user.get_teams_for_student()
     return render_template("team_names.html", list_of_teams=list_of_teams, student_id=student_id)
 
 @app.route("/assign_student_to_team")
@@ -152,6 +152,33 @@ def remove_team():
     g.logged_user.remove_team(team_name)
     return redirect(url_for("list_teams"))
 
+@app.route("/list_submissions")
+def list_submissions():
+    list_of_submissions = g.logged_user.get_submissions_to_grade()
+    return render_template("list_submissions.html", list_of_submissions=list_of_submissions)
+
+@app.route("/grade_submission", methods=["POST", "GET"])
+def grade_submission():
+    if request.method == "POST":
+        grade = request.form["grade"]
+        submission_id = request.form["submission_id"]
+        g.logged_user.grade_submission(submission_id, grade)
+        return redirect(url_for("list_submissions"))
+    submission_id = request.args["submission_id"]
+    submission = g.logged_user.get_submission(submission_id)
+    assignment = g.logged_user.get_assignment(submission.assignment)
+    return render_template("grade_submission.html", submission=submission, assignment=assignment)
+
+@app.route("/list_checkpoints")
+def list_checkpoints():
+    checkpoints_for_submission = g.logged_user.get_checkpoints_for_submission()
+    return render_template("list_checkpoints_for_submission.html", checkpoints_for_submission=checkpoints_for_submission)
+
+@app.route("/grade_checkpoint")
+def grade_checkpoint():
+    checkpoint_assignment_id = request.args["checkpoint_assignment_id"]
+    submissions_for_grade = g.logged_user.get_submissions_to_grade
+    return checkpoint_assignment_id
 
 @app.route("/view_student_details")
 def view_student_details():

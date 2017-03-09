@@ -88,3 +88,8 @@ img.logo {
     right: 0;
     margin: auto;
 }
+
+p.team {
+    font-size: 20px;
+    font-weight: 700;
+}

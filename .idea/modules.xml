@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../../postmandojo/.idea/postmandojo.iml" filepath="$PROJECT_DIR$/../../postmandojo/.idea/postmandojo.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/python-ccms-jakkolwiek.iml" filepath="$PROJECT_DIR$/.idea/python-ccms-jakkolwiek.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../python-flask-todo-BlakPolak/.idea/python-flask-todo-BlakPolak.iml" filepath="$PROJECT_DIR$/../python-flask-todo-BlakPolak/.idea/python-flask-todo-BlakPolak.iml" />
     </modules>
   </component>
 </project>
