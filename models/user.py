@@ -51,9 +51,7 @@ class User:
         self._id = _id
         self.name = name             #self.check_if_correct(name, str)
         self.surname = surname         #self.check_if_correct(surname, str)
-        self.check_gender(gender)
         self.gender = gender
-        self.date_validate(birth_date)
         self.birth_date = birth_date
         self.email = email
         self.login = login
@@ -110,32 +108,32 @@ class User:
     #         else:
     #             raise TypeError("Wrong format for: " + str(validate))
 
-    def check_gender(self, gender):
-        """
-        Checks if variable is correct type of gender, if not - it raises an error
+    # def check_gender(self, gender):
+    #     """
+    #     Checks if variable is correct type of gender, if not - it raises an error
+    #
+    #     Args:
+    #         gender: variable to check
+    #
+    #     Returns:
+    #         None
+    #     """
+    #     gender_list = ['male', 'female', 'not sure']
+    #     if gender.lower() not in gender_list:
+    #         raise NameError('Gender should be: male, female, not sure')
 
-        Args:
-            gender: variable to check
-
-        Returns:
-            None
-        """
-        gender_list = ['male', 'female', 'not sure']
-        if gender.lower() not in gender_list:
-            raise NameError('Gender should be: male, female, not sure')
-
-    def date_validate(self, birth_date):
-        """
-        Checks if data format is correct
-
-        Args:
-            birth_date: variable to check
-
-        Returns:
-         True if data format is correct
-        """
-        if datetime.datetime.strptime(birth_date, '%Y-%m-%d').strftime('%Y-%m-%d'):
-            return True
+    # def date_validate(self, birth_date):
+    #     """
+    #     Checks if data format is correct
+    #
+    #     Args:
+    #         birth_date: variable to check
+    #
+    #     Returns:
+    #      True if data format is correct
+    #     """
+    #     if datetime.datetime.strptime(birth_date, '%Y-%m-%d').strftime('%Y-%m-%d'):
+    #         return True
 
 
 class Employee(User):
@@ -1002,26 +1000,6 @@ class Manager(Employee):
         data.close()
         print("Mentor was erased.")
 
- #do usuniecia- przeniesiono tą metode do Mentor
-    # def edit_mentor(self):
-    #     """
-    #     Method allows manager to edit mentor specific data
-    #
-    #     Return:
-    #          None
-    #     """
-    #     data = sqlite3.connect("db/program.db")
-    #     cursor = data.cursor()
-    #     cursor.execute(
-    #         "UPDATE `User` SET `Name`='{}', `Surname`='{}', `Gender`='{}', `Birth_date`='{}',"
-    #         " `Email`='{}', `Login`='{}', `Password`='{}' "
-    #         " WHERE "
-    #         "`Name`='{}' AND `Surname`='{}'"
-    #         .format(self.name, self.surname, self.gender, self.birth_date,
-    #                 self.email, self.login, self.password))
-    #     data.commit()
-    #     data.close()
-    #     print("Update completed")
 
     @staticmethod
     def list_mentors():
