@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}
+    List checkpoints for submission
+{% endblock %}
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+    {{ super() }}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name of checkpoint</th>
+                        <th>Assignment</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                    {% if checkpoints_for_submission %}
+                    {% for submission in checkpoints_for_submission %}
+                        <tr>
+                            <td>{{ submission.name }}</td>
+                            <td>{{ submission.assignment }}</td>
+                            <td><a class="btn btn-default" href="{{ url_for("grade_checkpoint", checkpoint_assignment_id=submission.id) }}" role="button">Grade</a></td>
+                        </tr>
+                    {% endfor %}
+                    {% endif %}
+                    </tbody>
+            </table>
+{% endblock %}

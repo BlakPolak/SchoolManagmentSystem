@@ -27,7 +27,7 @@
                     </div>
                     <div class="col-md-6 col-md-offset-1 block">
                         {% block logged %}
-                            <div>Logged as <strong><{{ session["login"] }}</strong></div>
+                            <div>Logged as <strong>{{ session["login"] }}</strong></div>
                             <div><a class="btn btn-default button-max-width" href="{{ url_for("logout") }}" role="button">Logout</a></div>
                         {% endblock %}
                     </div>

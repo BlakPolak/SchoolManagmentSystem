@@ -8,7 +8,7 @@ class Submission:
     This class creates submissions.
     """
 
-    def __init__(self, assignment, student, submission_date="", result="", grade=""):
+    def __init__(self, assignment, student, submission_date="", result="", grade="", id=""):
         """
         Initialize object args
         Args:   assignment: name of assignment(str)
@@ -23,6 +23,7 @@ class Submission:
         self.submission_date = datetime.date.today()
         self.assignment = assignment
         self.student = student
+        self.id = id
 
     def __str__(self):
         """
