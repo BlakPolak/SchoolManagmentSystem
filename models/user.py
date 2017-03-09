@@ -7,8 +7,13 @@ from models.graded_assignment import gradedAssignment
 from models.team import Team
 from models.assignment import Assignment
 from models.gradeable_submissions import GradeableSubmissions
+from models.checkpoints_stats_for_mentors import CheckpointStatsForMentors
+from models.grade_stats_for_mentors import GradeStatsForMentors
 from models.submission import Submission
 from models.checkpoint_assignment import CheckpointAssignment
+from models.student_grades import StudentGrades
+from models.gradeable_checkpoint_submission import GradeableCheckpointSubmission
+
 
 
 class User:
@@ -572,6 +577,37 @@ class Mentor(Employee):
         data.close()
         return submission
 
+
+    def get_checkpoint_submissions_to_grade(self, checkpoint_assignment_id):
+        submission_list = []
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("select Checkpoint_submittion.id, Checkpoint_assignment.name, user.Name, user.Surname "
+                       "from Checkpoint_submittion "
+                       "inner join User on user.ID=Checkpoint_submittion.ID_Student "
+                       "inner join Checkpoint_assignment on Checkpoint_assignment.ID=Checkpoint_submittion.ID_Assignment"
+                       " where (checkpoint_submittion.card='' or checkpoint_submittion.card is null) "
+                       "and checkpoint_submittion.id_assignment=?", (checkpoint_assignment_id,))
+        rows = cursor.fetchall()
+        if rows:
+            for row in rows:
+                submission_list.append(GradeableCheckpointSubmission(row[0], row[1], row[2], row[3]))
+        data.close()
+        return submission_list
+
+
+    def grade_checkpoint_submission(self, list_of_notes):
+        submission_list = []
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        for row in list_of_notes:
+            cursor.execute("update Checkpoint_submittion set card=? where id=?", (row[1], row[0]))
+        data.commit()
+        data.close()
+        return submission_list
+
+
+
     def grade_submission(self, assignment_id, grade):
         """
         Method allows mentor grade students submitted assignment
@@ -1087,10 +1123,10 @@ class Manager(Employee):
            list with card statistics
 
        """
-        list_to_print = []
+        checkpoint_stats_list = []
         cards_statistics = {}
         mentors = []
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         cards = cursor.execute("SELECT `Name`, `Surname`, `Card` "
                                "FROM `Checkpoint_submittion` "
@@ -1111,11 +1147,11 @@ class Manager(Employee):
                     if str(row[2]) == 'green':
                         cards_statistics[mentor][2] += 1
         for key, value in cards_statistics.items():
-            temp = [key, value[0], value[1], value[2]]
-            list_to_print.append(temp)
+            statistic_for_mentor = CheckpointStatsForMentors(key, value[0], value[1], value[2])
+            checkpoint_stats_list.append(statistic_for_mentor)
         data.commit()
         data.close()
-        return list_to_print
+        return checkpoint_stats_list
 
     @staticmethod
     def grades_stats_for_mentors():
@@ -1133,27 +1169,21 @@ class Manager(Employee):
         grades = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
                                             "FROM `Submission` INNER JOIN `User` ON `Submission`.ID_Mentor = User.ID"
                                             " GROUP BY `Name`")
-        list_to_print = []
+
         grades = grades.fetchall()
         for row in grades:
-            grades_statistics.append(row)
-        for row in grades_statistics:
-            list_to_print.append([row[0], row[1], row[2], row[3]])
-        return list_to_print
+            grades_statistics.append(GradeStatsForMentors(row[0], row[1], row[2], row[3]))
+        return grades_statistics
 
-    @staticmethod
-    def full_stats_for_students(student_id):
-
-        student_stats = []
+    def full_stats_for_student(self, student_id):
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         grades = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
                                 "FROM `Submission` INNER JOIN `User` ON `Submission`.ID_Student = User.ID"
-                                " WHERE ID_Student = {}".format(student_id))
+                                " WHERE ID_Student = ?", (student_id,))
         grades = grades.fetchall()
-        for row in grades:
-            student_stats.append(row)
-        return student_stats
+        student_grades = StudentGrades(grades[0][0], grades[0][1], grades[0][2], grades[0][3])
+        return student_grades
 
 
 

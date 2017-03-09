@@ -184,11 +184,17 @@ def list_checkpoints():
     checkpoints_for_submission = g.logged_user.get_checkpoints_for_submission()
     return render_template("list_checkpoints_for_submission.html", checkpoints_for_submission=checkpoints_for_submission)
 
-@app.route("/grade_checkpoint")
+@app.route("/grade_checkpoint", methods=["GET", "POST"])
 def grade_checkpoint():
+    if request.method == "POST":
+        list_of_notes = []
+        for key, value in request.form.items():
+            list_of_notes.append([key, value])
+            g.logged_user.grade_checkpoint_submission(list_of_notes)
+        return redirect(url_for("list_checkpoints"))
     checkpoint_assignment_id = request.args["checkpoint_assignment_id"]
-    submissions_for_grade = g.logged_user.get_submissions_to_grade
-    return checkpoint_assignment_id
+    submissions_for_grade = g.logged_user.get_checkpoint_submissions_to_grade(checkpoint_assignment_id)
+    return render_template("grade_checkpoint_submissions.html", submissions_for_grade=submissions_for_grade)
 
 @app.route("/view_student_details")
 def view_student_details():
@@ -261,12 +267,12 @@ def list_students_manager():
 
 @app.route('/student_statistic_manager/<int:student_id>')
 def student_statistic_manager(student_id):
-    return render_template('student_statistic_manager.html', stats=g.logged_user.full_stats_for_students(student_id), logged_user=g.logged_user)
+    return render_template('student_statistic_manager.html', stats=g.logged_user.full_stats_for_student(student_id), logged_user=g.logged_user)
 
 
 @app.route('/average_grades_manager/<int:student_id>')
 def average_grades_manager(student_id):
-    return render_template('average_grades_manager.html', stats=g.logged_user.full_stats_for_students(student_id), logged_user=g.logged_user)
+    return render_template('average_grades_manager.html', stats=g.logged_user.full_stats_for_student(student_id), logged_user=g.logged_user)
 
 
 @app.route('/edit_mentor/<mentor_id>', methods=["POST", "GET"])
@@ -316,6 +322,16 @@ def remove_mentor():
     g.logged_user.remove_mentor(mentor_id)
     return redirect("list_mentors")
 
+@app.route("/checkpoint_stats_for_mentors")
+def checkpoint_stats_for_mentors():
+    list_of_statistics = g.logged_user.which_mentor_is_a_monster()
+    return render_template("checkpoint_stats_for_mentors.html", list_of_statistics=list_of_statistics)
+
+@app.route("/grade_stats_for_mentors")
+def grade_stats_for_mentors():
+    list_of_statistics = g.logged_user.grades_stats_for_mentors()
+    return render_template("grade_stats_for_mentors.html", list_of_statistics=list_of_statistics)
+
 @app.route('/list_students_employee')
 def list_students_employee():
     return render_template('list_students_employee.html', list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
@@ -324,8 +340,6 @@ def list_students_employee():
 def view_mentors_details():
     mentor = Mentor.get_mentor_by_id(request.args["id"])
     return render_template("view_mentors_details.html", logged_user=g.logged_user, mentor=mentor)
-
-
 
 @app.route('/student_details_employee/<student_id>')
 def student_details_employee(student_id):

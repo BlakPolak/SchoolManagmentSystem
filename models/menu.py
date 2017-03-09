@@ -87,7 +87,7 @@ class Menu:
                                                         "Average rating of mentor"])
                 elif menu.option == "11": #full stats for student
                     ui.Ui.print_table(user_signed_in.list_students(), ["Index", "Name", "Surname"])
-                    signed_user = user_signed_in.full_stats_for_students()
+                    signed_user = user_signed_in.full_stats_for_student()
                     if signed_user:
                         ui.Ui.print_table(signed_user, ["Name", "Surname", "Amount of graded assignments",
                                                         "Average Grade"])
