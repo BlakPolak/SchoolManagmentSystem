@@ -4,7 +4,6 @@ import sqlite3
 from models import ui
 from models.student_statistic import StudentStatistic
 from models.graded_assignment import gradedAssignment
-from models.assignment import Assignment
 from models.team import Team
 from models.assignment import Assignment
 from models.gradeable_submissions import GradeableSubmissions
@@ -12,7 +11,9 @@ from models.checkpoints_stats_for_mentors import CheckpointStatsForMentors
 from models.grade_stats_for_mentors import GradeStatsForMentors
 from models.submission import Submission
 from models.checkpoint_assignment import CheckpointAssignment
+from models.student_grades import StudentGrades
 from models.gradeable_checkpoint_submission import GradeableCheckpointSubmission
+
 
 
 class User:
@@ -273,25 +274,25 @@ class Student(User):
         data.close()
         return student_all_grades
 
-    def list_submissions(self): #to refactor - move to class submission as class method
-        """
-        Method returns list of all student submission
+    # def list_submissions(self):
+    #     """
+    #     Method returns list of all student submission
+    #
+    #     Return:
+    #         list submitted assignment
+    #
+    #     """
+    #     data = sqlite3.connect(User.path)
+    #     cursor = data.cursor()
+    #     cursor.execute("select ID_Assignment from `Submission` WHERE ID_Student='{}'".format(self._id))
+    #     submissions = cursor.fetchall()
+    #     submissions_list = []
+    #     for element in submissions:
+    #         submissions_list.append(element[0])
+    #     data.close()
+    #     return submissions_list
 
-        Return:
-            list submitted assignment
-
-        """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("select ID_Assignment from `Submission` WHERE ID_Student='{}'".format(self._id))
-        submissions = cursor.fetchall()
-        submissions_list = []
-        for element in submissions:
-            submissions_list.append(element[0])
-        data.close()
-        return submissions_list
-
-    def list_assignments_to_submit(self): #to refactor - move to class submission as class method
+    def list_assignments_to_submit(self):
         """
         Method returns list of all student submission
 
@@ -301,7 +302,8 @@ class Student(User):
         """
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        cursor.execute("select * from assignment where ID not in (select id_assignment from submission where id_student=?);", (self._id,))
+        cursor.execute("select * from assignment where ID not in "
+                       "(select id_assignment from submission where id_student=?) AND type='individual';", (self._id,))
         assignments = cursor.fetchall()
         assignments_to_submit = []
         for row in assignments:
@@ -316,19 +318,20 @@ class Student(User):
         data.close()
         return assignments_to_submit
 
-    def submit_assignment(self):
+    def submit_assignment(self, result, id_assignment):
         """
         Method allows student to submit assignment
 
         Args:
-            assignment
+            assignment, result
 
         """
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
         submission_date = datetime.date.today()
+        id_student = self._id
         cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
-                       "VALUES ('{}', '{}', '{}', '{}')".format(self._id, assignment_id, result, submission_date))
+                       "VALUES (?, ?, ?, ?)", (id_student, id_assignment, result, submission_date))
         data.commit()
         data.close()
 
@@ -342,14 +345,21 @@ class Student(User):
         """
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        cursor.execute("SELECT ID, Name, Type, Delivery_date FROM `Assignment` WHERE Type='group'")
-        group_assignments = cursor.fetchall()
-        group_assignments_list = []
-        for assignment in group_assignments:
-            group_assignments_list.append([assignment[0], assignment[1], assignment[2], assignment[3]])
-        data.commit()
+        cursor.execute("select * from assignment where ID not in "
+                       "(select id_assignment from submission where id_student=?) And type='group';", (self._id,))
+        assignments = cursor.fetchall()
+        group_assignments_to_submit = []
+        for row in assignments:
+            assignment_id = row[0]
+            assignment_name = row[1]
+            assignment_type = row[2]
+            assignment_max_points = row[3]
+            assignment_delivery_date = row[4]
+            assignment_content = row[5]
+            assignment = Assignment(assignment_id, assignment_name, assignment_type, assignment_max_points, assignment_delivery_date, assignment_content)
+            group_assignments_to_submit.append(assignment)
         data.close()
-        return group_assignments_list
+        return group_assignments_to_submit
 
     def find_student_team(self):
         """
@@ -396,11 +406,8 @@ class Student(User):
         """
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        if len(group_submission) <= 1:
-            print("You have no assignment to submitt!")
-            return
-        assignment_id = ui.Ui.get_inputs([""], "Enter number to choose assignment to submit: ")
-        result = ui.Ui.get_inputs(["Content"], "Provide information about new assignment")
+        # assignment_id =
+        # result =
         submission_date = datetime.date.today()
         for row in teammates:
             cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
@@ -1147,19 +1154,16 @@ class Manager(Employee):
         return grades_statistics
 
 
+    def full_stats_for_student(self, student_id):
 
-    def full_stats_for_students(self, student_id):
-
-        student_stats = []
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         grades = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
                                 "FROM `Submission` INNER JOIN `User` ON `Submission`.ID_Student = User.ID"
-                                " WHERE ID_Student = {}".format(student_id))
+                                " WHERE ID_Student = ?", (student_id,))
         grades = grades.fetchall()
-        for row in grades:
-            student_stats.append(row)
-        return student_stats
+        student_grades = StudentGrades(grades[0][0], grades[0][1], grades[0][2], grades[0][3])
+        return student_grades
 
 
 

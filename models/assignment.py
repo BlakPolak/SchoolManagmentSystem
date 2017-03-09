@@ -1,3 +1,5 @@
+import sqlite3
+
 class Assignment:
     """
     This class creates object assignment.
@@ -28,3 +30,20 @@ class Assignment:
     def __str__(self):
         """Conversion to string"""
         return self.name+"\t"+self.max_points+"\t"+self.delivery_date+"\t"+self.content
+
+
+    def get_assignment_by_id(self, id):
+        """
+        Method returns list of all student submission
+
+        Return:
+            list not submitted assignment
+        """
+
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT * FROM Assignment WHERE ID='{}'".format(id))
+        row = cursor.fetchone()
+        assignment = Assignment(row[0], row[1], row[2], row[3], row[4], row[5])
+        data.close()
+        return assignment
