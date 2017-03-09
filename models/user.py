@@ -4,6 +4,7 @@ import sqlite3
 from models import ui
 from models.student_statistic import StudentStatistic
 from models.graded_assignment import gradedAssignment
+from models.assignment import Assignment
 from models.team import Team
 from models.assignment import Assignment
 from models.gradeable_submissions import GradeableSubmissions
@@ -299,16 +300,21 @@ class Student(User):
         """
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        cursor.execute("SELECT ID, Name, Type, Delivery_date FROM `Assignment`")
+        cursor.execute("select * from assignment where ID not in (select id_assignment from submission where id_student=?);", (self._id,))
         assignments = cursor.fetchall()
         assignments_to_submit = []
-        for assignment in assignments:
-            if assignment[0] not in self.list_submissions():
-                assignments_to_submit.append(assignment)
+        for row in assignments:
+            assignment_name = row[1]
+            assignment_type = row[2]
+            assignment_max_points = row[3]
+            assignment_delivery_date = row[4]
+            assignment_content = row[5]
+            assignment = Assignment(assignment_name, assignment_max_points, assignment_delivery_date, assignment_type, assignment_content)
+            assignments_to_submit.append(assignment)
         data.close()
         return assignments_to_submit
 
-    def submit_assignment(self, assignment):
+    def submit_assignment(self):
         """
         Method allows student to submit assignment
 
@@ -318,17 +324,9 @@ class Student(User):
         """
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        if len(assignment) <= 1:
-            print("You have no assignment to submitt!")
-            return
-        assignment_id = ui.Ui.get_inputs([""], "Enter number to choose assignment to submit: ")
-        # if assignment_id not in assignment or assignment_id <= 0:
-        #     print("Try again with right index!")
-        #     return
-        result = ui.Ui.get_inputs(["Content"], "Provide information about new assignment")
         submission_date = datetime.date.today()
         cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
-                       "VALUES ('{}', '{}', '{}', '{}')".format(self._id, assignment_id[0], result[0], submission_date))
+                       "VALUES ('{}', '{}', '{}', '{}')".format(self._id, assignment_id, result, submission_date))
         data.commit()
         data.close()
 
@@ -961,6 +959,7 @@ class Manager(Employee):
         Return:
              None
         """
+
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         cursor.execute("DELETE FROM User WHERE ID=?", (id,))
@@ -1021,7 +1020,7 @@ class Manager(Employee):
             student detail list
         """
         mentors_details_list = []
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         cursor.execute("SELECT * FROM `User` WHERE User_type='mentor'")
         mentors = cursor.fetchall()
@@ -1034,42 +1033,42 @@ class Manager(Employee):
         data.close()
         return mentors_details_list
 
-    @staticmethod
-    def average_grade_for_student():
-        """
-        Method display average grade for choosen student
-
-
-        Return:
-            average grade for student
-
-        """
-        options = ui.Ui.get_inputs([""], "Enter the number of student to see his average grade")
-
-        data = sqlite3.connect("program.db")
-        cursor = data.cursor()
-        records = cursor.execute("SELECT COUNT(`Name`) FROM `User` WHERE `User_Type` = 'student'")
-        records = records.fetchall()
-        number_of_records = int(records[0][0])
-
-        if int(options[0]) < 1 or int(options[0]) > number_of_records:
-            print("There is no such student on the list")
-            return
-
-        average_grade_list = []
-        cursor.execute("SELECT * FROM `User` WHERE `User_type`='student'")
-        students = cursor.fetchall()
-        student_id = students[int(options[0]) - 1][0]
-        student_name = students[int(options[0]) - 1][1]
-        student_surname = students[int(options[0]) - 1][2]
-        record = cursor.execute("SELECT AVG(Grade) FROM `Submission` WHERE `Grade` IS NOT NULL AND `ID_Student`='{}'"
-                       .format(student_id))
-        record = record.fetchall()
-        average_grade = int(record[0][0])
-        average_grade_list.append([student_name, student_surname, average_grade])
-        data.commit()
-        data.close()
-        return average_grade_list
+    # @staticmethod
+    # def average_grade_for_student():
+    #     """
+    #     Method display average grade for choosen student
+    #
+    #
+    #     Return:
+    #         average grade for student
+    #
+    #     """
+    #     options = ui.Ui.get_inputs([""], "Enter the number of student to see his average grade")
+    #
+    #     data = sqlite3.connect("db/program.db")
+    #     cursor = data.cursor()
+    #     records = cursor.execute("SELECT COUNT(`Name`) FROM `User` WHERE `User_Type` = 'student'")
+    #     records = records.fetchall()
+    #     number_of_records = int(records[0][0])
+    #
+    #     if int(options[0]) < 1 or int(options[0]) > number_of_records:
+    #         print("There is no such student on the list")
+    #         return
+    #
+    #     average_grade_list = []
+    #     cursor.execute("SELECT * FROM `User` WHERE `User_type`='student'")
+    #     students = cursor.fetchall()
+    #     student_id = students[int(options[0]) - 1][0]
+    #     student_name = students[int(options[0]) - 1][1]
+    #     student_surname = students[int(options[0]) - 1][2]
+    #     record = cursor.execute("SELECT AVG(Grade) FROM `Submission` WHERE `Grade` IS NOT NULL AND `ID_Student`='{}'"
+    #                    .format(student_id))
+    #     record = record.fetchall()
+    #     average_grade = int(record[0][0])
+    #     average_grade_list.append([student_name, student_surname, average_grade])
+    #     data.commit()
+    #     data.close()
+    #     return average_grade_list
 
 
     @staticmethod
@@ -1123,7 +1122,7 @@ class Manager(Employee):
 
         """
         grades_statistics = []
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         grades = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
                                             "FROM `Submission` INNER JOIN `User` ON `Submission`.ID_Mentor = User.ID"
@@ -1140,9 +1139,9 @@ class Manager(Employee):
     def full_stats_for_students(student_id):
 
         student_stats = []
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        grades = cursor.execute("SELECT `ID_Student`, `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
+        grades = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
                                 "FROM `Submission` INNER JOIN `User` ON `Submission`.ID_Student = User.ID"
                                 " WHERE ID_Student = {}".format(student_id))
         grades = grades.fetchall()

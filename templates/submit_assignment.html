@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}
+    Submit assignment
+{% endblock %}
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+    {{ super() }}
+    <form method="POST">
+        <section id="content">
+            {% for assignment in assignment_list %}
+            <h2>{{ assignment.name }}</h2>
+            {% endfor %}
+            <p>Provide result:<p>
+                <textarea class="form-control" rows="3"></textarea>
+                <input class="btn btn-default" type="submit" value="Submit">
+        </section>
+    </form>
+{% endblock %}

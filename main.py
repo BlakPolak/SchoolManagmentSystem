@@ -60,7 +60,15 @@ def view_my_attendance():
 
 @app.route("/list_assignment")
 def list_assignment():
-    return render_template("list_assignment.html", assignment_list=g.logged_user.list_assignments_to_submit(),
+    return render_template("list_assignment.html", assignment_list=g.logged_user.list_assignments_to_submit(), logged_user=g.logged_user)
+
+@app.route("/submit_assignment", methods=["POST", "GET"])
+def submit_assignment():
+    if request.method == "POST":
+        result = request.form["result"]
+        g.logged_user.add_student(result)
+        return redirect(url_for("list_assignment"))
+    return render_template("submit_assignment.html", assignment_list=g.logged_user.list_assignments_to_submit(),
                            logged_user=g.logged_user)
 
 @app.route("/employee")
@@ -244,12 +252,12 @@ def list_students_manager():
 
 @app.route('/student_statistic_manager/<int:student_id>')
 def student_statistic_manager(student_id):
-    return render_template('student_statistic_manager.html', stats=g.logged_user.full_stats_for_students(student_id), logged_user=g.logged_user, student_id=student_id)
+    return render_template('student_statistic_manager.html', stats=g.logged_user.full_stats_for_students(student_id), logged_user=g.logged_user)
 
 
-@app.route('/average_grades_manager')
-def average_grades_manager():
-    return render_template('average_grades_manager.html', grades=g.logged_user.average_grade_for_student(), logged_user=g.logged_user)
+@app.route('/average_grades_manager/<int:student_id>')
+def average_grades_manager(student_id):
+    return render_template('average_grades_manager.html', stats=g.logged_user.full_stats_for_students(student_id), logged_user=g.logged_user)
 
 
 @app.route('/edit_mentor/<mentor_id>', methods=["POST", "GET"])
@@ -306,8 +314,8 @@ def list_students_employee():
 
 @app.route('/student_details_employee/<student_id>')
 def student_details_employee(student_id):
-    student = Student.get_mentor_by_id(student_id)
-    return render_template('student_details_employee.html', list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
+    student = Employee.get_student(g.logged_user, student_id)
+    return render_template('student_details_employee.html', list_of_students=g.logged_user.get_students(), logged_user=g.logged_user, student=student)
 
 
 @app.route("/logout")
