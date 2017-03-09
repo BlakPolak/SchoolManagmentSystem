@@ -274,24 +274,6 @@ class Student(User):
         data.close()
         return student_all_grades
 
-    # def list_submissions(self):
-    #     """
-    #     Method returns list of all student submission
-    #
-    #     Return:
-    #         list submitted assignment
-    #
-    #     """
-    #     data = sqlite3.connect(User.path)
-    #     cursor = data.cursor()
-    #     cursor.execute("select ID_Assignment from `Submission` WHERE ID_Student='{}'".format(self._id))
-    #     submissions = cursor.fetchall()
-    #     submissions_list = []
-    #     for element in submissions:
-    #         submissions_list.append(element[0])
-    #     data.close()
-    #     return submissions_list
-
     def list_assignments_to_submit(self):
         """
         Method returns list of all student submission
