@@ -21,9 +21,15 @@
                         <tr>
                             <td>{{ submission.name }}</td>
                             <td>{{ submission.assignment }}</td>
-                            <td><a class="btn btn-default" href="{{ url_for("grade_checkpoint", checkpoint_assignment_id=submission.id) }}" role="button">Grade</a></td>
+                            <td><a class="btn btn-default" href="{{ url_for("grade_checkpoint", checkpoint_assignment_id=submission.id) }}" role="button">Grade students</a></td>
                         </tr>
                     {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td>
+                                <h2>No submissions for grade</h2>
+                            </td>
+                        </tr>
                     {% endif %}
                     </tbody>
             </table>
