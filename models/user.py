@@ -1138,7 +1138,7 @@ class Manager(Employee):
 
 
 
-    def full_stats_for_students(student_id):
+    def full_stats_for_students(self, student_id):
 
         student_stats = []
         data = sqlite3.connect("db/program.db")
