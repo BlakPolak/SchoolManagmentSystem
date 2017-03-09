@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-    List of assignments
+    List of group assignments
 {% endblock %}
 {% block navbar %}
     {{ super() }}
@@ -24,7 +24,7 @@
                         <td>{{ assignment.type }}</td>
                         <td>{{ assignment.max_points }}</td>
                         <td>{{ assignment.delivery_date }}</td>
-                        <td><a class="btn btn-default" href="{{ url_for('submit_assignment', assignment_id=assignment.id) }}" role="button">Submit</a></td>
+                        <td><a class="btn btn-default" href="{{ url_for('submit_group_assignment', assignment_id=assignment.id) }}" role="button">Submit</a></td>
                     </tbody>
                 {% endfor %}
             </table>
