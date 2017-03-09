@@ -20,11 +20,10 @@ class Assignment:
         """
         self.id = id
         self.name = name
+        self.type = type
         self.max_points = max_points
         self.delivery_date = delivery_date
-        self.type = type
         self.content = content
-        self.type = type
 
     def __str__(self):
         """Conversion to string"""

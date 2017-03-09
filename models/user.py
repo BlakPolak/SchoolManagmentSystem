@@ -304,12 +304,13 @@ class Student(User):
         assignments = cursor.fetchall()
         assignments_to_submit = []
         for row in assignments:
+            assignment_id = row[0]
             assignment_name = row[1]
             assignment_type = row[2]
             assignment_max_points = row[3]
             assignment_delivery_date = row[4]
             assignment_content = row[5]
-            assignment = Assignment(assignment_name, assignment_max_points, assignment_delivery_date, assignment_type, assignment_content)
+            assignment = Assignment(assignment_id, assignment_name, assignment_type, assignment_max_points, assignment_delivery_date, assignment_content)
             assignments_to_submit.append(assignment)
         data.close()
         return assignments_to_submit
