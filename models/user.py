@@ -8,6 +8,8 @@ from models.assignment import Assignment
 from models.team import Team
 from models.assignment import Assignment
 from models.gradeable_submissions import GradeableSubmissions
+from models.checkpoints_stats_for_mentors import CheckpointStatsForMentors
+from models.grade_stats_for_mentors import GradeStatsForMentors
 from models.submission import Submission
 from models.checkpoint_assignment import CheckpointAssignment
 from models.gradeable_checkpoint_submission import GradeableCheckpointSubmission
@@ -47,15 +49,15 @@ class User:
             password: check_if_correct(password, str)
         """
         self._id = _id
-        self.name = self.check_if_correct(name, str)
-        self.surname = self.check_if_correct(surname, str)
+        self.name = name             #self.check_if_correct(name, str)
+        self.surname = surname         #self.check_if_correct(surname, str)
         self.check_gender(gender)
         self.gender = gender
         self.date_validate(birth_date)
         self.birth_date = birth_date
         self.email = email
         self.login = login
-        self.password = self.check_if_correct(password, str)
+        self.password = password  #self.check_if_correct(password, str)
         self.user_type = user_type
 
     @classmethod
@@ -85,28 +87,28 @@ class User:
         return None
 
 
-    @staticmethod
-    def check_if_correct(validate, check_type):
-        """
-        Checks if variable is expected type and convert it to integer type if it contains just digits
-
-        Args:
-            validate: variable to check
-            check_type: expected type of variable
-
-        Returns:
-            validated variable
-        """
-        if type(validate) != check_type:
-            raise TypeError("Wrong format for: " + str(validate))
-        elif type(validate) == check_type:
-            if validate.isdigit():
-                validate = int(validate)
-                return validate
-            elif all(i.isalpha() or i.isspace() for i in validate):
-                return validate
-            else:
-                raise TypeError("Wrong format for: " + str(validate))
+    # @staticmethod
+    # def check_if_correct(validate, check_type):
+    #     """
+    #     Checks if variable is expected type and convert it to integer type if it contains just digits
+    #
+    #     Args:
+    #         validate: variable to check
+    #         check_type: expected type of variable
+    #
+    #     Returns:
+    #         validated variable
+    #     """
+    #     if type(validate) != check_type:
+    #         raise TypeError("Wrong format for: " + str(validate))
+    #     elif type(validate) == check_type:
+    #         if validate.isdigit():
+    #             validate = int(validate)
+    #             return validate
+    #         elif all(i.isalpha() or i.isspace() for i in validate):
+    #             return validate
+    #         else:
+    #             raise TypeError("Wrong format for: " + str(validate))
 
     def check_gender(self, gender):
         """
@@ -305,12 +307,13 @@ class Student(User):
         assignments = cursor.fetchall()
         assignments_to_submit = []
         for row in assignments:
+            assignment_id = row[0]
             assignment_name = row[1]
             assignment_type = row[2]
             assignment_max_points = row[3]
             assignment_delivery_date = row[4]
             assignment_content = row[5]
-            assignment = Assignment(assignment_name, assignment_max_points, assignment_delivery_date, assignment_type, assignment_content)
+            assignment = Assignment(assignment_id, assignment_name, assignment_type, assignment_max_points, assignment_delivery_date, assignment_content)
             assignments_to_submit.append(assignment)
         data.close()
         return assignments_to_submit
@@ -983,8 +986,8 @@ class Manager(Employee):
         data.close()
         print("Mentor was added.")
 
-    @staticmethod
-    def remove_mentor():
+
+    def remove_mentor(self, mentor_id):
         """
         Method allows manager to remove mentor from mentors list
 
@@ -994,7 +997,7 @@ class Manager(Employee):
 
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        cursor.execute("DELETE FROM User WHERE ID=?", (id,))
+        cursor.execute("DELETE FROM User WHERE ID=?", (mentor_id,))
         data.commit()
         data.close()
         print("Mentor was erased.")
@@ -1042,28 +1045,28 @@ class Manager(Employee):
 
 
 
-    @staticmethod
-    def view_mentors_details():
-        """
-        Returns mentors details list to display
-
-        Returns:
-
-            student detail list
-        """
-        mentors_details_list = []
-        data = sqlite3.connect("db/program.db")
-        cursor = data.cursor()
-        cursor.execute("SELECT * FROM `User` WHERE User_type='mentor'")
-        mentors = cursor.fetchall()
-        n = 1
-        for mentor in mentors:
-            mentors_details_list.append([str(n) + ".", mentor[1], mentor[2], mentor[3], mentor[4],
-                                         mentor[5], mentor[6], mentor[7]])
-            n += 1
-        data.commit()
-        data.close()
-        return mentors_details_list
+    # @staticmethod
+    # def view_mentors_details():
+    #     """
+    #     Returns mentors details list to display
+    #
+    #     Returns:
+    #
+    #         student detail list
+    #     """
+    #     mentors_details_list = []
+    #     data = sqlite3.connect("db/program.db")
+    #     cursor = data.cursor()
+    #     cursor.execute("SELECT * FROM `User` WHERE User_type='mentor'")
+    #     mentors = cursor.fetchall()
+    #     n = 1
+    #     for mentor in mentors:
+    #         mentors_details_list.append([str(n) + ".", mentor[1], mentor[2], mentor[3], mentor[4],
+    #                                      mentor[5], mentor[6], mentor[7]])
+    #         n += 1
+    #     data.commit()
+    #     data.close()
+    #     return mentors_details_list
 
     # @staticmethod
     # def average_grade_for_student():
@@ -1113,10 +1116,10 @@ class Manager(Employee):
            list with card statistics
 
        """
-        list_to_print = []
+        checkpoint_stats_list = []
         cards_statistics = {}
         mentors = []
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         cards = cursor.execute("SELECT `Name`, `Surname`, `Card` "
                                "FROM `Checkpoint_submittion` "
@@ -1137,11 +1140,11 @@ class Manager(Employee):
                     if str(row[2]) == 'green':
                         cards_statistics[mentor][2] += 1
         for key, value in cards_statistics.items():
-            temp = [key, value[0], value[1], value[2]]
-            list_to_print.append(temp)
+            statistic_for_mentor = CheckpointStatsForMentors(key, value[0], value[1], value[2])
+            checkpoint_stats_list.append(statistic_for_mentor)
         data.commit()
         data.close()
-        return list_to_print
+        return checkpoint_stats_list
 
     @staticmethod
     def grades_stats_for_mentors():
@@ -1159,15 +1162,14 @@ class Manager(Employee):
         grades = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
                                             "FROM `Submission` INNER JOIN `User` ON `Submission`.ID_Mentor = User.ID"
                                             " GROUP BY `Name`")
-        list_to_print = []
+
         grades = grades.fetchall()
         for row in grades:
-            grades_statistics.append(row)
-        for row in grades_statistics:
-            list_to_print.append([row[0], row[1], row[2], row[3]])
-        return list_to_print
+            grades_statistics.append(GradeStatsForMentors(row[0], row[1], row[2], row[3]))
+        return grades_statistics
 
-    @staticmethod
+
+
     def full_stats_for_students(student_id):
 
         student_stats = []

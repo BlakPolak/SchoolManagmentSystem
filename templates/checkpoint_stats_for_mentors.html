@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}
+    Checkpoint statistics for mentors
+{% endblock %}
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+    {{ super() }}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Mentor Name</th>
+                        <th>Red Cards</th>
+                        <th>Yellow Cards</th>
+                        <th>Green Cards</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                    {% if list_of_statistics %}
+                    {% for statistic in list_of_statistics %}
+                        <tr>
+                            <td>{{ statistic.name }}</td>
+                            <td>{{ statistic.red_card }}</td>
+                            <td>{{ statistic.yellow_card }}</td>
+                            <td>{{ statistic.green_card }}</td>
+                        </tr>
+                    {% endfor %}
+                    {% endif %}
+                    </tbody>
+            </table>
+{% endblock %}
