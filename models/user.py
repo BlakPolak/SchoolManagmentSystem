@@ -384,7 +384,7 @@ class Student(User):
         Method returns all students from the same team
 
         Return:
-            list student teammates
+            list student teammates.py
 
         """
         data = sqlite3.connect(User.path)
@@ -403,17 +403,16 @@ class Student(User):
         Method allows student to submit assignment for each team member
 
         Args:
-            teammates, group_submission
+            teammates.py, group_submission
 
         """
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        # assignment_id =
-        # result =
         submission_date = datetime.date.today()
-        for row in teammates:
-            cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
-                           "VALUES ('{}', '{}', '{}', '{}')".format(row, assignment_id[0], result[0], submission_date))
+        id_student = list_student_teammates
+        for
+        cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
+                       "VALUES (?, ?, ?, ?)", (id_student, id_assignment, result, submission_date))
         data.commit()
         data.close()
 
