@@ -7,6 +7,9 @@ from models.graded_assignment import gradedAssignment
 from models.assignment import Assignment
 from models.team import Team
 from models.assignment import Assignment
+from models.gradeable_submissions import GradeableSubmissions
+from models.submission import Submission
+from models.checkpoint_assignment import CheckpointAssignment
 
 
 class User:
@@ -43,15 +46,15 @@ class User:
             password: check_if_correct(password, str)
         """
         self._id = _id
-        self.name = self.check_if_correct(name, str)
-        self.surname = self.check_if_correct(surname, str)
+        self.name = name             #self.check_if_correct(name, str)
+        self.surname = surname         #self.check_if_correct(surname, str)
         self.check_gender(gender)
         self.gender = gender
         self.date_validate(birth_date)
         self.birth_date = birth_date
         self.email = email
         self.login = login
-        self.password = self.check_if_correct(password, str)
+        self.password = password  #self.check_if_correct(password, str)
         self.user_type = user_type
 
     @classmethod
@@ -81,28 +84,28 @@ class User:
         return None
 
 
-    @staticmethod
-    def check_if_correct(validate, check_type):
-        """
-        Checks if variable is expected type and convert it to integer type if it contains just digits
-
-        Args:
-            validate: variable to check
-            check_type: expected type of variable
-
-        Returns:
-            validated variable
-        """
-        if type(validate) != check_type:
-            raise TypeError("Wrong format for: " + str(validate))
-        elif type(validate) == check_type:
-            if validate.isdigit():
-                validate = int(validate)
-                return validate
-            elif all(i.isalpha() or i.isspace() for i in validate):
-                return validate
-            else:
-                raise TypeError("Wrong format for: " + str(validate))
+    # @staticmethod
+    # def check_if_correct(validate, check_type):
+    #     """
+    #     Checks if variable is expected type and convert it to integer type if it contains just digits
+    #
+    #     Args:
+    #         validate: variable to check
+    #         check_type: expected type of variable
+    #
+    #     Returns:
+    #         validated variable
+    #     """
+    #     if type(validate) != check_type:
+    #         raise TypeError("Wrong format for: " + str(validate))
+    #     elif type(validate) == check_type:
+    #         if validate.isdigit():
+    #             validate = int(validate)
+    #             return validate
+    #         elif all(i.isalpha() or i.isspace() for i in validate):
+    #             return validate
+    #         else:
+    #             raise TypeError("Wrong format for: " + str(validate))
 
     def check_gender(self, gender):
         """
@@ -527,7 +530,7 @@ class Mentor(Employee):
         data.commit()
         data.close()
 
-    def show_submissions_to_grade(self):
+    def get_submissions_to_grade(self):
         """
         Method allows mentor show submissions to grade
 
@@ -537,24 +540,33 @@ class Mentor(Employee):
              List of lists with submissions to grade
         """
         return_list = []
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         submissions_not_graded = cursor.execute(
-"SELECT Assignment.ID, Assignment.Name, Assignment.delivery_date, User.Name, User.Surname, Submission.Submittion_date "
+"SELECT Submission.id, Assignment.ID, Assignment.Name, Assignment.delivery_date, User.Name, User.Surname, Submission.Submittion_date "
 "FROM Submission "
-"INNER JOIN Assignment ON Assignment.ID=Submission.ID "
+"LEFT JOIN Assignment ON Assignment.ID=Submission.ID "
 "INNER JOIN User ON user.ID=Submission.ID_Student "
 "WHERE Submission.Grade IS NULL OR Submission.Grade=''").fetchall()
         if len(submissions_not_graded) == 0:
-            print("No submissions to grade")
             return None
         for submission in submissions_not_graded:
-            return_list.append([submission[0], submission[1], submission[2],
-                                submission[3], submission[4], submission[5]])
+            return_list.append(GradeableSubmissions(submission[1], submission[2], submission[3],
+                                submission[4], submission[5], submission[6], submission[0]))
         data.close()
         return return_list
 
-    def grade_submission(self):
+    def get_submission(self, submission_id):
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("select * from Submission where ID=?", (submission_id,))
+        row = cursor.fetchone()
+        if row:
+            submission = Submission(row[2], row[1], row[5], row[3], row[4], row[0])
+        data.close()
+        return submission
+
+    def grade_submission(self, assignment_id, grade):
         """
         Method allows mentor grade students submitted assignment
 
@@ -563,12 +575,9 @@ class Mentor(Employee):
         Return:
              None
         """
-        id_assignment_to_grade = ui.Ui.get_inputs([""], "Choose assignment to grade")
-        grade = ui.Ui.get_inputs([""], "Enter grade for assignment")
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        cursor.execute("UPDATE Submission SET Grade={} WHERE ID={}".format(grade[0], int(id_assignment_to_grade[0])))
-        print("Submission graded")
+        cursor.execute("UPDATE Submission SET Grade={} WHERE ID={}".format(grade, assignment_id))
         data.commit()
         data.close()
 
@@ -606,8 +615,33 @@ class Mentor(Employee):
         team_list = []
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
+        # cursor.execute("SELECT user.id, team_name, name, surname FROM teams "
+        #                "LEFT JOIN user ON teams.id_student=user.id ORDER BY team_name")
         cursor.execute("SELECT user.id, team_name, name, surname FROM teams "
-                       "LEFT JOIN user ON teams.id_student=user.id ORDER BY team_name")
+                       "LEFT JOIN user ON teams.id_student=user.id order by team_name")
+        teams = cursor.fetchall()
+        for team in teams:
+            team_list.append(Team(team[0], team[1], team[2], team[3]))
+        data.close()
+        return team_list
+
+
+    def get_teams_for_student(self):
+        """
+        Method allows mentor to list teams
+
+        Args:
+            None
+        Return:
+             None
+        """
+        team_list = []
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        # cursor.execute("SELECT user.id, team_name, name, surname FROM teams "
+        #                "LEFT JOIN user ON teams.id_student=user.id ORDER BY team_name")
+        cursor.execute("SELECT user.ID, team_name, name, surname FROM teams "
+                       "LEFT JOIN user ON teams.id_student=user.id group by Team_Name order by team_name")
         teams = cursor.fetchall()
         for team in teams:
             team_list.append(Team(team[0], team[1], team[2], team[3]))
@@ -693,7 +727,36 @@ class Mentor(Employee):
         data.close()
 
 
-    def list_checkpoint_assignments(self):
+    def get_checkpoints_for_submission(self):
+        list_of_checkpoint_submissions = []
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT * FROM Checkpoint_assignment"
+                       " where Checkpoint_assignment.id in (select ID_Assignment from Checkpoint_submittion"
+                       " where card='' or card is null)")
+
+        rows = cursor.fetchall()
+        if rows:
+            for row in rows:
+                list_of_checkpoint_submissions.append(CheckpointAssignment(row[0], row[1], row[2]))
+        return list_of_checkpoint_submissions
+
+    def get_submissions_for_checkpoint(self):
+        list_of_checkpoint_submissions = []
+        data = sqlite3.connect("db/program.db")
+        cursor = data.cursor()
+        cursor.execute("SELECT * FROM Checkpoint_submittion, Checkpoint_assignment"
+                       " where Checkpoint_submittion.ID_Assignment in (select ID_Assignment from Checkpoint_submittion"
+                       " where card='' or card is null)")
+
+        rows = cursor.fetchall()
+        if rows:
+            for row in rows:
+                list_of_checkpoint_submissions.append(CheckpointAssignment(row[0], row[1], row[2]))
+        return list_of_checkpoint_submissions
+
+
+    def get_checkpoint_assignments(self):
         """
         Method allows mentor to list checkpoint assignments
 
@@ -703,7 +766,7 @@ class Mentor(Employee):
              None
         """
         checkpoint_assignments_list = []
-        data = sqlite3.connect("program.db")
+        data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         cursor.execute("SELECT * FROM Checkpoint_assignment")
         assignments = cursor.fetchall()
@@ -888,8 +951,8 @@ class Manager(Employee):
         data.close()
         print("Mentor was added.")
 
-    @staticmethod
-    def remove_mentor():
+
+    def remove_mentor(self, mentor_id):
         """
         Method allows manager to remove mentor from mentors list
 
@@ -899,7 +962,7 @@ class Manager(Employee):
 
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
-        cursor.execute("DELETE FROM User WHERE ID=?", (id,))
+        cursor.execute("DELETE FROM User WHERE ID=?", (mentor_id,))
         data.commit()
         data.close()
         print("Mentor was erased.")
@@ -947,28 +1010,28 @@ class Manager(Employee):
 
 
 
-    @staticmethod
-    def view_mentors_details():
-        """
-        Returns mentors details list to display
-
-        Returns:
-
-            student detail list
-        """
-        mentors_details_list = []
-        data = sqlite3.connect("db/program.db")
-        cursor = data.cursor()
-        cursor.execute("SELECT * FROM `User` WHERE User_type='mentor'")
-        mentors = cursor.fetchall()
-        n = 1
-        for mentor in mentors:
-            mentors_details_list.append([str(n) + ".", mentor[1], mentor[2], mentor[3], mentor[4],
-                                         mentor[5], mentor[6], mentor[7]])
-            n += 1
-        data.commit()
-        data.close()
-        return mentors_details_list
+    # @staticmethod
+    # def view_mentors_details():
+    #     """
+    #     Returns mentors details list to display
+    #
+    #     Returns:
+    #
+    #         student detail list
+    #     """
+    #     mentors_details_list = []
+    #     data = sqlite3.connect("db/program.db")
+    #     cursor = data.cursor()
+    #     cursor.execute("SELECT * FROM `User` WHERE User_type='mentor'")
+    #     mentors = cursor.fetchall()
+    #     n = 1
+    #     for mentor in mentors:
+    #         mentors_details_list.append([str(n) + ".", mentor[1], mentor[2], mentor[3], mentor[4],
+    #                                      mentor[5], mentor[6], mentor[7]])
+    #         n += 1
+    #     data.commit()
+    #     data.close()
+    #     return mentors_details_list
 
     # @staticmethod
     # def average_grade_for_student():

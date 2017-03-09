@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}
+    List submissions
+{% endblock %}
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+    {{ super() }}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Index</th>
+                        <th>Assignment name</th>
+                        <th>Assignment delivery date</th>
+                        <th>Student name</th>
+                        <th>Student surname</th>
+                        <th>Submission date</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                    {% if list_of_submissions %}
+                    {% for submission in list_of_submissions %}
+                        <tr>
+                            <td>{{ submission.assignment_id }}</td>
+                            <td>{{ submission.assignment_name }}</td>
+                            <td>{{ submission.assignment_delivery_date }}</td>
+                            <td>{{ submission.student_name }}</td>
+                            <td>{{ submission.student_surname }}</td>
+                            <td>{{ submission.submission_date }}</td>
+                            <td><a class="btn btn-default" href="{{ url_for("grade_submission", submission_id=submission.submission_id) }}" role="button">Grade</a></td>
+                        </tr>
+                    {% endfor %}
+                    {% endif %}
+                    </tbody>
+            </table>
+{% endblock %}

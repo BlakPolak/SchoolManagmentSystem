@@ -25,11 +25,12 @@
                     {% for mentor in list_of_mentors %}
                         <tr>
                             <td>{{ mentor._id }}</td>
-                            <td>{{ mentor.name }} {{ mentor.surname }}</td>
+                            <td><a href="{{ url_for("view_mentors_details", id=mentor._id) }}">{{ mentor.name }} {{ mentor.surname }}</a></td>
                             <td>
                                 <a class="btn btn-default" href="edit_mentor/{{mentor._id}}" role="button"> Edit</a>
-                                <a class="btn btn-default" href="remove_mentor/{{mentor._id}}" role="button" onclick="showConfirm()">Remove</a>
-
+                                <a class="btn btn-default" href="{{ url_for("remove_mentor", mentor_id=mentor._id) }}" role="button" onclick="return showConfirm()">Remove</a>
+                                <a class="btn btn-default" href="#" role="button"> Grade stats</a>
+                                <a class="btn btn-default" href="#" role="button"> Checkpoint stats</a>
                             </td>
                         </tr>
                     {% endfor %}

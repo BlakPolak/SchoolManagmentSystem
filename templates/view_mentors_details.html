@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}
+    View mentor details
+{% endblock %}
+{% block content %}
+    <h2 class="content">View mentor details</h2>
+    {{ super() }}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Gender</th>
+                <th>Date of birth</th>
+                <th>Email</th>
+                <th>Login</th>
+                <th>Password</th>
+            </tr>
+        </thead>
+            <tbody>
+                <tr>
+                    <td>{{ mentor.name }}</td>
+                    <td>{{ mentor.surname }}</td>
+                    <td>{{ mentor.gender }}</td>
+                    <td>{{ mentor.birth_date }}</td>
+                    <td>{{ mentor.email }}</td>
+                    <td>{{ mentor.login }}</td>
+                    <td>{{ mentor.password }}</td>
+                </tr>
+          </tbody>
+    </table>
+{% endblock %}
