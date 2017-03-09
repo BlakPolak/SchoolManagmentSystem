@@ -378,23 +378,23 @@ class Student(User):
         data.close()
         return teammates_list
 
-    def add_group_assignment(self, teammates, group_submission):
-        """
-        Method allows student to submit assignment for each team member
-
-        Args:
-            teammates.py, group_submission
-
-        """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        submission_date = datetime.date.today()
-        id_student = list_student_teammates
-        for
-        cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
-                       "VALUES (?, ?, ?, ?)", (id_student, id_assignment, result, submission_date))
-        data.commit()
-        data.close()
+    # def add_group_assignment(self, teammates, group_submission):
+    #     """
+    #     Method allows student to submit assignment for each team member
+    #
+    #     Args:
+    #         teammates.py, group_submission
+    #
+    #     """
+    #     data = sqlite3.connect(User.path)
+    #     cursor = data.cursor()
+    #     submission_date = datetime.date.today()
+    #     id_student = list_student_teammates
+    #     for
+    #     cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
+    #                    "VALUES (?, ?, ?, ?)", (id_student, id_assignment, result, submission_date))
+    #     data.commit()
+    #     data.close()
 
     def check_my_attendance(self):
         """
@@ -558,11 +558,11 @@ class Mentor(Employee):
         data = sqlite3.connect("db/program.db")
         cursor = data.cursor()
         submissions_not_graded = cursor.execute(
-"SELECT Submission.id, Assignment.ID, Assignment.Name, Assignment.delivery_date, User.Name, User.Surname, Submission.Submittion_date "
-"FROM Submission "
-"LEFT JOIN Assignment ON Assignment.ID=Submission.ID "
-"INNER JOIN User ON user.ID=Submission.ID_Student "
-"WHERE Submission.Grade IS NULL OR Submission.Grade=''").fetchall()
+                        "SELECT Submission.id, Assignment.ID, Assignment.Name, Assignment.delivery_date, User.Name, User.Surname, Submission.Submittion_date "
+                        "FROM Submission "
+                        "LEFT JOIN Assignment ON Assignment.ID=Submission.ID "
+                        "INNER JOIN User ON user.ID=Submission.ID_Student "
+                        "WHERE Submission.Grade IS NULL OR Submission.Grade=''").fetchall()
         if len(submissions_not_graded) == 0:
             return None
         for submission in submissions_not_graded:
