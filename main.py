@@ -2,9 +2,6 @@ from flask import Flask, render_template, request, url_for, redirect, session, g
 from models.user import *
 from flask_jsglue import JSGlue
 from models.user import User
-from models.data import Data
-from models.attendance import Attendance
-from models.submission import Submission
 import os
 
 app = Flask(__name__)
@@ -19,6 +16,7 @@ def before_request():
     setattr(g, 'logged_user', None)
     if "login" in session:
         g.logged_user = app.config.logged_user
+
 
 @app.route("/")
 @app.route("/index")
@@ -40,36 +38,43 @@ def index():
 
 @app.route("/mentor")
 def mentor():
+    """Show menu for mentor user"""
     return render_template("mentor.html")
 
 
 @app.route("/student")
 def student():
+    """Show menu for student user"""
     return render_template("student.html", logged_user=g.logged_user)
 
 
 @app.route("/view_my_grades")
 def view_my_grades():
+    """Show grades for logged student"""
     return render_template("view_my_grades.html", student_grades=g.logged_user.view_my_grades(), logged_user=g.logged_user)
 
 
 @app.route("/view_my_attendance")
 def view_my_attendance():
+    """ Show percent attendance for logged student"""
     return render_template("view_my_attendance.html", attendance=g.logged_user.check_my_attendance(), logged_user=g.logged_user)
 
 
 @app.route("/list_assignment")
 def list_assignment():
+    """Shows list of individual assignment stored in the database"""
     return render_template("list_assignment.html", assignment_list=g.logged_user.list_assignments_to_submit(), logged_user=g.logged_user)
 
 
 @app.route("/list_group_assignment")
 def list_group_assignment():
+    """Shows list of group assignment stored in the database"""
     return render_template("list_group_assignment.html", group_assignment=g.logged_user.list_group_assignment(), logged_user=g.logged_user)
 
 
 @app.route("/submit_assignment/<assignment_id>", methods=["POST", "GET"])
 def submit_assignment(assignment_id):
+    """Student provide result for submission"""
     assignment = Assignment.get_assignment_by_id(g.logged_user, assignment_id)
     if request.method == "POST":
         result = request.form["result"]
@@ -82,6 +87,7 @@ def submit_assignment(assignment_id):
 
 @app.route("/submit_group_assignment/<assignment_id>", methods=["POST", "GET"])
 def submit_group_assignment(assignment_id):
+    """Student provide result for group submission"""
     assignment = Assignment.get_assignment_by_id(g.logged_user, assignment_id)
     if request.method == "POST":
         result = request.form["result"]
@@ -91,20 +97,28 @@ def submit_group_assignment(assignment_id):
     return render_template("submit_group_assignment.html", group_assignment=g.logged_user.list_group_assignment(),
                            logged_user=g.logged_user, assignment=assignment)
 
+
 @app.route("/employee")
 def employee():
+    """Show menu for employee user"""
     return render_template("employee.html", logged_user=g.logged_user)
+
 
 @app.route("/manager")
 def manager():
+    """Show menu for manager user"""
     return render_template("manager.html", logged_user=g.logged_user)
+
 
 @app.route("/list_students")
 def list_students():
+    """Shows list of students stored in the database"""
     return render_template("list_students_mentor.html", list_of_students=g.logged_user.get_students())
+
 
 @app.route("/add_new_student", methods=["POST", "GET"])
 def add_new_student():
+    """Create new student"""
     if request.method == "POST":
         name = request.form["name"]
         surname = request.form["surname"]
@@ -118,8 +132,10 @@ def add_new_student():
         return redirect(url_for("list_students"))
     return render_template("add_new_student.html")
 
+
 @app.route("/edit_student", methods=["POST", "GET"])
 def edit_student():
+    """ Edit selected student data """
     if request.method == "POST":
         student_id = request.form["student_id"]
         name = request.form["name"]
@@ -136,15 +152,19 @@ def edit_student():
     student = g.logged_user.get_student(student_id)
     return render_template("edit_student.html", student=student)
 
+
 @app.route("/remove_student")
 def remove_student():
+    """ Remove selected by id student from database """
     student_id = request.args["student_id"]
     g.logged_user.remove_student(student_id)
     flash("Student was removed", "alert alert-success text-centered")
     return redirect("list_students")
 
+
 @app.route("/check_students_attendance", methods=["POST", "GET"])
 def check_students_attendance():
+    """ Checks students attendance i stored it in database """
     if request.method == "POST":
         attendance_list = []
         for key, value in request.form.items():
@@ -156,26 +176,34 @@ def check_students_attendance():
             flash("Attendance done!", "alert alert-success text-centered")
     return render_template("check_students_attendance.html", list_of_students=g.logged_user.get_students())
 
+
 @app.route("/add_to_team")
 def add_to_team():
+    """ Add selected student to team """
     student_id = request.args["student_id"]
     return redirect(url_for("teams_for_student", student_id=student_id))
 
+
 @app.route("/teams_for_student")
 def teams_for_student():
+    """ Shows teams names from stored in database"""
     student_id = request.args["student_id"]
     list_of_teams = g.logged_user.get_teams_for_student()
     return render_template("team_names.html", list_of_teams=list_of_teams, student_id=student_id)
 
+
 @app.route("/assign_student_to_team")
 def assign_student_to_team():
+    """ Assign selected by id student to team """
     student_id = request.args["student_id"]
     team_name = request.args["team_name"]
     g.logged_user.add_to_team(student_id, team_name)
     return redirect(url_for("list_students"))
 
+
 @app.route("/add_new_team", methods=["POST", "GET"])
 def add_new_team():
+    """ Add new team name to database """
     if request.method == "POST":
         new_team = request.form["name"]
         g.logged_user.add_team(new_team)
@@ -183,20 +211,26 @@ def add_new_team():
         return redirect(url_for("list_teams"))
     return render_template("add_new_team.html")
 
+
 @app.route("/remove_team")
 def remove_team():
+    """ Remove selected by id team from database """
     team_name = request.args["team_name"]
     g.logged_user.remove_team(team_name)
     flash("Team was removed", "alert alert-success text-centered")
     return redirect(url_for("list_teams"))
 
+
 @app.route("/list_submissions")
 def list_submissions():
+    """ List all submissions from database """
     list_of_submissions = g.logged_user.get_submissions_to_grade()
     return render_template("list_submissions.html", list_of_submissions=list_of_submissions)
 
+
 @app.route("/grade_submission", methods=["POST", "GET"])
 def grade_submission():
+    """ Grade selected submissions and stored data to database """
     if request.method == "POST":
         grade = request.form["grade"]
         submission_id = request.form["submission_id"]
@@ -208,13 +242,17 @@ def grade_submission():
     assignment = g.logged_user.get_assignment(submission.assignment)
     return render_template("grade_submission.html", submission=submission, assignment=assignment)
 
+
 @app.route("/list_checkpoints")
 def list_checkpoints():
+    """ List all checkpoint assignment from database """
     checkpoints_for_submission = g.logged_user.get_checkpoints_for_submission()
     return render_template("list_checkpoints_for_submission.html", checkpoints_for_submission=checkpoints_for_submission)
 
+
 @app.route("/grade_checkpoint", methods=["GET", "POST"])
 def grade_checkpoint():
+    """ Grade checkpoint submissions """
     if request.method == "POST":
         list_of_notes = []
         for key, value in request.form.items():
@@ -226,13 +264,17 @@ def grade_checkpoint():
     submissions_for_grade = g.logged_user.get_checkpoint_submissions_to_grade(checkpoint_assignment_id)
     return render_template("grade_checkpoint_submissions.html", submissions_for_grade=submissions_for_grade)
 
+
 @app.route("/view_student_details")
 def view_student_details():
+    """ List all personal data about student from database """
     student = g.logged_user.get_student(request.args["id"])
     return render_template("view_student_details.html", logged_user=g.logged_user, student=student)
 
+
 @app.route("/view_student_statistics", methods=["POST", "GET"])
 def view_student_statistics():
+    """ List all statistic data about student from database """
     if request.method == "POST":
         if request.form["date_from"] and request.form["date_to"]:
             student_statistics = g.logged_user.check_student_performance(request.form["student_id"], request.form["date_from"], request.form["date_to"])
@@ -244,16 +286,21 @@ def view_student_statistics():
 
 @app.route("/list_teams", methods=["POST", "GET"])
 def list_teams():
+    """ List all teams from database """
     list_of_teams = g.logged_user.get_teams()
     return render_template("list_teams.html", list_of_teams=list_of_teams)
 
+
 @app.route("/list_mentors_assignments")
 def list_mentors_assignments():
+    """ List all assignment from database """
     list_of_assignments = g.logged_user.get_assignments()
     return render_template("list_mentors_assignments.html", list_of_assignments=list_of_assignments)
 
+
 @app.route("/edit_assignment", methods=["GET", "POST"])
 def edit_assignment():
+    """ Edit assignment create by mentor user """
     if request.method == "POST":
         assignment_id = request.form["assignment_id"]
         name = request.form["name"]
@@ -268,15 +315,19 @@ def edit_assignment():
     assignment = g.logged_user.get_assignment(assignment_id)
     return render_template("edit_assignment.html", assignment=assignment)
 
+
 @app.route("/remove_assignment")
 def remove_assignment():
+    """ Remove assignment from assignment table in database """
     assignment_id = request.args["assignment_id"]
     g.logged_user.remove_assignment(assignment_id)
     flash("Assignment was removed", "alert alert-success text-centered")
     return redirect(url_for("list_mentors_assignments"))
 
+
 @app.route("/add_new_assignment", methods=["POST", "GET"])
 def add_new_assignment():
+    """ Add new assignment to database """
     if request.method == "POST":
         name = request.form["name"]
         type = request.form["type"]
@@ -287,28 +338,34 @@ def add_new_assignment():
         return redirect(url_for("list_mentors_assignments"))
     return render_template("add_new_assignment.html")
 
+
 @app.route("/list_mentors")
 def list_mentors():
+    """ List all mentors from database """
     return render_template("list_mentors.html", list_of_mentors=g.logged_user.list_mentors(), logged_user=g.logged_user)
 
 
 @app.route("/list_students_manager")
 def list_students_manager():
+    """ List all students from database to manager """
     return render_template("list_students_manager.html", list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
 
 
 @app.route('/student_statistic_manager/<int:student_id>')
 def student_statistic_manager(student_id):
+    """ List all students details from database to manager """
     return render_template('student_statistic_manager.html', stats=g.logged_user.full_stats_for_student(student_id), logged_user=g.logged_user)
 
 
 @app.route('/average_grades_manager/<int:student_id>')
 def average_grades_manager(student_id):
+    """ List all students statistics from database to manager """
     return render_template('average_grades_manager.html', stats=g.logged_user.full_stats_for_student(student_id), logged_user=g.logged_user)
 
 
 @app.route('/edit_mentor/<mentor_id>', methods=["POST", "GET"])
 def edit_mentor(mentor_id):
+    """ Edit mentors data in database """
     if request.method == "POST":
         new_name = request.form["name"]
         new_surname= request.form["surname"]
@@ -328,14 +385,17 @@ def edit_mentor(mentor_id):
         mentor_to_edit.login = new_login
         mentor_to_edit.password = new_password
         mentor_to_edit.edit_mentor()
+        flash("Mentor updated!", "alert alert-success text-centered")
         return redirect(url_for('list_mentors'))
 
     if request.method == "GET":
         mentor_to_edit = Mentor.get_mentor_by_id(mentor_id)
         return render_template("edit_mentor.html", logged_user=g.logged_user, mentor_id=mentor_id, mentor=mentor_to_edit)
 
+
 @app.route('/add_new_mentor', methods=["POST", "GET"])
 def add_new_mentor():
+    """ Add new mentor to database """
     if request.method == "POST":
             name = request.form["name"]
             surname = request.form["surname"]
@@ -345,36 +405,50 @@ def add_new_mentor():
             login = request.form["login"]
             password = request.form["password"]
             g.logged_user.add_mentor(name, surname, gender, birthdate, email, login, password)
+            flash("Mentor added!", "alert alert-success text-centered")
             return redirect(url_for("list_mentors"))
     return render_template("add_new_mentor.html")
 
+
 @app.route("/remove_mentor")
 def remove_mentor():
+    """ Remove selected by id mentor from database """
     mentor_id = request.args["mentor_id"]
     g.logged_user.remove_mentor(mentor_id)
+    flash("Mentor removed!", "alert alert-success text-centered")
     return redirect("list_mentors")
+
 
 @app.route("/checkpoint_stats_for_mentors")
 def checkpoint_stats_for_mentors():
+    """ List all mentor statistic about grades and checkpoint cards """
     list_of_statistics = g.logged_user.which_mentor_is_a_monster()
     return render_template("checkpoint_stats_for_mentors.html", list_of_statistics=list_of_statistics)
 
+
 @app.route("/grade_stats_for_mentors")
 def grade_stats_for_mentors():
+    """ List grade statistics for selected mentor """
     list_of_statistics = g.logged_user.grades_stats_for_mentors()
     return render_template("grade_stats_for_mentors.html", list_of_statistics=list_of_statistics)
 
+
 @app.route('/list_students_employee')
 def list_students_employee():
+    """ List all students from database to employee """
     return render_template('list_students_employee.html', list_of_students=g.logged_user.get_students(), logged_user=g.logged_user)
+
 
 @app.route('/view_mentors_details')
 def view_mentors_details():
+    """ Show all mentor details from database to manager """
     mentor = Mentor.get_mentor_by_id(request.args["id"])
     return render_template("view_mentors_details.html", logged_user=g.logged_user, mentor=mentor)
 
+
 @app.route('/student_details_employee/<student_id>')
 def student_details_employee(student_id):
+    """ List all students details from database to manager """
     student = Employee.get_student(g.logged_user, student_id)
     return render_template('student_details_employee.html', list_of_students=g.logged_user.get_students(), logged_user=g.logged_user, student=student)
 
