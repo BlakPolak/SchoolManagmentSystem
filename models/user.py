@@ -1,6 +1,5 @@
 import datetime
 import sqlite3
-
 from models import ui
 from models.student_statistic import StudentStatistic
 from models.graded_assignment import gradedAssignment
@@ -15,7 +14,6 @@ from models.student_grades import StudentGrades
 from models.gradeable_checkpoint_submission import GradeableCheckpointSubmission
 
 
-
 class User:
     """
         Base class creates user object
@@ -23,9 +21,7 @@ class User:
         Args:
             name: check_if_correct(name, str)
             surname: check_if_correct(surname, str)
-            check_gender: gender
             gender: gender
-            date_validate: birth_date
             birth_date: birth_date
             email:
             login:login
@@ -41,9 +37,7 @@ class User:
         Args:
             name: check_if_correct(name, str)
             surname: check_if_correct(surname, str)
-            check_gender: gender
             gender: gender
-            date_validate: birth_date
             birth_date: birth_date
             email:
             login:login
@@ -86,57 +80,6 @@ class User:
         return None
 
 
-    # @staticmethod
-    # def check_if_correct(validate, check_type):
-    #     """
-    #     Checks if variable is expected type and convert it to integer type if it contains just digits
-    #
-    #     Args:
-    #         validate: variable to check
-    #         check_type: expected type of variable
-    #
-    #     Returns:
-    #         validated variable
-    #     """
-    #     if type(validate) != check_type:
-    #         raise TypeError("Wrong format for: " + str(validate))
-    #     elif type(validate) == check_type:
-    #         if validate.isdigit():
-    #             validate = int(validate)
-    #             return validate
-    #         elif all(i.isalpha() or i.isspace() for i in validate):
-    #             return validate
-    #         else:
-    #             raise TypeError("Wrong format for: " + str(validate))
-
-    # def check_gender(self, gender):
-    #     """
-    #     Checks if variable is correct type of gender, if not - it raises an error
-    #
-    #     Args:
-    #         gender: variable to check
-    #
-    #     Returns:
-    #         None
-    #     """
-    #     gender_list = ['male', 'female', 'not sure']
-    #     if gender.lower() not in gender_list:
-    #         raise NameError('Gender should be: male, female, not sure')
-
-    # def date_validate(self, birth_date):
-    #     """
-    #     Checks if data format is correct
-    #
-    #     Args:
-    #         birth_date: variable to check
-    #
-    #     Returns:
-    #      True if data format is correct
-    #     """
-    #     if datetime.datetime.strptime(birth_date, '%Y-%m-%d').strftime('%Y-%m-%d'):
-    #         return True
-
-
 class Employee(User):
     """Class creates object employee"""
     def __init__(self, _id, name, surname, gender, birth_date, email, login, password, user_type):
@@ -146,9 +89,7 @@ class Employee(User):
         Args:
             name: check_if_correct(name, str)
             surname: check_if_correct(surname, str)
-            check_gender: gender
             gender: gender
-            date_validate: birth_date
             birth_date: birth_date
             email:
             login:login
@@ -169,7 +110,8 @@ class Employee(User):
         cursor.execute("SELECT * FROM User WHERE User_type='student'")
         students = cursor.fetchall()
         for student in students:
-            student_list.append(Student(student[0], student[1], student[2], student[3], student[4], student[5], student[6], student[7], student[8]))
+            student_list.append(Student(student[0], student[1], student[2], student[3], student[4],
+                                        student[5], student[6], student[7], student[8]))
         data.close()
         return student_list
 
@@ -184,7 +126,8 @@ class Employee(User):
         cursor = data.cursor()
         cursor.execute("SELECT * FROM User WHERE ID=?", (id,))
         student_row = cursor.fetchone()
-        student = Student(student_row[0], student_row[1], student_row[2], student_row[3], student_row[4], student_row[5], student_row[6], student_row[7], student_row[8])
+        student = Student(student_row[0], student_row[1], student_row[2], student_row[3], student_row[4],
+                          student_row[5], student_row[6], student_row[7], student_row[8])
         data.close()
         return student
 
@@ -213,7 +156,6 @@ class Employee(User):
 
                 student detail list
         """
-
         student_list = []
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
@@ -237,9 +179,7 @@ class Student(User):
        Args:
             name: check_if_correct(name, str)
             surname: check_if_correct(surname, str)
-            check_gender: gender
             gender: gender
-            date_validate: birth_date
             birth_date: birth_date
             email:
             login:login
@@ -247,9 +187,6 @@ class Student(User):
         """
         super().__init__(_id, name, surname, gender, birth_date, email, login, password, user_type)
         self.my_submissions_list = []
-
-    def __str__(self):
-        return self.name+self.surname
 
     def view_my_grades(self):
         """
@@ -259,7 +196,6 @@ class Student(User):
             table submitted assignment with grades
 
         """
-
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
         cursor.execute("SELECT assignment.name, submission.grade FROM assignment INNER JOIN submission "
@@ -338,7 +274,8 @@ class Student(User):
             assignment_max_points = row[3]
             assignment_delivery_date = row[4]
             assignment_content = row[5]
-            assignment = Assignment(assignment_id, assignment_name, assignment_type, assignment_max_points, assignment_delivery_date, assignment_content)
+            assignment = Assignment(assignment_id, assignment_name, assignment_type, assignment_max_points,
+                                    assignment_delivery_date, assignment_content)
             group_assignments_to_submit.append(assignment)
         data.close()
         return group_assignments_to_submit
@@ -392,28 +329,9 @@ class Student(User):
         submission_date = datetime.date.today()
         for teammate in self.find_students_teammates():
             cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
-                            "VALUES (?, ?, ?, ?)", (teammate, id_assignment, result, submission_date))
+                           "VALUES (?, ?, ?, ?)", (teammate, id_assignment, result, submission_date))
         data.commit()
         data.close()
-
-    # def add_group_assignment(self, teammates, group_submission):
-    #     """
-    #     Method allows student to submit assignment for each team member
-    #
-    #     Args:
-    #         teammates.py, group_submission
-    #
-    #     """
-    #     data = sqlite3.connect(User.path)
-    #     cursor = data.cursor()
-    #     submission_date = datetime.date.today()
-    #     id_student = list_student_teammates
-    #     for
-    #     cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
-    #                    "VALUES (?, ?, ?, ?)", (id_student, id_assignment, result, submission_date))
-    #     data.commit()
-    #     data.close()
-
 
     def check_my_attendance(self):
         """
@@ -739,7 +657,7 @@ class Mentor(Employee):
     def remove_team(self, team_name):
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        cursor.execute("delete FROM teams WHERE Team_Name=?", (team_name))
+        cursor.execute("delete FROM teams WHERE Team_Name=?", (team_name,))
         data.commit()
         data.close()
 
@@ -910,7 +828,7 @@ class Mentor(Employee):
         """
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        cursor.execute("SELECT name, surname FROM user where ID=?", (student_id))
+        cursor.execute("SELECT name, surname FROM user where ID=?", (student_id,))
         _data = cursor.fetchone()
         student_name = _data[0]
         student_surname = _data[1]
