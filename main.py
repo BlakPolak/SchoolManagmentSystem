@@ -2,9 +2,6 @@ from flask import Flask, render_template, request, url_for, redirect, session, g
 from models.user import *
 from flask_jsglue import JSGlue
 from models.user import User
-from models.data import Data
-from models.attendance import Attendance
-from models.submission import Submission
 import os
 
 app = Flask(__name__)
