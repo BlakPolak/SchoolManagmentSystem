@@ -625,7 +625,8 @@ class Mentor(Employee):
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
         for row in list_of_notes:
-            cursor.execute("update Checkpoint_submittion set card=? where id=?", (row[1], row[0]))
+            cursor.execute("update Checkpoint_submittion set card=?, Date=?, ID_Mentor=? "
+                           "where id=?", (row[1], str(datetime.date.today()), self._id, row[0]))
         data.commit()
         data.close()
         return submission_list
@@ -797,9 +798,17 @@ class Mentor(Employee):
         list_of_checkpoint_submissions = []
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
+        cursor.execute("select user.id from user where user.id not in (select id_student from checkpoint_submittion) and user.user_type='student'")
+        students_ids_without_submissions = cursor.fetchall()
+        cursor.execute("select id from Checkpoint_assignment")
+        assignments = cursor.fetchall()
+        for student_id in students_ids_without_submissions:
+            for assignment in assignments:
+                cursor.execute("insert into Checkpoint_submittion (ID_Student, ID_Assignment) values (?, ?)", (student_id[0], assignment[0]))
+        data.commit()
         cursor.execute("SELECT * FROM Checkpoint_assignment"
                        " where Checkpoint_assignment.id in (select ID_Assignment from Checkpoint_submittion"
-                       " where card='' or card is null)")
+                       " where card='' or card is null group by ID_Assignment)")
 
         rows = cursor.fetchall()
         if rows:

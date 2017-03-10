@@ -14,6 +14,7 @@
         <form method="post">
             <table class="table">
                 <thead>
+                    <tr><td><h2>List of students</h2></td></tr>
                     <tr>
                         <th>Index</th>
                         <th>Student</th>
@@ -32,7 +33,7 @@
                         </tr>
                     {% endfor %}
                     <tr>
-                        <td><a class="btn btn-default" href="{{ url_for("add_new_student") }}" role="button">Add new student</a></td>
+                        <td><a class="btn btn-default btn-lg btn-block" href="{{ url_for("add_new_student") }}" role="button">Add new student</a></td>
                     </tr>
                     </tbody>
                 {% endif %}
