@@ -4,47 +4,46 @@
 {% endblock %}
 {% block content %}
     {{ super() }}
-    <h2 class="content">Edit Student</h2>
-    <form method="post" class="manager">
-        <div class="form-group">
-            <label>Name
-                <input type="text" class="form-control" name="name" placeholder="{{ student.name }}" required>
-            </label>
-        </div>
-        <div class="form-group">
-            <label>Surname
-                <input type="text" class="form-control" name="surname" placeholder="{{ student.surname }}" required>
-            </label>
-        </div>
-        <div class="form-group">
-            <label>Gender
-                <select class="form-control form-group" name="gender" required>
-                    <option selected>male</option>
-                    <option>female</option>
-                    <option>not sure</option>
-                </select>
-            </label>
-        </div>
-        <div class="form-group">
-            <label>Date of birth
-                <input type="date" class="form-control" name="birthdate" placeholder="{{ student.birth_date }}" required>
-            </label>
-        </div>
-        <div class="form-group">
-            <label>Email</label>
-            <input type="email" class="form-control" name="email" placeholder="{{ student.email }}">
-        </div>
-        <div class="form-group">
-            <label>Login
-                <input type="text" class="form-control" name="login" placeholder="{{ student.login }}" required>
-            </label>
-        </div>
-        <div class="form-group">
-            <label>Password
-                <input type="password" class="form-control" name="password" placeholder="{{ student.password }}">
-            </label>
-        </div>
-        <input type="hidden" name="student_id" value="{{ student._id }}">
-        <button type="submit" class="btn btn-default button-max-width">Update student</button>
+    <form method="post">
+        <table class="table">
+            <tr><td><h2 class="content">Edit Student</h2></td></tr>
+            <tr>
+                <td>
+                    <label>Name
+                        <input type="text" size="35" class="form-control" name="name" value="{{ student.name }}" required>
+                    </label>
+                    <label>Surname
+                        <input type="text" size="35" class="form-control" name="surname" value="{{ student.surname }}" required>
+                    </label>
+                    <div>
+                    <label>Gender
+                        <select class="form-control form-group select" name="gender" required>
+                            <option {% if student.gender == "male" %}selected{% endif %}>male</option>
+                            <option {% if student.gender == "female" %}selected{% endif %}>female</option>
+                            <option {% if student.gender == "not sure" %}selected{% endif %}>not sure</option>
+                        </select>
+                    </label>
+                    </div>
+                    <label>Date of birth
+                        <input type="date" size="65" class="form-control select" name="birthdate" value="{{ student.birth_date }}" required>
+                    </label>
+                </td>
+                <td>
+                    <label>Email
+                        <input type="email" size="35" class="form-control" name="email" value="{{ student.email }}">
+                    </label>
+                    <label>Login
+                        <input type="text" size="35" class="form-control" name="login" value="{{ student.login }}" required>
+                    </label>
+                    <label>Password
+                        <input type="password" size="35" class="form-control" name="password" value="{{ student.password }}">
+                    </label>
+                    <input type="hidden" name="student_id" value="{{ student._id }}">
+
+                </td>
+            </tr>
+            <tr><td><button type="submit" class="btn btn-default btn-lg btn-block">Update student</button></td></tr>
+        </table>
+
     </form>
 {% endblock %}

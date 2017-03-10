@@ -114,6 +114,7 @@ def add_new_student():
         login = request.form["login"]
         password = request.form["password"]
         g.logged_user.add_student(name, surname, gender, birthdate, email, login, password)
+        flash("Student was added", "alert alert-success text-centered")
         return redirect(url_for("list_students"))
     return render_template("add_new_student.html")
 
@@ -129,6 +130,7 @@ def edit_student():
         login = request.form["login"]
         password = request.form["password"]
         g.logged_user.update_student(student_id, name, surname, gender, birthdate, email, login, password)
+        flash("Student data was updated", "alert alert-success text-centered")
         return redirect(url_for("list_students"))
     student_id = request.args["student_id"]
     student = g.logged_user.get_student(student_id)
@@ -138,6 +140,7 @@ def edit_student():
 def remove_student():
     student_id = request.args["student_id"]
     g.logged_user.remove_student(student_id)
+    flash("Student was removed", "alert alert-success text-centered")
     return redirect("list_students")
 
 @app.route("/check_students_attendance", methods=["POST", "GET"])
@@ -148,7 +151,7 @@ def check_students_attendance():
             attendance_list.append([key, value])
         zm = g.logged_user.save_attendance(attendance_list)
         if not zm:
-            flash("Youve checked attendance today!", "alert alert-danger text-centered")
+            flash("You've checked attendance today!", "alert alert-danger text-centered")
         else:
             flash("Attendance done!", "alert alert-success text-centered")
     return render_template("check_students_attendance.html", list_of_students=g.logged_user.get_students())
@@ -176,6 +179,7 @@ def add_new_team():
     if request.method == "POST":
         new_team = request.form["name"]
         g.logged_user.add_team(new_team)
+        flash("Team was added", "alert alert-success text-centered")
         return redirect(url_for("list_teams"))
     return render_template("add_new_team.html")
 
@@ -183,6 +187,7 @@ def add_new_team():
 def remove_team():
     team_name = request.args["team_name"]
     g.logged_user.remove_team(team_name)
+    flash("Team was removed", "alert alert-success text-centered")
     return redirect(url_for("list_teams"))
 
 @app.route("/list_submissions")
@@ -196,6 +201,7 @@ def grade_submission():
         grade = request.form["grade"]
         submission_id = request.form["submission_id"]
         g.logged_user.grade_submission(submission_id, grade)
+        flash("Submission was graded", "alert alert-success text-centered")
         return redirect(url_for("list_submissions"))
     submission_id = request.args["submission_id"]
     submission = g.logged_user.get_submission(submission_id)
@@ -214,6 +220,7 @@ def grade_checkpoint():
         for key, value in request.form.items():
             list_of_notes.append([key, value])
             g.logged_user.grade_checkpoint_submission(list_of_notes)
+        flash("Checkpoint submissions were graded", "alert alert-success text-centered")
         return redirect(url_for("list_checkpoints"))
     checkpoint_assignment_id = request.args["checkpoint_assignment_id"]
     submissions_for_grade = g.logged_user.get_checkpoint_submissions_to_grade(checkpoint_assignment_id)
@@ -255,6 +262,7 @@ def edit_assignment():
         delivery_date = request.form["date"]
         content = request.form["content"]
         g.logged_user.update_assignment(assignment_id, name, type, max_points, delivery_date, content)
+        flash("Assignment was upadated", "alert alert-success text-centered")
         return redirect(url_for("list_mentors_assignments"))
     assignment_id = request.args["assignment_id"]
     assignment = g.logged_user.get_assignment(assignment_id)
@@ -264,6 +272,7 @@ def edit_assignment():
 def remove_assignment():
     assignment_id = request.args["assignment_id"]
     g.logged_user.remove_assignment(assignment_id)
+    flash("Assignment was removed", "alert alert-success text-centered")
     return redirect(url_for("list_mentors_assignments"))
 
 @app.route("/add_new_assignment", methods=["POST", "GET"])
