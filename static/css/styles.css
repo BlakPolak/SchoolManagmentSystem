@@ -108,3 +108,7 @@ table {
 .border-none {
     border-top: none !important;
 }
+
+.link {
+    text-decoration: underline;
+}

@@ -26,7 +26,7 @@
                     {% for student in list_of_students %}
                         <tr>
                             <td>{{ student._id }}</td>
-                            <td><a href="{{ url_for("view_student_details", id=student._id) }}">{{ student.name }} {{ student.surname }}</a></td>
+                            <td><a href="{{ url_for("view_student_details", id=student._id) }}" class="link">{{ student.name }} {{ student.surname }}</a></td>
                             <td><a class="btn btn-default" href="{{ url_for("edit_student", student_id=student._id) }}" role="button">Edit</a></td>
                             <td><a class="btn btn-default" href="{{ url_for("remove_student", student_id=student._id) }}" role="button" onclick="return showConfirm()">Remove</a></td>
                             <td><a class="btn btn-default" href="{{ url_for("add_to_team", student_id=student._id) }}" role="button">Add to team</a></td>
