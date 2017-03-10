@@ -23,6 +23,15 @@ function showConfirm() {
     else{
     }
 }
+
+function showConfirmManager() {
+    if (confirm("Are you sure") == false) {
+        window.location=Flask.url_for("list_mentors");
+        return false
+    }
+    else{
+    }
+}
 //
 // function checkSubmit(e) {
 //    if(e && e.keyCode == 13) {
