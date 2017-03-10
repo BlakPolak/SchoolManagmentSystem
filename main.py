@@ -319,6 +319,7 @@ def edit_mentor(mentor_id):
         mentor_to_edit.login = new_login
         mentor_to_edit.password = new_password
         mentor_to_edit.edit_mentor()
+        flash("Mentor updated!", "alert alert-success text-centered")
         return redirect(url_for('list_mentors'))
 
     if request.method == "GET":
@@ -336,6 +337,7 @@ def add_new_mentor():
             login = request.form["login"]
             password = request.form["password"]
             g.logged_user.add_mentor(name, surname, gender, birthdate, email, login, password)
+            flash("Mentor added!", "alert alert-success text-centered")
             return redirect(url_for("list_mentors"))
     return render_template("add_new_mentor.html")
 
@@ -343,6 +345,7 @@ def add_new_mentor():
 def remove_mentor():
     mentor_id = request.args["mentor_id"]
     g.logged_user.remove_mentor(mentor_id)
+    flash("Mentor removed!", "alert alert-success text-centered")
     return redirect("list_mentors")
 
 @app.route("/checkpoint_stats_for_mentors")
