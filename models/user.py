@@ -1,7 +1,5 @@
 import datetime
 import sqlite3
-
-from models import ui
 from models.student_statistic import StudentStatistic
 from models.graded_assignment import gradedAssignment
 from models.team import Team
@@ -15,7 +13,6 @@ from models.student_grades import StudentGrades
 from models.gradeable_checkpoint_submission import GradeableCheckpointSubmission
 
 
-
 class User:
     """
         Base class creates user object
@@ -23,9 +20,7 @@ class User:
         Args:
             name: check_if_correct(name, str)
             surname: check_if_correct(surname, str)
-            check_gender: gender
             gender: gender
-            date_validate: birth_date
             birth_date: birth_date
             email:
             login:login
@@ -41,9 +36,7 @@ class User:
         Args:
             name: check_if_correct(name, str)
             surname: check_if_correct(surname, str)
-            check_gender: gender
             gender: gender
-            date_validate: birth_date
             birth_date: birth_date
             email:
             login:login
@@ -86,57 +79,6 @@ class User:
         return None
 
 
-    # @staticmethod
-    # def check_if_correct(validate, check_type):
-    #     """
-    #     Checks if variable is expected type and convert it to integer type if it contains just digits
-    #
-    #     Args:
-    #         validate: variable to check
-    #         check_type: expected type of variable
-    #
-    #     Returns:
-    #         validated variable
-    #     """
-    #     if type(validate) != check_type:
-    #         raise TypeError("Wrong format for: " + str(validate))
-    #     elif type(validate) == check_type:
-    #         if validate.isdigit():
-    #             validate = int(validate)
-    #             return validate
-    #         elif all(i.isalpha() or i.isspace() for i in validate):
-    #             return validate
-    #         else:
-    #             raise TypeError("Wrong format for: " + str(validate))
-
-    # def check_gender(self, gender):
-    #     """
-    #     Checks if variable is correct type of gender, if not - it raises an error
-    #
-    #     Args:
-    #         gender: variable to check
-    #
-    #     Returns:
-    #         None
-    #     """
-    #     gender_list = ['male', 'female', 'not sure']
-    #     if gender.lower() not in gender_list:
-    #         raise NameError('Gender should be: male, female, not sure')
-
-    # def date_validate(self, birth_date):
-    #     """
-    #     Checks if data format is correct
-    #
-    #     Args:
-    #         birth_date: variable to check
-    #
-    #     Returns:
-    #      True if data format is correct
-    #     """
-    #     if datetime.datetime.strptime(birth_date, '%Y-%m-%d').strftime('%Y-%m-%d'):
-    #         return True
-
-
 class Employee(User):
     """Class creates object employee"""
     def __init__(self, _id, name, surname, gender, birth_date, email, login, password, user_type):
@@ -146,9 +88,7 @@ class Employee(User):
         Args:
             name: check_if_correct(name, str)
             surname: check_if_correct(surname, str)
-            check_gender: gender
             gender: gender
-            date_validate: birth_date
             birth_date: birth_date
             email:
             login:login
@@ -169,7 +109,8 @@ class Employee(User):
         cursor.execute("SELECT * FROM User WHERE User_type='student'")
         students = cursor.fetchall()
         for student in students:
-            student_list.append(Student(student[0], student[1], student[2], student[3], student[4], student[5], student[6], student[7], student[8]))
+            student_list.append(Student(student[0], student[1], student[2], student[3], student[4],
+                                        student[5], student[6], student[7], student[8]))
         data.close()
         return student_list
 
@@ -182,9 +123,10 @@ class Employee(User):
         """
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        cursor.execute("SELECT * FROM User WHERE ID='{}'".format(id))
+        cursor.execute("SELECT * FROM User WHERE ID=?", (id,))
         student_row = cursor.fetchone()
-        student = Student(student_row[0], student_row[1], student_row[2], student_row[3], student_row[4], student_row[5], student_row[6], student_row[7], student_row[8])
+        student = Student(student_row[0], student_row[1], student_row[2], student_row[3], student_row[4],
+                          student_row[5], student_row[6], student_row[7], student_row[8])
         data.close()
         return student
 
@@ -213,7 +155,6 @@ class Employee(User):
 
                 student detail list
         """
-
         student_list = []
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
@@ -237,9 +178,7 @@ class Student(User):
        Args:
             name: check_if_correct(name, str)
             surname: check_if_correct(surname, str)
-            check_gender: gender
             gender: gender
-            date_validate: birth_date
             birth_date: birth_date
             email:
             login:login
@@ -247,9 +186,6 @@ class Student(User):
         """
         super().__init__(_id, name, surname, gender, birth_date, email, login, password, user_type)
         self.my_submissions_list = []
-
-    def __str__(self):
-        return self.name+self.surname
 
     def view_my_grades(self):
         """
@@ -259,11 +195,10 @@ class Student(User):
             table submitted assignment with grades
 
         """
-
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
         cursor.execute("SELECT assignment.name, submission.grade FROM assignment INNER JOIN submission "
-                       "ON submission.ID_assignment = assignment.ID WHERE ID_Student='{}'".format(self._id))
+                       "ON submission.ID_assignment = assignment.ID WHERE ID_Student=?", (self._id, ))
         grades = cursor.fetchall()
         student_all_grades = []
         for row in grades:
@@ -338,7 +273,8 @@ class Student(User):
             assignment_max_points = row[3]
             assignment_delivery_date = row[4]
             assignment_content = row[5]
-            assignment = Assignment(assignment_id, assignment_name, assignment_type, assignment_max_points, assignment_delivery_date, assignment_content)
+            assignment = Assignment(assignment_id, assignment_name, assignment_type, assignment_max_points,
+                                    assignment_delivery_date, assignment_content)
             group_assignments_to_submit.append(assignment)
         data.close()
         return group_assignments_to_submit
@@ -353,7 +289,7 @@ class Student(User):
         """
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        cursor.execute("SELECT `Team_Name` FROM `Teams` WHERE ID_Student='{}'".format(self._id))
+        cursor.execute("SELECT `Team_Name` FROM `Teams` WHERE ID_Student=?", (self._id,))
         teams = cursor.fetchall()
         data.commit()
         data.close()
@@ -370,7 +306,7 @@ class Student(User):
         """
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        cursor.execute("SELECT Id_Student FROM `Teams` WHERE Team_name='{}'".format(self.find_student_team()))
+        cursor.execute("SELECT Id_Student FROM `Teams` WHERE Team_name=?", (self.find_student_team(),))
         teammates = cursor.fetchall()
         teammates_list = []
         for mate in teammates:
@@ -392,28 +328,9 @@ class Student(User):
         submission_date = datetime.date.today()
         for teammate in self.find_students_teammates():
             cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
-                            "VALUES (?, ?, ?, ?)", (teammate, id_assignment, result, submission_date))
+                           "VALUES (?, ?, ?, ?)", (teammate, id_assignment, result, submission_date))
         data.commit()
         data.close()
-
-    # def add_group_assignment(self, teammates, group_submission):
-    #     """
-    #     Method allows student to submit assignment for each team member
-    #
-    #     Args:
-    #         teammates.py, group_submission
-    #
-    #     """
-    #     data = sqlite3.connect(User.path)
-    #     cursor = data.cursor()
-    #     submission_date = datetime.date.today()
-    #     id_student = list_student_teammates
-    #     for
-    #     cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
-    #                    "VALUES (?, ?, ?, ?)", (id_student, id_assignment, result, submission_date))
-    #     data.commit()
-    #     data.close()
-
 
     def check_my_attendance(self):
         """
@@ -426,8 +343,8 @@ class Student(User):
         student_id = self._id
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        cursor.execute("SELECT COUNT(Presence) FROM `Attendance` WHERE ID_Student='{}'"
-                       "AND `Presence`= 0".format(student_id))
+        cursor.execute("SELECT COUNT(Presence) FROM `Attendance` WHERE ID_Student=?"
+                       "AND `Presence`= 0", (student_id,))
         presence = cursor.fetchall()
         number_of_presence = float(presence[0][0])
         cursor.execute("SELECT COUNT(Presence) FROM `Attendance`")
@@ -472,8 +389,7 @@ class Mentor(Employee):
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
         cursor.execute("INSERT INTO `User` (`name`, `surname`, `gender`, `birth_date`, `email`, `login`, `password`, `user_type`) "
-                       "VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')"
-                       .format(name, surname, gender, birthdate, email, login, password, "student"))
+                       "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (name, surname, gender, birthdate, email, login, password, "student"))
         data.commit()
         data.close()
 
@@ -540,8 +456,8 @@ class Mentor(Employee):
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
         cursor.execute(
-            "UPDATE User SET `name`='{}', `surname`='{}', `gender`='{}', `birth_date`='{}', `email`='{}', `login`='{}', `password`='{}' "
-            " WHERE id='{}'".format(name, surname, gender, birthdate, email, login, password, student_id))
+            "UPDATE User SET `name`=?, `surname`=?, `gender`=?, `birth_date`=?, `email`=?, `login`=?, `password`=? "
+            " WHERE id=?", (name, surname, gender, birthdate, email, login, password, student_id))
         data.commit()
         data.close()
 
@@ -649,31 +565,9 @@ class Mentor(Employee):
         """
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        cursor.execute("UPDATE Submission SET Grade={} WHERE ID={}".format(grade, assignment_id))
+        cursor.execute("UPDATE Submission SET Grade=? WHERE ID=?", (grade, assignment_id))
         data.commit()
         data.close()
-
-    def add_assignment(self):
-        """
-        Method allows mentor add new assignment
-
-        Args:
-            None
-        Return:
-             None
-        """
-        options = ui.Ui.get_inputs(["Name", "Type", "Max. points to receive", "Delivery date", "Content"],
-                                    "Provide information about new assignment")
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute(
-            "INSERT INTO `assignment` (`name`, `type`, `max_points`, `delivery_date`, `content`) "
-            "VALUES ('{}', '{}', '{}', '{}', '{}')"
-            .format(options[0], options[1], options[2], options[3],
-                    options[4]))
-        data.commit()
-        data.close()
-        print("Assignment was added.")
 
     def get_teams(self):
         """
@@ -723,25 +617,23 @@ class Mentor(Employee):
     def add_to_team(self, student_id, team_name):
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        cursor.execute("SELECT * FROM teams WHERE ID_Student='{}'".format(student_id)) # check if student already is in team
+        cursor.execute("SELECT * FROM teams WHERE ID_Student=?", (student_id,)) # check if student already is in team
         team_row = cursor.fetchone()
         if team_row:
-            cursor.execute("DELETE FROM teams WHERE ID_Student='{}'"
-                           .format(student_id))
-        cursor.execute("INSERT INTO teams (ID_Student, Team_name) VALUES ('{}', '{}')"
-                           .format(student_id, team_name))
+            cursor.execute("DELETE FROM teams WHERE ID_Student=?", (student_id,))
+        cursor.execute("INSERT INTO teams (ID_Student, Team_name) VALUES (?, ?)", (student_id, team_name))
         data.commit()
         data.close()
 
     def add_team(self, new_team):
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        cursor.execute("SELECT * FROM teams WHERE Team_Name='{}'".format(new_team)) # check if student already is in team
+        cursor.execute("SELECT * FROM teams WHERE Team_Name=?", (new_team,)) # check if student already is in team
         team_row = cursor.fetchone()
         if team_row:
             data.close()
             return None
-        cursor.execute("INSERT INTO teams (Team_name, ID_Student) VALUES ('{}', '{}')".format(new_team, "<empty>"))
+        cursor.execute("INSERT INTO teams (Team_name, ID_Student) VALUES (?, ?)", (new_team, "<empty>"))
         data.commit()
         data.close()
 
@@ -756,7 +648,7 @@ class Mentor(Employee):
         """
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        cursor.execute("delete FROM teams WHERE Team_Name='{}'".format(team_name))
+        cursor.execute("delete FROM teams WHERE Team_Name=?", (team_name,))
         data.commit()
         data.close()
 
@@ -944,35 +836,6 @@ class Mentor(Employee):
         data.close()
         return checkpoint_id
 
-    def add_checkpoint_submission(self, checkpoint_assignment_id):
-        """
-        Method allows mentor to add cards to particular student
-
-        Args:
-            checkpoint_assignment_id: id of particular assignment
-        Return:
-             None
-        """
-        choosed_student = ui.Ui.get_inputs([""], "Choose student to add checkpoint results")
-        student_to_add_id = int(choosed_student[0])
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        card = ui.Ui.get_inputs([""], "Choose card to add (Enter to not assign)")
-
-        cursor.execute("SELECT * FROM Checkpoint_submittion "
-                       "WHERE ID_Student='{}' AND ID_Assignment='{}'"
-                       .format(student_to_add_id, checkpoint_assignment_id))
-
-        _data = cursor.fetchone()
-        if _data is None:
-            cursor.execute("INSERT INTO Checkpoint_submittion (ID_Student, Date, Card, ID_Mentor, ID_Assignment) "
-                           "VALUES ('{}', '{}', '{}', '{}', '{}')"
-                           .format(student_to_add_id, datetime.date.today(), card[0], self._id, checkpoint_assignment_id))
-            data.commit()
-            print("Checkpoint submission added.")
-        else:
-            print("Checkpoint already graded.")
-        data.close()
 
     def check_student_performance(self, student_id, date_from, date_to):
         """
@@ -985,13 +848,13 @@ class Mentor(Employee):
         """
         data = sqlite3.connect(User.path)
         cursor = data.cursor()
-        cursor.execute("SELECT name, surname FROM user where ID={}".format(student_id))
+        cursor.execute("SELECT name, surname FROM user where ID=?", (student_id,))
         _data = cursor.fetchone()
         student_name = _data[0]
         student_surname = _data[1]
 
-        cursor.execute("SELECT * FROM attendance where id_student={} AND date BETWEEN '{}' AND '{}'"
-                       .format(student_id, date_from, date_to))
+        cursor.execute("SELECT * FROM attendance where id_student=? AND date BETWEEN ? AND ?",
+                       (student_id, date_from, date_to))
         _data = cursor.fetchall()
         all_days = 0
         days_in_school = 0
@@ -1004,8 +867,8 @@ class Mentor(Employee):
         else:
             avg_days = round(days_in_school/all_days, 2)
 
-        cursor.execute("SELECT Grade FROM Submission where id_student={} AND Submittion_date BETWEEN '{}' AND '{}'"
-                       .format(student_id, date_from, date_to))
+        cursor.execute("SELECT Grade FROM Submission where id_student=? AND Submittion_date BETWEEN ? AND ?",
+                       (student_id, date_from, date_to))
         _data = cursor.fetchall()
         grades_quantity = 0
         grades_sum = 0
@@ -1017,8 +880,8 @@ class Mentor(Employee):
         else:
             grades_avg = 0
 
-        cursor.execute("SELECT Card FROM Checkpoint_submittion where id_student={} AND date BETWEEN '{}' AND '{}'"
-                       .format(student_id, date_from, date_to))
+        cursor.execute("SELECT Card FROM Checkpoint_submittion where id_student=? AND date BETWEEN ? AND ?",
+                       (student_id, date_from, date_to))
         _data = cursor.fetchall()
         yellow_cards = 0
         red_cards = 0
@@ -1048,7 +911,6 @@ class Mentor(Employee):
                        (self.name, self.surname, self.gender, self.birth_date, self.email, self.login, self.password, self._id))
         data.commit()
         data.close()
-        print("Update completed")
 
     @classmethod
     def get_mentor_by_id(cls, id):
