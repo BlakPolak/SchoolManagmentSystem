@@ -17,8 +17,8 @@
                 </thead>
                 {% for assignment in student_grades %}
                     <tbody>
-                        <td>{{ assignment.name }}</td>
-                        <td>{{ assignment.grade }}</td>
+                        <td>{{ assignment[0].name }}</td>
+                        <td>{{ assignment[1].grade }}</td>
                     </tbody>
                 {% endfor %}
             </table>

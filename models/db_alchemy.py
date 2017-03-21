@@ -38,7 +38,6 @@ class CheckpointSubmissionDb(db.Model):
 
 class SubmissionDb(db.Model):
     __tablename__ = 'Submission'
-
     id = db.Column(db.Integer, primary_key=True)
     id_student = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
     id_assignment = db.Column(db.Integer, db.ForeignKey('Assignment.id'), nullable=False)
