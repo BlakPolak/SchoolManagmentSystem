@@ -2,9 +2,6 @@ from flask import Flask, render_template, request, url_for, redirect, session, g
 from models.user import *
 from flask_jsglue import JSGlue
 from models.user import User
-from models.data import Data
-from models.attendance import Attendance
-from models.submission import Submission
 import os
 
 app = Flask(__name__)
@@ -388,6 +385,7 @@ def edit_mentor(mentor_id):
         mentor_to_edit.login = new_login
         mentor_to_edit.password = new_password
         mentor_to_edit.edit_mentor()
+        flash("Mentor updated!", "alert alert-success text-centered")
         return redirect(url_for('list_mentors'))
 
     if request.method == "GET":
@@ -407,6 +405,7 @@ def add_new_mentor():
             login = request.form["login"]
             password = request.form["password"]
             g.logged_user.add_mentor(name, surname, gender, birthdate, email, login, password)
+            flash("Mentor added!", "alert alert-success text-centered")
             return redirect(url_for("list_mentors"))
     return render_template("add_new_mentor.html")
 
@@ -416,6 +415,7 @@ def remove_mentor():
     """ Remove selected by id mentor from database """
     mentor_id = request.args["mentor_id"]
     g.logged_user.remove_mentor(mentor_id)
+    flash("Mentor removed!", "alert alert-success text-centered")
     return redirect("list_mentors")
 
 

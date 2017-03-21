@@ -30,7 +30,7 @@
                             <td><a href="{{ url_for("view_mentors_details", id=mentor._id) }}">{{ mentor.name }} {{ mentor.surname }}</a></td>
                             <td>
                                 <a class="btn btn-default" href="edit_mentor/{{mentor._id}}" role="button"> Edit</a>
-                                <a class="btn btn-default" href="{{ url_for("remove_mentor", mentor_id=mentor._id) }}" role="button" onclick="return showConfirm()">Remove</a>
+                                <a class="btn btn-default" href="{{ url_for("remove_mentor", mentor_id=mentor._id) }}" role="button" onclick="return showConfirmManager()">Remove</a>
                             </td>
                         </tr>
                     {% endfor %}
