@@ -132,16 +132,8 @@ class Employee(User):
         Returns:
                 student list
         """
-        student_list = []
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT * FROM User WHERE User_type='student'")
-        students = cursor.fetchall()
-        for student in students:
-            student_list.append(Student(student[0], student[1], student[2], student[3], student[4],
-                                        student[5], student[6], student[7], student[8]))
-        data.close()
-        return student_list
+        students = db.session.query(UserDb).filter_by(user_type="student").all()
+        return students
 
     def get_student(self, id):
         """
