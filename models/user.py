@@ -361,17 +361,13 @@ class Mentor(Employee):
         Args:
             name, surname, gender, birthdate, email, login, password
         Return:
-             None
+             UserDB object
         """
-
-
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("INSERT INTO `User` (`name`, `surname`, `gender`, `birth_date`, `email`, `login`, `password`, `user_type`) "
-                       "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (name, surname, gender, birthdate, email, login, password, "student"))
-        data.commit()
-        data.close()
-
+        new_student = UserDb(name=name, surname=surname, gender=gender, birth_date=birthdate,
+                                email=email, login=login, password=password, user_type="student")
+        db.session.add(new_student)
+        db.session.commit()
+        return new_student
 
     def remove_student(self, student_id):
         """
@@ -382,14 +378,10 @@ class Mentor(Employee):
         Return:
              None
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("delete from User where ID=?", (student_id,))
-        cursor.execute("delete from Submission where ID_Student=?", (student_id,))
-        cursor.execute("delete from teams where ID_Student=?", (student_id,))
-        cursor.execute("delete from Checkpoint_submittion where ID_Student=?", (student_id,))
-        data.commit()
-        data.close()
+
+        user = db.session.query(UserDb).filter_by(id=student_id).first()
+        db.session.delete(user)
+        db.session.commit()
 
     def save_attendance(self, attendance_list):
         """
@@ -432,13 +424,16 @@ class Mentor(Employee):
         Return:
              None
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute(
-            "UPDATE User SET `name`=?, `surname`=?, `gender`=?, `birth_date`=?, `email`=?, `login`=?, `password`=? "
-            " WHERE id=?", (name, surname, gender, birthdate, email, login, password, student_id))
-        data.commit()
-        data.close()
+        user = db.session.query(UserDb).filter_by(id=student_id).first()
+        user.name = name
+        user.surname = surname
+        user.gender = gender
+        user.birth_date = birthdate
+        user.email = email
+        user.login = login
+        user.password = password
+        db.session.commit()
+        return user
 
     def get_submissions_to_grade(self):
         """
