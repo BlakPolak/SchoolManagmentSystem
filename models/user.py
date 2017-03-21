@@ -397,17 +397,13 @@ class Mentor(Employee):
         Args:
             name, surname, gender, birthdate, email, login, password
         Return:
-             None
+             UserDB object
         """
-
-
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("INSERT INTO `User` (`name`, `surname`, `gender`, `birth_date`, `email`, `login`, `password`, `user_type`) "
-                       "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (name, surname, gender, birthdate, email, login, password, "student"))
-        data.commit()
-        data.close()
-
+        new_student = db.UserDb(name=name, surname=surname, gender=gender, birth_date=birthdate,
+                                email=email, login=login, password=password, user_type="student")
+        db.session.add(new_student)
+        db.session.commit()
+        return new_student
 
     def remove_student(self, student_id):
         """
