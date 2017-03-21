@@ -145,43 +145,7 @@ class Employee(User):
         student = db.session.query(UserDb).filter_by(id=id).first()
         return student
 
-    def list_students_simple_view(self):
-        """
-        Return student list to display
 
-        Returns:
-                student list
-        """
-        student_list = []
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT * FROM `User` WHERE User_type='student'")
-        students = cursor.fetchall()
-        for student in students:
-            student_list.append([student[0], student[1], student[2]])
-        data.close()
-        return student_list
-
-    def view_student_details(self):
-        """
-        Returns students details list to display
-
-            Returns:
-
-                student detail list
-        """
-        student_list = []
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT * FROM `User` WHERE User_type='student'")
-        students = cursor.fetchall()
-        n = 1
-        for student in students:
-            student_list.append([str(n) + ".", student[1], student[2], student[3],
-                                 student[4], student[5], student[6], student[7]])
-            n += 1
-        data.close()
-        return student_list
 
 
 class Student(User):
@@ -781,71 +745,71 @@ class Mentor(Employee):
                 list_of_checkpoint_submissions.append(CheckpointAssignment(row[0], row[1], row[2]))
         return list_of_checkpoint_submissions
 
-    def get_submissions_for_checkpoint(self):
-        """
-        Method allows mentor to get submissions for checkpoints
+    # def get_submissions_for_checkpoint(self):
+    #     """
+    #     Method allows mentor to get submissions for checkpoints
+    #
+    #     Args:
+    #         None
+    #     Return:
+    #          list of checkpoint submissions
+    #     """
+    #     list_of_checkpoint_submissions = []
+    #     data = sqlite3.connect(User.path)
+    #     cursor = data.cursor()
+    #     cursor.execute("SELECT * FROM Checkpoint_submittion, Checkpoint_assignment"
+    #                    " where Checkpoint_submittion.ID_Assignment in (select ID_Assignment from Checkpoint_submittion"
+    #                    " where card='' or card is null)")
+    #
+    #     rows = cursor.fetchall()
+    #     if rows:
+    #         for row in rows:
+    #             list_of_checkpoint_submissions.append(CheckpointAssignment(row[0], row[1], row[2]))
+    #     return list_of_checkpoint_submissions
 
-        Args:
-            None
-        Return:
-             list of checkpoint submissions
-        """
-        list_of_checkpoint_submissions = []
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT * FROM Checkpoint_submittion, Checkpoint_assignment"
-                       " where Checkpoint_submittion.ID_Assignment in (select ID_Assignment from Checkpoint_submittion"
-                       " where card='' or card is null)")
+    #
+    # def get_checkpoint_assignments(self):
+    #     """
+    #     Method allows mentor to list checkpoint assignments
+    #
+    #     Args:
+    #         None
+    #     Return:
+    #          None
+    #     """
+    #     checkpoint_assignments_list = []
+    #     data = sqlite3.connect(User.path)
+    #     cursor = data.cursor()
+    #     cursor.execute("SELECT * FROM Checkpoint_assignment")
+    #     assignments = cursor.fetchall()
+    #     n = 1
+    #     for assignment in assignments:
+    #         if assignment[2] == None:
+    #             checkpoint_assignments_list.append([str(n) + ".", assignment[1], ''])
+    #
+    #         else:
+    #             checkpoint_assignments_list.append([str(n) + ".", assignment[1], assignment[2]])
+    #         n += 1
+    #     data.close()
+    #     return checkpoint_assignments_list
 
-        rows = cursor.fetchall()
-        if rows:
-            for row in rows:
-                list_of_checkpoint_submissions.append(CheckpointAssignment(row[0], row[1], row[2]))
-        return list_of_checkpoint_submissions
-
-
-    def get_checkpoint_assignments(self):
-        """
-        Method allows mentor to list checkpoint assignments
-
-        Args:
-            None
-        Return:
-             None
-        """
-        checkpoint_assignments_list = []
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT * FROM Checkpoint_assignment")
-        assignments = cursor.fetchall()
-        n = 1
-        for assignment in assignments:
-            if assignment[2] == None:
-                checkpoint_assignments_list.append([str(n) + ".", assignment[1], ''])
-
-            else:
-                checkpoint_assignments_list.append([str(n) + ".", assignment[1], assignment[2]])
-            n += 1
-        data.close()
-        return checkpoint_assignments_list
-
-    def get_checkpoint_id(self):
-        """
-        Returns id of checkpoint
-
-        Args:
-            None
-        Return:
-             id of checkpoint
-        """
-        choosed_checkpoint = ui.Ui.get_inputs([""], "Choose checkpoint to grade student")
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT * FROM Checkpoint_assignment")
-        checkpoint = cursor.fetchall()
-        checkpoint_id = checkpoint[int(choosed_checkpoint[0]) - 1][0]
-        data.close()
-        return checkpoint_id
+    # def get_checkpoint_id(self):
+    #     """
+    #     Returns id of checkpoint
+    #
+    #     Args:
+    #         None
+    #     Return:
+    #          id of checkpoint
+    #     """
+    #     choosed_checkpoint = ui.Ui.get_inputs([""], "Choose checkpoint to grade student")
+    #     data = sqlite3.connect(User.path)
+    #     cursor = data.cursor()
+    #     cursor.execute("SELECT * FROM Checkpoint_assignment")
+    #     checkpoint = cursor.fetchall()
+    #     checkpoint_id = checkpoint[int(choosed_checkpoint[0]) - 1][0]
+    #     data.close()
+    #     return checkpoint_id
 
 
     def check_student_performance(self, student_id, date_from, date_to):
