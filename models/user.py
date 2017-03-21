@@ -11,6 +11,8 @@ from models.submission import Submission
 from models.checkpoint_assignment import CheckpointAssignment
 from models.student_grades import StudentGrades
 from models.gradeable_checkpoint_submission import GradeableCheckpointSubmission
+from models.db_alchemy import *
+from main import db
 
 
 class User:
@@ -52,6 +54,33 @@ class User:
         self.password = password  #self.check_if_correct(password, str)
         self.user_type = user_type
 
+    # @classmethod
+    # def get_user(cls, login, password):
+    #     """ On successful authentication returns User or Manager object
+    #         Args:
+    #             login (str): login of the user
+    #             password (str): password of the user
+    #         Returns:
+    #             User (obj): if authentication passed
+    #             None: if authentication fails
+    #     """
+    #     conn = sqlite3.connect(User.path)
+    #     cursor = conn.execute("SELECT * FROM user")
+    #     for row in cursor.fetchall():
+    #         if row[6] == login and row[7] == password:
+    #             conn.close()
+    #             if row[8] == "manager":
+    #                 return Manager(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
+    #             elif row[8] == "student":
+    #                 return Student(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
+    #             elif row[8] == "employee":
+    #                 return Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
+    #             elif row[8] == "mentor":
+    #                 return Mentor(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
+    #     conn.close()
+    #     return None
+
+
     @classmethod
     def get_user(cls, login, password):
         """ On successful authentication returns User or Manager object
@@ -62,21 +91,21 @@ class User:
                 User (obj): if authentication passed
                 None: if authentication fails
         """
-        conn = sqlite3.connect(User.path)
-        cursor = conn.execute("SELECT * FROM user")
-        for row in cursor.fetchall():
-            if row[6] == login and row[7] == password:
-                conn.close()
-                if row[8] == "manager":
-                    return Manager(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
-                elif row[8] == "student":
-                    return Student(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
-                elif row[8] == "employee":
-                    return Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
-                elif row[8] == "mentor":
-                    return Mentor(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
-        conn.close()
-        return None
+        user = db.session.query(UserDb).filter_by(login=login, password=password).first()
+        if user.user_type == "student":
+            return Student(user.id, user.name, user.surname, user.gender, user.birth_date, user.email, user.login,
+                           user.password, user.user_type)
+        elif user.user_type == "manager":
+            return Manager(user.id, user.name, user.surname, user.gender, user.birth_date, user.email, user.login,
+                           user.password, user.user_type)
+        elif user.user_type == "employee":
+            return Employee(user.id, user.name, user.surname, user.gender, user.birth_date, user.email, user.login,
+                           user.password, user.user_type)
+        elif user.user_type == "mentor":
+            return Mentor(user.id, user.name, user.surname, user.gender, user.birth_date, user.email, user.login,
+                           user.password, user.user_type)
+        else:
+            return None
 
 
 class Employee(User):

@@ -97,9 +97,7 @@ table {
 .select {
     width: 280px !important;
 }
-/*.table>tbody>tr>td {*/
-    /*border-top: none;*/
-/*}*/
+
 .table>thead>tr>th {
     vertical-align: bottom;
     border-bottom: none;
@@ -109,4 +107,8 @@ table {
 }
 .border-none {
     border-top: none !important;
+}
+
+.link {
+    text-decoration: underline;
 }

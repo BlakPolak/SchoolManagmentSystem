@@ -1,10 +1,13 @@
 from flask import Flask, render_template, request, url_for, redirect, session, g, flash
 from models.user import *
 from flask_jsglue import JSGlue
-from models.user import User
+# from models.user import User
+from flask_sqlalchemy import SQLAlchemy
 import os
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' + os.getcwd() + '/db/program.db'
+db = SQLAlchemy(app)
 app.secret_key = os.urandom(24)
 jsglue = JSGlue(app)
 
