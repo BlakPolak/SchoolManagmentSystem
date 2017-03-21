@@ -131,7 +131,7 @@ def add_new_student():
         login = request.form["login"]
         password = request.form["password"]
         new_student = g.logged_user.add_student(name, surname, gender, birthdate, email, login, password)
-        flash("Student was added" + , "alert alert-success text-centered")
+        flash("Student was added: " + new_student.name + " " + new_student.surname, "alert alert-success text-centered")
         return redirect(url_for("list_students"))
     return render_template("add_new_student.html")
 

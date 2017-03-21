@@ -399,7 +399,7 @@ class Mentor(Employee):
         Return:
              UserDB object
         """
-        new_student = db.UserDb(name=name, surname=surname, gender=gender, birth_date=birthdate,
+        new_student = UserDb(name=name, surname=surname, gender=gender, birth_date=birthdate,
                                 email=email, login=login, password=password, user_type="student")
         db.session.add(new_student)
         db.session.commit()
@@ -414,14 +414,10 @@ class Mentor(Employee):
         Return:
              None
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("delete from User where ID=?", (student_id,))
-        cursor.execute("delete from Submission where ID_Student=?", (student_id,))
-        cursor.execute("delete from teams where ID_Student=?", (student_id,))
-        cursor.execute("delete from Checkpoint_submittion where ID_Student=?", (student_id,))
-        data.commit()
-        data.close()
+
+        user = db.session.query(UserDb).filter_by(id=student_id).first()
+        db.session.delete(user)
+        db.session.commit()
 
     def save_attendance(self, attendance_list):
         """

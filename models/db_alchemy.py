@@ -67,10 +67,11 @@ class UserDb(db.Model):
     password = db.Column(db.String(30), nullable=False, unique=True)
     user_type = db.Column(db.String(30), nullable=False)
     student_checkpoint_submission = db.relationship('CheckpointSubmissionDb', backref='student_checkpoint_submission_ref', lazy="dynamic",
-                              foreign_keys='CheckpointSubmissionDb.id_student')
+                                                    cascade='all, delete', foreign_keys='CheckpointSubmissionDb.id_student')
     mentor_checkpoint_submission = db.relationship('CheckpointSubmissionDb', backref='mentor_checkpoint_submission_ref', lazy="dynamic",
                              foreign_keys='CheckpointSubmissionDb.id_mentor')
-    student_submission = db.relationship('SubmissionDb', backref='student_submission_ref', lazy="dynamic",
+    student_submission = db.relationship('SubmissionDb', backref='student_submission_ref', cascade='all, delete', lazy="dynamic",
                               foreign_keys='SubmissionDb.id_student')
     mentor_submission = db.relationship('SubmissionDb', backref='mentor_submission_ref', lazy="dynamic",
                              foreign_keys='SubmissionDb.id_mentor')
+    team_s = db.relationship('TeamDb', backref='user_team', cascade='all, delete', lazy='dynamic')
