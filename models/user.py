@@ -150,13 +150,7 @@ class Employee(User):
         Returns:
                 student list
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT * FROM User WHERE ID=?", (id,))
-        student_row = cursor.fetchone()
-        student = Student(student_row[0], student_row[1], student_row[2], student_row[3], student_row[4],
-                          student_row[5], student_row[6], student_row[7], student_row[8])
-        data.close()
+        student = db.session.query(UserDb).filter_by(id=id).first()
         return student
 
     def list_students_simple_view(self):
