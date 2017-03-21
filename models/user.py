@@ -174,18 +174,8 @@ class Student(User):
             table submitted assignment with grades
 
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT assignment.name, submission.grade FROM assignment INNER JOIN submission "
-                       "ON submission.ID_assignment = assignment.ID WHERE ID_Student=?", (self._id, ))
-        grades = cursor.fetchall()
-        student_all_grades = []
-        for row in grades:
-            assignment_name = row[0]
-            assignment_grade = row[1]
-            student_grade = gradedAssignment(assignment_name, assignment_grade)
-            student_all_grades.append(student_grade)
-        data.close()
+        student_all_grades = db.session.query(AssignmentDb, SubmissionDb).join(SubmissionDb, SubmissionDb.id_assignment == AssignmentDb.id).filter(SubmissionDb.id_student == self._id).all()
+        print(student_all_grades)
         return student_all_grades
 
     def list_assignments_to_submit(self):
