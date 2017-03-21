@@ -28,6 +28,6 @@
                     <td>{{ student.password }}</td>
                 </tr>
           </tbody>
-    <a class="btn btn-default" href="{{ url_for("view_student_statistics", student_id=student._id) }}" role="button">Student statistics</a>
+    <a class="btn btn-default" href="{{ url_for("view_student_statistics", student_id=student.id) }}" role="button">Student statistics</a>
     </table>
 {% endblock %}

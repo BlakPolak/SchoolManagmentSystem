@@ -460,13 +460,16 @@ class Mentor(Employee):
         Return:
              None
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute(
-            "UPDATE User SET `name`=?, `surname`=?, `gender`=?, `birth_date`=?, `email`=?, `login`=?, `password`=? "
-            " WHERE id=?", (name, surname, gender, birthdate, email, login, password, student_id))
-        data.commit()
-        data.close()
+        user = db.session.query(UserDb).filter_by(id=student_id).first()
+        user.name = name
+        user.surname = surname
+        user.gender = gender
+        user.birth_date = birthdate
+        user.email = email
+        user.login = login
+        user.password = password
+        db.session.commit()
+        return user
 
     def get_submissions_to_grade(self):
         """

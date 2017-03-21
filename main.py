@@ -148,8 +148,8 @@ def edit_student():
         email = request.form["email"]
         login = request.form["login"]
         password = request.form["password"]
-        g.logged_user.update_student(student_id, name, surname, gender, birthdate, email, login, password)
-        flash("Student data was updated", "alert alert-success text-centered")
+        student = g.logged_user.update_student(student_id, name, surname, gender, birthdate, email, login, password)
+        flash("Student data was updated: "+student.name+" "+student.surname, "alert alert-success text-centered")
         return redirect(url_for("list_students"))
     student_id = request.args["student_id"]
     student = g.logged_user.get_student(student_id)
