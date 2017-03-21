@@ -130,7 +130,7 @@ class Employee(User):
         Return student list to display
 
         Returns:
-                student list
+                students list
         """
         students = db.session.query(UserDb).filter_by(user_type="student").all()
         return students
@@ -965,16 +965,8 @@ class Manager(Employee):
         Return:
              mentor_list
         """
-        mentor_list = []
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT * FROM `User` WHERE User_type='mentor'")
-        mentors = cursor.fetchall()
-        for mentor in mentors:
-            mentor_list.append(Mentor(mentor[0], mentor[1], mentor[2], mentor[3], mentor[4],
-                                      mentor[5], mentor[6], mentor[7], mentor[8]))
-        data.close()
-        return mentor_list
+        mentors = db.session.query(UserDb).filter_by(user_type="mentor").all()
+        return mentors
 
 
     @staticmethod
