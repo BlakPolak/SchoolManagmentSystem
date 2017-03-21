@@ -175,7 +175,6 @@ class Student(User):
 
         """
         student_all_grades = db.session.query(AssignmentDb, SubmissionDb).join(SubmissionDb, SubmissionDb.id_assignment == AssignmentDb.id).filter(SubmissionDb.id_student == self._id).all()
-        print(student_all_grades)
         return student_all_grades
 
     def list_assignments_to_submit(self):
