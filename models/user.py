@@ -1009,12 +1009,5 @@ class Manager(Employee):
             list with grade statistics
 
         """
-
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        grades = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
-                                "FROM `Submission` INNER JOIN `User` ON `Submission`.ID_Student = User.ID"
-                                " WHERE ID_Student = ?", (student_id,))
-        grades = grades.fetchall()
-        student_grades = StudentGrades(grades[0][0], grades[0][1], grades[0][2], grades[0][3])
-        return student_grades
+        grades = db.session.query(UserDb, func.count(SubmissionDb.grade), func.avg(SubmissionDb.grade)).filter(UserDb.id == SubmissionDb.id_student, UserDb.id == student_id).all()
+        return grades
