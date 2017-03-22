@@ -3,6 +3,7 @@ from models.user import *
 from flask_jsglue import JSGlue
 # from models.user import User
 from flask_sqlalchemy import SQLAlchemy
+
 import os
 
 app = Flask(__name__)

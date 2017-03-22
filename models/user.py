@@ -12,6 +12,7 @@ from models.checkpoint_assignment import CheckpointAssignment
 from models.student_grades import StudentGrades
 from models.gradeable_checkpoint_submission import GradeableCheckpointSubmission
 from models.db_alchemy import *
+from sqlalchemy.sql import func
 from main import db
 from sqlalchemy.sql import func
 
@@ -800,54 +801,27 @@ class Mentor(Employee):
         Return:
              None
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT name, surname FROM user where ID=?", (student_id,))
-        _data = cursor.fetchone()
-        student_name = _data[0]
-        student_surname = _data[1]
 
-        cursor.execute("SELECT * FROM attendance where id_student=? AND date BETWEEN ? AND ?",
-                       (student_id, date_from, date_to))
-        _data = cursor.fetchall()
-        all_days = 0
-        days_in_school = 0
-        for item in _data:
-            all_days += 1
-            if item[3] == "1":
-                days_in_school += 1
-        if all_days == 0:
-            avg_days = 0
-        else:
-            avg_days = round(days_in_school/all_days, 2)
-
-        cursor.execute("SELECT Grade FROM Submission where id_student=? AND Submittion_date BETWEEN ? AND ?",
-                       (student_id, date_from, date_to))
-        _data = cursor.fetchall()
-        grades_quantity = 0
-        grades_sum = 0
-        for item in _data:
-            grades_quantity += 1
-            grades_sum += int(item[0])
-        if grades_quantity:
-            grades_avg = round(grades_sum/grades_quantity, 2)
-        else:
-            grades_avg = 0
-
-        cursor.execute("SELECT Card FROM Checkpoint_submittion where id_student=? AND date BETWEEN ? AND ?",
-                       (student_id, date_from, date_to))
-        _data = cursor.fetchall()
+        student = db.session.query(UserDb).filter_by(id=student_id).first()
+        avg_days = db.session.query(func.avg(AttendanceDb.presence)).\
+            filter(AttendanceDb.id_student==student_id, AttendanceDb.date.between(date_from, date_to)).all()[0][0]
+        avg_grades = db.session.query(func.avg(SubmissionDb.grade)).\
+            filter(SubmissionDb.id_student==student_id, SubmissionDb.date.between(date_from, date_to)).all()[0][0]
+        cards = db.session.query(CheckpointSubmissionDb.card).\
+            filter(CheckpointSubmissionDb.id_student==student_id, CheckpointSubmissionDb.date.between(date_from, date_to)).all()
         yellow_cards = 0
         red_cards = 0
-        for item in _data:
-            if item[0] == "yellow":
+        green_cards = 0
+        for card in cards:
+            if card[0] == "yellow":
                 yellow_cards += 1
-            elif item[0] == "red":
+            elif card[0] == "red":
                 red_cards += 1
-
-        student_statistics = StudentStatistic(student_id, student_name, student_surname, avg_days,
-                                      grades_avg, yellow_cards, red_cards)
-        data.close()
+            elif card[0] == "green":
+                green_cards += 1
+        student_statistics = StudentStatistic(student.id, student.name, student.surname, avg_days,
+                                      avg_grades, yellow_cards, red_cards, green_cards)
+        print()
         return student_statistics
 
     def edit_mentor(self):
@@ -1005,12 +979,5 @@ class Manager(Employee):
             list with grade statistics
 
         """
-
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        grades = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
-                                "FROM `Submission` INNER JOIN `User` ON `Submission`.ID_Student = User.ID"
-                                " WHERE ID_Student = ?", (student_id,))
-        grades = grades.fetchall()
-        student_grades = StudentGrades(grades[0][0], grades[0][1], grades[0][2], grades[0][3])
-        return student_grades
+        grades = db.session.query(UserDb, func.count(SubmissionDb.grade), func.avg(SubmissionDb.grade)).filter(UserDb.id == SubmissionDb.id_student, UserDb.id == student_id).all()
+        return grades

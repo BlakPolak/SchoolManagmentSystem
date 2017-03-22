@@ -2,7 +2,7 @@ class StudentStatistic:
     """ Class creates Student Statistics object """
 
 
-    def __init__(self, id, student_name, student_surname, avg_days, grades_avg, yellow_cards, red_cards):
+    def __init__(self, id, student_name, student_surname, avg_days, grades_avg, yellow_cards, red_cards, green_cards):
         """
         Initialize object args
         Args:   id: number
@@ -22,3 +22,4 @@ class StudentStatistic:
         self.grades_avg = grades_avg
         self.yellow_cards = yellow_cards
         self.red_cards = red_cards
+        self.green_cards = green_cards
