@@ -213,14 +213,10 @@ class Student(User):
             assignment, result
 
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        submission_date = datetime.date.today()
-        id_student = self._id
-        cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
-                       "VALUES (?, ?, ?, ?)", (id_student, id_assignment, result, submission_date))
-        data.commit()
-        data.close()
+
+        submission = SubmissionDb(id_student=self._id, result=result, id_assignment=id_assignment)
+        db.session.add(submission)
+        db.session.commit()
 
     def list_group_assignment(self):
         """
