@@ -250,23 +250,22 @@ def grade_submission():
 @app.route("/list_checkpoints")
 def list_checkpoints():
     """ List all checkpoint assignment from database """
-    checkpoints_for_submission = g.logged_user.get_checkpoints_for_submission()
-    return render_template("list_checkpoints_for_submission.html", checkpoints_for_submission=checkpoints_for_submission)
+    checkpoints = g.logged_user.get_checkpoints_for_submission()
+    return render_template("list_checkpoints_for_submission.html", checkpoints=checkpoints)
 
 
 @app.route("/grade_checkpoint", methods=["GET", "POST"])
 def grade_checkpoint():
     """ Grade checkpoint submissions """
     if request.method == "POST":
-        list_of_notes = []
-        for key, value in request.form.items():
-            list_of_notes.append([key, value])
-            g.logged_user.grade_checkpoint_submission(list_of_notes)
+        submission_id = request.form['submission_id']
+        card = request.form['card']
+        g.logged_user.grade_checkpoint_submission(submission_id, card)
         flash("Checkpoint submissions were graded", "alert alert-success text-centered")
         return redirect(url_for("list_checkpoints"))
-    checkpoint_assignment_id = request.args["checkpoint_assignment_id"]
-    submissions_for_grade = g.logged_user.get_checkpoint_submissions_to_grade(checkpoint_assignment_id)
-    return render_template("grade_checkpoint_submissions.html", submissions_for_grade=submissions_for_grade)
+    checkpoint_submission_id = request.args["checkpoint_submission_id"]
+    submission = g.logged_user.get_student_checkpoint_submission(checkpoint_submission_id)
+    return render_template("grade_checkpoint_submissions.html", submission=submission)
 
 
 @app.route("/view_student_details")

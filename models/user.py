@@ -459,6 +459,10 @@ class Mentor(Employee):
         submission = db.session.query(SubmissionDb).filter_by(id=submission_id).first()
         return submission
 
+    def get_student_checkpoint_submission(self, checkpoint_submission_id):
+        submission = db.session.query(CheckpointSubmissionDb).filter_by(id=checkpoint_submission_id).first()
+        return submission
+
 
     def get_checkpoint_submissions_to_grade(self, checkpoint_assignment_id):
         """
@@ -486,7 +490,7 @@ class Mentor(Employee):
         return submission_list
 
 
-    def grade_checkpoint_submission(self, list_of_notes):
+    def grade_checkpoint_submission(self, submission_id, card):
         """
         Method allows mentor to grade checkpoint submission
 
@@ -495,15 +499,9 @@ class Mentor(Employee):
         Return:
              submission list
         """
-        submission_list = []
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        for row in list_of_notes:
-            cursor.execute("update Checkpoint_submittion set card=?, Date=?, ID_Mentor=? "
-                           "where id=?", (row[1], str(datetime.date.today()), self._id, row[0]))
-        data.commit()
-        data.close()
-        return submission_list
+        submission = db.session.query(CheckpointSubmissionDb).filter_by(id=submission_id).first()
+        submission.card = card
+        db.session.commit()
 
 
 
@@ -676,26 +674,29 @@ class Mentor(Employee):
         Return:
              list of checkpoint submissions
         """
-        list_of_checkpoint_submissions = []
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("select user.id from user where user.id not in (select id_student from checkpoint_submittion) and user.user_type='student'")
-        students_ids_without_submissions = cursor.fetchall()
-        cursor.execute("select id from Checkpoint_assignment")
-        assignments = cursor.fetchall()
-        for student_id in students_ids_without_submissions:
-            for assignment in assignments:
-                cursor.execute("insert into Checkpoint_submittion (ID_Student, ID_Assignment) values (?, ?)", (student_id[0], assignment[0]))
-        data.commit()
-        cursor.execute("SELECT * FROM Checkpoint_assignment"
-                       " where Checkpoint_assignment.id in (select ID_Assignment from Checkpoint_submittion"
-                       " where card='' or card is null group by ID_Assignment)")
+        submissions = db.session.query(CheckpointSubmissionDb).filter_by(card='').all()
+        # a = submissions[0].student
 
-        rows = cursor.fetchall()
-        if rows:
-            for row in rows:
-                list_of_checkpoint_submissions.append(CheckpointAssignment(row[0], row[1], row[2]))
-        return list_of_checkpoint_submissions
+        # list_of_checkpoint_submissions = []
+        # data = sqlite3.connect(User.path)
+        # cursor = data.cursor()
+        # cursor.execute("select user.id from user where user.id not in (select id_student from checkpoint_submittion) and user.user_type='student'")
+        # students_ids_without_submissions = cursor.fetchall()
+        # cursor.execute("select id from Checkpoint_assignment")
+        # assignments = cursor.fetchall()
+        # for student_id in students_ids_without_submissions:
+        #     for assignment in assignments:
+        #         cursor.execute("insert into Checkpoint_submittion (ID_Student, ID_Assignment) values (?, ?)", (student_id[0], assignment[0]))
+        # data.commit()
+        # cursor.execute("SELECT * FROM Checkpoint_assignment"
+        #                " where Checkpoint_assignment.id in (select ID_Assignment from Checkpoint_submittion"
+        #                " where card='' or card is null group by ID_Assignment)")
+        #
+        # rows = cursor.fetchall()
+        # if rows:
+        #     for row in rows:
+        #         list_of_checkpoint_submissions.append(CheckpointAssignment(row[0], row[1], row[2]))
+        return submissions
 
     # def get_submissions_for_checkpoint(self):
     #     """
