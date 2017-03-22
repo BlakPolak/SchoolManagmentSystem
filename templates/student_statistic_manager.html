@@ -11,7 +11,7 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Student Statistics for {{ stats.name }} {{ stats.surname }}:</th>
+                        <th>Student Statistics for {{ stats[0].name }} {{ stats[0].surname }}:</th>
 
                     </tr>
 
@@ -23,8 +23,8 @@
                         <tbody>
 
                             <tr>
-                                <td> Number of Grades: {{ stats.number_of_grades }}</td>
-                                <td> Average Grade: {{ stats.average_grade }}</td>
+                                <td> Number of Grades: {{ stats[1] }}</td>
+                                <td> Average Grade: {{ stats[2]}}</td>
 
                             </tr>
 
