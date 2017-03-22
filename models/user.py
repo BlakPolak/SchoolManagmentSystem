@@ -13,7 +13,7 @@ from models.student_grades import StudentGrades
 from models.gradeable_checkpoint_submission import GradeableCheckpointSubmission
 from models.db_alchemy import *
 from main import db
-from sqlalchemy import *
+from sqlalchemy.sql import func
 
 
 
@@ -1011,18 +1011,8 @@ class Manager(Employee):
             list with grade statistics
 
         """
-        grades_statistics = []
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        grades = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
-                                            "FROM `Submission` INNER JOIN `User` ON `Submission`.ID_Mentor = User.ID"
-                                            " GROUP BY `Name`")
-        grades = db.session.query(UserDb.name, UserDb.surname, ).filter_by(
-            id=CheckpointSubmissionDb.id_mentor).all()
-        # grades = grades.fetchall()
-        for row in grades:
-            grades_statistics.append(GradeStatsForMentors(row[0], row[1], row[2], row[3]))
-        return grades_statistics
+        grades = db.session.query(UserDb, func.count(SubmissionDb.grade), func.avg(SubmissionDb.grade)).filter_by(id=SubmissionDb.id_mentor).all()
+        return grades
 
 
     def full_stats_for_student(self, student_id):
