@@ -21,21 +21,21 @@
                 </thead>
                     <tbody>
                     {% for team in list_of_teams %}
-                        {% if not team.student_name %}
+                        {% if not team[1].name %}
                         <tr class="team-name">
-                            <td><p class="team">{{ team.team_name }}</p></td>
+                            <td><p class="team">{{ team[1].name }}</p></td>
                             <td>-</td>
                             <td>-</td>
                             <td>-</td>
-                            <td><a class="btn btn-default" href="{{ url_for("remove_team", team_name=team.team_name) }}" role="button">Remove</a></td>
+                            <td><a class="btn btn-default" href="{{ url_for("remove_team", team_name=team[0].name) }}" role="button">Remove</a></td>
                         </tr>
                         {% else %}
                         <tr>
-                            <td>{{ team.team_name }}</td>
-                            <td>{{ team.student_id }}</td>
-                            <td>{{ team.student_name }}</td>
-                            <td>{{ team.student_surname }}</td>
-                            <td><a class="btn btn-default" href="{{ url_for("remove_team", team_name=team.team_name) }}" role="button">Remove</a></td>
+                            <td>{{ team[0].name }}</td>
+                            <td>{{ team[1].id }}</td>
+                            <td>{{ team[1].name }}</td>
+                            <td>{{ team[1].surname }}</td>
+                            <td><a class="btn btn-default" href="{{ url_for("remove_team", team_name=team[0].name) }}" role="button">Remove</a></td>
                         </tr>
                         {% endif %}
                     {% endfor %}
