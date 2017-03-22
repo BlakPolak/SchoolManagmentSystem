@@ -552,17 +552,10 @@ class Mentor(Employee):
         Return:
              None
         """
-        team_list = []
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        # cursor.execute("SELECT user.id, team_name, name, surname FROM teams "
-        #                "LEFT JOIN user ON teams.id_student=user.id ORDER BY team_name")
-        cursor.execute("SELECT user.id, team_name, name, surname FROM teams "
-                       "LEFT JOIN user ON teams.id_student=user.id order by team_name")
-        teams = cursor.fetchall()
-        for team in teams:
-            team_list.append(Team(team[0], team[1], team[2], team[3]))
-        data.close()
+
+        team_list = db.session.query(TeamDb, UserDb).filter_by(id_student=UserDb.id).all()
+
+
         return team_list
 
 

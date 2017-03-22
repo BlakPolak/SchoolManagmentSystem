@@ -74,4 +74,4 @@ class UserDb(db.Model):
                               foreign_keys='SubmissionDb.id_student')
     mentor_submission = db.relationship('SubmissionDb', backref='mentor_submission_ref', lazy="dynamic",
                              foreign_keys='SubmissionDb.id_mentor')
-    team_s = db.relationship('TeamDb', backref='user_team', cascade='all, delete', lazy='dynamic')
+    teams = db.relationship('TeamDb', backref='teams', cascade='all, delete', lazy='dynamic')
