@@ -312,8 +312,10 @@ def edit_assignment():
         max_points = request.form["max_points"]
         delivery_date = request.form["date"]
         content = request.form["content"]
-        g.logged_user.update_assignment(assignment_id, name, type, max_points, delivery_date, content)
-        flash("Assignment was upadated", "alert alert-success text-centered")
+        if g.logged_user.update_assignment(assignment_id, name, type, max_points, delivery_date, content):
+            flash("Assignment was updated", "alert alert-success text-centered")
+        else:
+            flash("Error during updating assignment", "alert alert-fail text-centered")
         return redirect(url_for("list_mentors_assignments"))
     assignment_id = request.args["assignment_id"]
     assignment = g.logged_user.get_assignment(assignment_id)
@@ -338,8 +340,10 @@ def add_new_assignment():
         max_points = request.form["max_points"]
         delivery_date = request.form["date"]
         content = request.form["content"]
-        g.logged_user.add_new_assignment(name, type, max_points, delivery_date, content)
-        return redirect(url_for("list_mentors_assignments"))
+        if g.logged_user.add_new_assignment(name, type, max_points, delivery_date, content):
+            return redirect(url_for("list_mentors_assignments"))
+        else:
+            flash("Adding assignment has failed", "alert alert-fail text-centered")
     return render_template("add_new_assignment.html")
 
 

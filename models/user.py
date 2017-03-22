@@ -621,14 +621,7 @@ class Mentor(Employee):
           list of assignments
         """
 
-        list_of_assignments = []
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("select * from Assignment")
-        for row in cursor.fetchall():
-            new_assignment = Assignment(row[0], row[1], row[2], row[3], row[4], row[5])
-            list_of_assignments.append(new_assignment)
-        data.close()
+        list_of_assignments = db.session.query(AssignmentDb).all()
         return list_of_assignments
 
     def get_assignment(self, assignment_id):
@@ -640,13 +633,7 @@ class Mentor(Employee):
         Return:
           assignment
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("select * from Assignment where ID=?", (assignment_id,))
-        row = cursor.fetchone()
-        if row:
-            assignment = Assignment(row[0], row[1], row[2], row[3], row[4], row[5])
-        data.close()
+        assignment = db.session.query(AssignmentDb).filter_by(id=assignment_id).first()
         return assignment
 
     def remove_assignment(self, assignment_id):
@@ -658,11 +645,7 @@ class Mentor(Employee):
         Return:
             None
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("delete from  Assignment where ID=?", (assignment_id,))
-        data.commit()
-        data.close()
+        db.session.query(AssignmentDb).filter_by(id=assignment_id).delete()
 
 
     def update_assignment(self, assignment_id, name, type, max_points, delivery_date, content):
@@ -674,12 +657,15 @@ class Mentor(Employee):
          Return:
              None
          """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("update Assignment set Name=?, Type=?, Max_points=?, Delivery_date=?, "
-                       " Content=? where ID=?", (name, type, max_points, delivery_date, content, assignment_id))
-        data.commit()
-        data.close()
+
+        assignment = self.get_assignment(assignment_id)
+        assignment.name = name
+        assignment.type = type
+        assignment.max_points = max_points
+        assignment.delivery_date = delivery_date
+        assignment.content = content
+        db.session.commit()
+        return assignment
 
 
     def add_new_assignment(self, name, type, max_points, delivery_date, content):
@@ -691,13 +677,10 @@ class Mentor(Employee):
         Return:
             None
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("insert into Assignment (Name, Type, Max_points, Delivery_date, "
-                       " Content) values(?, ?, ?, ?, ?)", (name, type, max_points, delivery_date, content))
-        data.commit()
-        data.close()
-
+        new_assignment = AssignmentDb(name=name, type=type, max_points=max_points, delivery_date=delivery_date, content=content)
+        db.session.add(new_assignment)
+        db.session.commit()
+        return new_assignment
 
     def get_checkpoints_for_submission(self):
         """
