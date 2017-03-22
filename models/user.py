@@ -542,9 +542,9 @@ class Mentor(Employee):
              None
         """
 
-        team_list = db.session.query(TeamDb, UserDb).filter_by(id_student=UserDb.id).all()
-
-
+        team_list = db.session.query(TeamDb, UserDb).join(UserDb, UserDb.id == TeamDb.id_student).all()
+        # team_list = db.session.query(TeamDb).all()
+        print(team_list)
         return team_list
 
 
