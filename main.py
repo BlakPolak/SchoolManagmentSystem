@@ -243,7 +243,7 @@ def grade_submission():
         return redirect(url_for("list_submissions"))
     submission_id = request.args["submission_id"]
     submission = g.logged_user.get_submission(submission_id)
-    assignment = g.logged_user.get_assignment(submission.assignment)
+    assignment = g.logged_user.get_assignment(submission.id_assignment)
     return render_template("grade_submission.html", submission=submission, assignment=assignment)
 
 

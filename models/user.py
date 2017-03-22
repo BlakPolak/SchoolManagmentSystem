@@ -437,21 +437,14 @@ class Mentor(Employee):
              List of lists with submissions to grade
         """
         return_list = []
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        submissions_not_graded = cursor.execute(
-                            "SELECT Submission.id, Assignment.ID, Assignment.Name, Assignment.delivery_date, User.Name, User.Surname, Submission.Submittion_date "
-                            "FROM Submission "
-                            "LEFT JOIN Assignment ON Assignment.ID=Submission.ID_Assignment "
-                            "INNER JOIN User ON user.ID=Submission.ID_Student "
-                            "WHERE Submission.Grade IS NULL OR Submission.Grade=''").fetchall()
-
-        if len(submissions_not_graded) == 0:
-            return None
-        for submission in submissions_not_graded:
+        submissions = db.session.query(SubmissionDb.id, AssignmentDb.id, AssignmentDb.name, AssignmentDb.delivery_date,
+                                       UserDb.name, UserDb.surname, SubmissionDb.date).filter(
+                                        AssignmentDb.id == SubmissionDb.id_assignment, UserDb.id == SubmissionDb.id_student,
+                                        (SubmissionDb.grade == "") | (SubmissionDb.grade.is_(None))
+                                        ).all()
+        for submission in submissions:
             return_list.append(GradeableSubmissions(submission[1], submission[2], submission[3],
                                 submission[4], submission[5], submission[6], submission[0]))
-        data.close()
         return return_list
 
     def get_submission(self, submission_id):
@@ -463,13 +456,7 @@ class Mentor(Employee):
         Return:
             one submission
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("select * from Submission where ID=?", (submission_id,))
-        row = cursor.fetchone()
-        if row:
-            submission = Submission(row[2], row[1], row[5], row[3], row[4], row[0])
-        data.close()
+        submission = db.session.query(SubmissionDb).filter_by(id=submission_id).first()
         return submission
 
 
@@ -520,7 +507,7 @@ class Mentor(Employee):
 
 
 
-    def grade_submission(self, assignment_id, grade):
+    def grade_submission(self, submission_id, grade):
         """
         Method allows mentor grade students submitted assignment
 
@@ -529,11 +516,9 @@ class Mentor(Employee):
         Return:
              None
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("UPDATE Submission SET Grade=? WHERE ID=?", (grade, assignment_id))
-        data.commit()
-        data.close()
+        submission = self.get_submission(submission_id)
+        submission.grade = grade
+        db.session.commit()
 
     def get_teams(self):
         """
