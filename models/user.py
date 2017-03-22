@@ -174,18 +174,7 @@ class Student(User):
             table submitted assignment with grades
 
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT assignment.name, submission.grade FROM assignment INNER JOIN submission "
-                       "ON submission.ID_assignment = assignment.ID WHERE ID_Student=?", (self._id, ))
-        grades = cursor.fetchall()
-        student_all_grades = []
-        for row in grades:
-            assignment_name = row[0]
-            assignment_grade = row[1]
-            student_grade = gradedAssignment(assignment_name, assignment_grade)
-            student_all_grades.append(student_grade)
-        data.close()
+        student_all_grades = db.session.query(AssignmentDb, SubmissionDb).join(SubmissionDb, SubmissionDb.id_assignment == AssignmentDb.id).filter(SubmissionDb.id_student == self._id).all()
         return student_all_grades
 
     def list_assignments_to_submit(self):
@@ -926,13 +915,9 @@ class Manager(Employee):
         Return:
              None
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("INSERT INTO `User` (`Name`, `Surname`, `Gender`, `Birth_date`, `Email`, `Login`, `Password`, `User_type`) "
-                       "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (name, surname, gender, birthdate, email, login, password, "mentor"))
-        data.commit()
-        data.close()
-        print("Mentor was added.")
+        mentor = UserDb(name=name, surname=surname, gender=gender, birth_date=birthdate, email=email, login=login, password=password, user_type="mentor")
+        db.session.add(mentor)
+        db.session.commit()
 
 
     def remove_mentor(self, mentor_id):
@@ -944,12 +929,9 @@ class Manager(Employee):
         Return:
              None
         """
-
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("DELETE FROM User WHERE ID=?", (mentor_id,))
-        data.commit()
-        data.close()
+        mentor = db.session.query(UserDb).filter_by(id=mentor_id).first()
+        db.session.delete(mentor)
+        db.session.commit()
 
 
     @staticmethod
