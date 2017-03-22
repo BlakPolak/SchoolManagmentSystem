@@ -544,7 +544,7 @@ class Mentor(Employee):
              None
         """
 
-        team_list = db.session.query(TeamDb, UserDb).join(UserDb, UserDb.id == TeamDb.id_student).all()
+        team_list = db.session.query(TeamDb, UserDb).outerjoin(UserDb, UserDb.id == TeamDb.id_student).all()
         # team_list = db.session.query(TeamDb).all()
         print(team_list)
         return team_list
@@ -572,28 +572,24 @@ class Mentor(Employee):
         data.close()
         return team_list
 
-    def add_to_team(self, student_id, team_name):
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT * FROM teams WHERE ID_Student=?", (student_id,)) # check if student already is in team
-        team_row = cursor.fetchone()
-        if team_row:
-            cursor.execute("DELETE FROM teams WHERE ID_Student=?", (student_id,))
-        cursor.execute("INSERT INTO teams (ID_Student, Team_name) VALUES (?, ?)", (student_id, team_name))
-        data.commit()
-        data.close()
+    def add_to_team(self, name):
+        pass
+            # data = sqlite3.connect(User.path)
+            # cursor = data.cursor()
+            # cursor.execute("SELECT * FROM teams WHERE ID_Student=?", (student_id,)) # check if student already is in team
+            # team_row = cursor.fetchone()
+            # if team_row:
+            #     cursor.execute("DELETE FROM teams WHERE ID_Student=?", (student_id,))
+            # cursor.execute("INSERT INTO teams (ID_Student, Team_name) VALUES (?, ?)", (student_id, team_name))
+            # data.commit()
+            # data.close()
 
-    def add_team(self, new_team):
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT * FROM teams WHERE Team_Name=?", (new_team,)) # check if student already is in team
-        team_row = cursor.fetchone()
-        if team_row:
-            data.close()
-            return None
-        cursor.execute("INSERT INTO teams (Team_name, ID_Student) VALUES (?, ?)", (new_team, "<empty>"))
-        data.commit()
-        data.close()
+    def add_team(self, name):
+
+        new_team = TeamDb(name=name)
+        db.session.add(new_team)
+        db.session.commit()
+        return new_team
 
     def remove_team(self, team_name):
         """
@@ -604,11 +600,11 @@ class Mentor(Employee):
         Return:
             None
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("delete FROM teams WHERE Team_Name=?", (team_name,))
-        data.commit()
-        data.close()
+
+        team_name = db.session.query(TeamDb).filter_by(name=team_name).first()
+        db.session.delete(team_name)
+        db.session.commit()
+
 
     def get_assignments(self):
         """
