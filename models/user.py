@@ -13,6 +13,8 @@ from models.student_grades import StudentGrades
 from models.gradeable_checkpoint_submission import GradeableCheckpointSubmission
 from models.db_alchemy import *
 from main import db
+from sqlalchemy import *
+
 
 
 class User:
@@ -977,12 +979,7 @@ class Manager(Employee):
         checkpoint_stats_list = []
         cards_statistics = {}
         mentors = []
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cards = cursor.execute("SELECT `Name`, `Surname`, `Card` "
-                               "FROM `Checkpoint_submittion` "
-                               "INNER JOIN `User` ON Checkpoint_submittion.ID_Mentor = User.ID ")
-        cards = cards.fetchall()
+        cards = db.session.query(UserDb.name, UserDb.surname, CheckpointSubmissionDb.card).filter_by(id=CheckpointSubmissionDb.id_mentor).all()
         for row in cards:
             name_surname = str(row[0]) + ' ' + str(row[1])
             cards_statistics[name_surname] = [0, 0, 0] #Cards [red,yellow,green] # row[1]- surname change for name,surname or ID_Mentor
@@ -1000,8 +997,6 @@ class Manager(Employee):
         for key, value in cards_statistics.items():
             statistic_for_mentor = CheckpointStatsForMentors(key, value[0], value[1], value[2])
             checkpoint_stats_list.append(statistic_for_mentor)
-        data.commit()
-        data.close()
         return checkpoint_stats_list
 
     @staticmethod
@@ -1022,8 +1017,9 @@ class Manager(Employee):
         grades = cursor.execute("SELECT  `Name`, `Surname`, COUNT(`Grade`), AVG(`Grade`)"
                                             "FROM `Submission` INNER JOIN `User` ON `Submission`.ID_Mentor = User.ID"
                                             " GROUP BY `Name`")
-
-        grades = grades.fetchall()
+        grades = db.session.query(UserDb.name, UserDb.surname, ).filter_by(
+            id=CheckpointSubmissionDb.id_mentor).all()
+        # grades = grades.fetchall()
         for row in grades:
             grades_statistics.append(GradeStatsForMentors(row[0], row[1], row[2], row[3]))
         return grades_statistics
