@@ -525,7 +525,7 @@ class Mentor(Employee):
         Return:
              None
         """
-        team_list = db.session.query(TeamDb, UserDb).join(UserDb, UserDb.id == TeamDb.id_student)\
+        team_list = db.session.query(TeamDb, UserDb).outerjoin(UserDb, UserDb.id == TeamDb.id_student)\
             .order_by(TeamDb.name).group_by(TeamDb.name).all()
         return team_list
 
@@ -534,10 +534,11 @@ class Mentor(Employee):
         student_in_team = db.session.query(TeamDb).filter_by(id_student=student_id).first()
         if student_in_team:
             db.session.delete(student_in_team)
-        assign_student = db.session.query(TeamDb).filter_by(id_student=student_id, name=team_name).first()
-        db.session.add(assign_student)
+        # assign_student = db.session.query(TeamDb).filter_by(id_student=student_id, name=team_name).first()
+        assigned_student = TeamDb(id_student=student_id, name=team_name)
+        db.session.add(assigned_student)
         db.session.commit()
-        return assign_student
+        return assigned_student
 
     def add_team(self, name):
         """
