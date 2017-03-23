@@ -523,7 +523,14 @@ class Mentor(Employee):
         return team_list
 
     def add_to_team(self, student_id, team_name):
+        """
+        Method allows mentor assign student to team
 
+        Args:
+            None
+        Return:
+             None
+        """
         student_in_team = db.session.query(TeamDb).filter_by(id_student=student_id).first()
         if student_in_team:
             db.session.delete(student_in_team)
@@ -548,6 +555,8 @@ class Mentor(Employee):
         db.session.commit()
         return new_team
 
+
+
     def remove_team(self, team_name):
         """
         Method allows mentor to remove team
@@ -558,8 +567,20 @@ class Mentor(Employee):
             None
         """
 
-        team_name = db.session.query(TeamDb).filter_by(name=team_name).first()
-        db.session.delete(team_name)
+        db.session.query(TeamDb).filter_by(name=team_name).delete()
+        db.session.commit()
+
+
+    def remove_student_from_team(self, student_id):
+        """
+        Method allows mentor to remove team
+
+        Args:
+            team name
+        Return:
+            None
+        """
+        db.session.query(TeamDb).filter_by(id_student=student_id).delete()
         db.session.commit()
 
 
