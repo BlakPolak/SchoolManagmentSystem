@@ -19,8 +19,11 @@
                     <tbody>
 
                         <tr>
-                            <td>{{ stats[0][2] }}</td>
-
+                            {% if stats[0][2] == None %}
+                                <td>{{ 'There is no grades to average'}}</td>
+                            {% else %}
+                                <td>{{ stats[0][2]|round(2) }}</td>
+                            {% endif %}
                         </tr>
 
                   </tbody>

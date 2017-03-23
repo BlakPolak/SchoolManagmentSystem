@@ -18,14 +18,21 @@
                 </thead>
                     <tbody>
                     {% if list_of_statistics %}
-                    {% for statistic in list_of_statistics %}
+                        {% for statistic in list_of_statistics %}
+                            <tr>
+                                <td>{{ statistic.name }}</td>
+                                <td>{{ statistic.red_card }}</td>
+                                <td>{{ statistic.yellow_card }}</td>
+                                <td>{{ statistic.green_card }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
                         <tr>
-                            <td>{{ statistic.name }}</td>
-                            <td>{{ statistic.red_card }}</td>
-                            <td>{{ statistic.yellow_card }}</td>
-                            <td>{{ statistic.green_card }}</td>
+                            <td>No data for creating statistics</td>
+                            <td>No data for creating statistics</td>
+                            <td>No data for creating statistics</td>
+                            <td>No data for creating statistics</td>
                         </tr>
-                    {% endfor %}
                     {% endif %}
                     </tbody>
             </table>
