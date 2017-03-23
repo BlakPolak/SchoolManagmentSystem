@@ -162,23 +162,41 @@ class Student(User):
             list not submitted assignment
 
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("select * from assignment where ID not in "
-                       "(select id_assignment from submission where id_student=?) AND type='individual';", (self._id,))
-        assignments = cursor.fetchall()
-        assignments_to_submit = []
-        for row in assignments:
-            assignment_id = row[0]
-            assignment_name = row[1]
-            assignment_type = row[2]
-            assignment_max_points = row[3]
-            assignment_delivery_date = row[4]
-            assignment_content = row[5]
-            assignment = Assignment(assignment_id, assignment_name, assignment_type, assignment_max_points, assignment_delivery_date, assignment_content)
-            assignments_to_submit.append(assignment)
-        data.close()
-        return assignments_to_submit
+        assignments = db.session.query(AssignmentDb).filter(AssignmentDb.id == SubmissionDb.id_assignment,
+                                                            AssignmentDb.type == 'individual',
+                                                            (SubmissionDb.result == '') | (SubmissionDb.result.is_(None))).all()
+        print()
+        # data = sqlite3.connect(User.path)
+        # cursor = data.cursor()
+        # db.session.query()
+        # cursor.execute("select * from assignment where ID not in "
+        #                "(select id_assignment from submission where id_student=?) AND type='individual';", (self._id,))
+        # assignments = cursor.fetchall()
+        # assignments_to_submit = []
+        # for row in assignments:
+        #     assignment_id = row[0]
+        #     assignment_name = row[1]
+        #     assignment_type = row[2]
+        #     assignment_max_points = row[3]
+        #     assignment_delivery_date = row[4]
+        #     assignment_content = row[5]
+        #     assignment = Assignment(assignment_id, assignment_name, assignment_type, assignment_max_points, assignment_delivery_date, assignment_content)
+        #     assignments_to_submit.append(assignment)
+        # data.close()
+        return assignments
+
+    # def submit_assignment(self, result, id_assignment):
+    #     """
+    #     Method allows student to submit assignment
+    #
+    #     Args:
+    #         assignment, result
+    #
+    #     """
+    #
+    #     submission = SubmissionDb(id_student=self._id, result=result, id_assignment=id_assignment)
+    #     db.session.add(submission)
+    #     db.session.commit()
 
     def submit_assignment(self, result, id_assignment):
         """
@@ -189,9 +207,11 @@ class Student(User):
 
         """
 
-        submission = SubmissionDb(id_student=self._id, result=result, id_assignment=id_assignment)
+        submission = db.session.query(SubmissionDb).filter_by(id_student=self._id, id_assignment=id_assignment).first()
+        submission.result = result
         db.session.add(submission)
         db.session.commit()
+
 
     def list_group_assignment(self):
         """

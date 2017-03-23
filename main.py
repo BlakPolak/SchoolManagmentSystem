@@ -85,8 +85,7 @@ def submit_assignment(assignment_id):
         id_assignment = assignment.id
         g.logged_user.submit_assignment(result, id_assignment)
         return redirect(url_for("list_assignment"))
-    return render_template("submit_assignment.html", assignment_list=g.logged_user.list_assignments_to_submit(),
-                           logged_user=g.logged_user, assignment=assignment)
+    return render_template("submit_assignment.html", assignment=assignment)
 
 
 @app.route("/submit_group_assignment/<assignment_id>", methods=["POST", "GET"])

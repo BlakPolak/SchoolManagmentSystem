@@ -10,6 +10,7 @@ class AssignmentDb(db.Model):
     max_points = db.Column(db.Integer)
     delivery_date = db.Column(db.String(10))
     content = db.Column(db.String(200))
+    submissions = db.relationship('SubmissionDb', backref='submissions', lazy='dynamic')
 
 class AttendanceDb(db.Model):
     __tablename__ = 'Attendance'
