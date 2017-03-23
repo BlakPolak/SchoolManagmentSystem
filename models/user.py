@@ -483,11 +483,13 @@ class Mentor(Employee):
          Return:
              None
          """
-
-        new_team = TeamDb(name=name, id_student='')
-        db.session.add(new_team)
-        db.session.commit()
-        return new_team
+        team = db.session.query(TeamDb).filter_by(name=name).all()
+        if not team:
+            new_team = TeamDb(name=name, id_student='')
+            db.session.add(new_team)
+            db.session.commit()
+            return new_team
+        return None
 
 
 
