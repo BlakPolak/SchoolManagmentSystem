@@ -262,6 +262,16 @@ def list_checkpoints():
     checkpoints = g.logged_user.get_checkpoints_for_submission()
     return render_template("list_checkpoints_for_submission.html", checkpoints=checkpoints)
 
+@app.route("/add_checkpoint", methods=["GET", "POST"])
+def add_checkpoint():
+    """ List all checkpoint assignment from database """
+    if request.method == "POST":
+        name = request.form['name']
+        assignment = request.form['assignment']
+        g.logged_user.add_checkpoint(name, assignment)
+        return redirect(url_for("list_checkpoints"))
+    return render_template("add_checkpoint.html")
+
 
 @app.route("/grade_checkpoint", methods=["GET", "POST"])
 def grade_checkpoint():

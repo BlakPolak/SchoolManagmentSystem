@@ -384,35 +384,19 @@ class Mentor(Employee):
         submission = db.session.query(SubmissionDb).filter_by(id=submission_id).first()
         return submission
 
+    def add_checkpoint(self, name, assignment):
+        new_checkpoint = CheckpointAssignmentDb(name=name, assignment=assignment)
+        db.session.add(new_checkpoint)
+        db.session.commit()
+        students = db.session.query(UserDb).filter_by(user_type='student').all()
+        for student in students:
+            new_submission = CheckpointSubmissionDb(id_assignment=new_checkpoint.id, id_student=student.id)
+            db.session.add(new_submission)
+        db.session.commit()
+
     def get_student_checkpoint_submission(self, checkpoint_submission_id):
         submission = db.session.query(CheckpointSubmissionDb).filter_by(id=checkpoint_submission_id).first()
         return submission
-
-
-    def get_checkpoint_submissions_to_grade(self, checkpoint_assignment_id):
-        """
-        Method allows mentor to get checkpoint submmision to grade
-
-        Args:
-            checkpoint assignment id
-        Return:
-             submission list
-        """
-        submission_list = []
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("select Checkpoint_submittion.id, Checkpoint_assignment.name, user.Name, user.Surname "
-                       "from Checkpoint_submittion "
-                       "inner join User on user.ID=Checkpoint_submittion.ID_Student "
-                       "inner join Checkpoint_assignment on Checkpoint_assignment.ID=Checkpoint_submittion.ID_Assignment"
-                       " where (checkpoint_submittion.card='' or checkpoint_submittion.card is null) "
-                       "and checkpoint_submittion.id_assignment=?", (checkpoint_assignment_id,))
-        rows = cursor.fetchall()
-        if rows:
-            for row in rows:
-                submission_list.append(GradeableCheckpointSubmission(row[0], row[1], row[2], row[3]))
-        data.close()
-        return submission_list
 
 
     def grade_checkpoint_submission(self, submission_id, card):
@@ -427,8 +411,6 @@ class Mentor(Employee):
         submission = db.session.query(CheckpointSubmissionDb).filter_by(id=submission_id).first()
         submission.card = card
         db.session.commit()
-
-
 
     def grade_submission(self, submission_id, grade):
         """
@@ -613,7 +595,8 @@ class Mentor(Employee):
         Return:
              list of checkpoint submissions
         """
-        submissions = db.session.query(CheckpointSubmissionDb).filter_by(card='').all()
+        submissions = db.session.query(CheckpointSubmissionDb).\
+            filter((CheckpointSubmissionDb.card == '') | CheckpointSubmissionDb.card.is_(None)).all()
         return submissions
 
 
