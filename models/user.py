@@ -254,13 +254,7 @@ class Student(User):
             team name as list
 
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT `Team_Name` FROM `Teams` WHERE ID_Student=?", (self._id,))
-        teams = cursor.fetchall()
-        data.commit()
-        data.close()
-        team = teams[0][0]
+        team = db.session.query(TeamDb).filter_by(id_student=self._id).first()
         return team
 
     def find_students_teammates(self):
@@ -268,18 +262,10 @@ class Student(User):
         Method returns all students from the same team
 
         Return:
-            list student teammates.py
+            list student teammates
 
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT Id_Student FROM `Teams` WHERE Team_name=?", (self.find_student_team(),))
-        teammates = cursor.fetchall()
-        teammates_list = []
-        for mate in teammates:
-            teammates_list.append(mate[0])
-        data.commit()
-        data.close()
+        teammates_list = db.session.query(TeamDb).filter_by(name=self.find_student_team().name).all()
         return teammates_list
 
     def add_group_assignment(self, id_assignment, result):
@@ -290,14 +276,11 @@ class Student(User):
             teammates.py, group_submission
 
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
         submission_date = datetime.date.today()
         for teammate in self.find_students_teammates():
-            cursor.execute("INSERT INTO `Submission` (`ID_Student`, `ID_Assignment`,`Result`, `Submittion_date`) "
-                           "VALUES (?, ?, ?, ?)", (teammate, id_assignment, result, submission_date))
-        data.commit()
-        data.close()
+            submission = SubmissionDb(id_student=teammate.id_student, result=result, id_assignment=id_assignment, date=submission_date)
+            db.session.add(submission)
+            db.session.commit()
 
     def check_my_attendance(self):
         """
