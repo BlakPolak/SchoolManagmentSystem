@@ -29,10 +29,23 @@
                     {% if list_of_statistics %}
                     {% for statistic in list_of_statistics %}
                         <tr>
-                            <td>{{ statistic[0].name }}</td>
-                            <td>{{ statistic[0].surname }}</td>
-                            <td>{{ statistic[1]}}</td>
-                            <td>{{ statistic[2]|round(2) }}</td>
+                            {% if statistic[0].name %}
+                                <td>{{ statistic[0].name }}</td>
+                                <td>{{ statistic[0].surname }}</td>
+                                <td>{{ statistic[1]}}</td>
+                                {% if statistic[2] == None %}
+                                    <td>There is no grades to average</td>
+                                {% else %}
+                                    <td>{{ statistic[2]|round(2) }}</td>
+                                {% endif %}
+                            {% else %}
+                                <td>No data for creating statistics</td>
+                                <td>No data for creating statistics</td>
+                                <td>No data for creating statistics</td>
+                                <td>No data for creating statistics</td>
+                            {% endif %}
+
+
                         </tr>
                     {% endfor %}
                     {% endif %}
