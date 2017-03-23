@@ -371,27 +371,17 @@ def average_grades_manager(student_id):
 def edit_mentor(mentor_id):
     """ Edit mentors data in database """
     if request.method == "POST":
-        new_name = request.form["name"]
-        new_surname= request.form["surname"]
-        new_gender = request.form["gender"]
-        new_birthdate = request.form["birthdate"]
-        new_email = request.form["email"]
-        new_login = request.form["login"]
-        new_password = request.form["password"]
-
         mentor_to_edit = Mentor.get_mentor_by_id(mentor_id)
-
-        mentor_to_edit.name = new_name
-        mentor_to_edit.surname = new_surname
-        mentor_to_edit.gender = new_gender
-        mentor_to_edit.birth_date = new_birthdate
-        mentor_to_edit.email = new_email
-        mentor_to_edit.login = new_login
-        mentor_to_edit.password = new_password
-        mentor_to_edit.edit_mentor()
+        mentor_to_edit.name = request.form["name"]
+        mentor_to_edit.surname = request.form["surname"]
+        mentor_to_edit.gender = request.form["gender"]
+        mentor_to_edit.birth_date = request.form["birthdate"]
+        mentor_to_edit.email = request.form["email"]
+        mentor_to_edit.login = request.form["login"]
+        mentor_to_edit.password = request.form["password"]
+        db.session.commit()
         flash("Mentor updated!", "alert alert-success text-centered")
         return redirect(url_for('list_mentors'))
-
     if request.method == "GET":
         mentor_to_edit = Mentor.get_mentor_by_id(mentor_id)
         return render_template("edit_mentor.html", logged_user=g.logged_user, mentor_id=mentor_id, mentor=mentor_to_edit)
