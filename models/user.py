@@ -356,8 +356,6 @@ class Mentor(Employee):
         """
         Method allows mentor show submissions to grade
 
-        Args:
-            None
         Return:
              List of lists with submissions to grade
         """
@@ -385,6 +383,13 @@ class Mentor(Employee):
         return submission
 
     def add_checkpoint(self, name, assignment):
+        """
+        Method allows mentor add checkpoint
+
+        Args:
+            name, assignment
+
+        """
         new_checkpoint = CheckpointAssignmentDb(name=name, assignment=assignment)
         db.session.add(new_checkpoint)
         db.session.commit()
@@ -395,6 +400,14 @@ class Mentor(Employee):
         db.session.commit()
 
     def get_student_checkpoint_submission(self, checkpoint_submission_id):
+        """
+        Method allows student submit assignment
+
+        Args:
+            checkpoint_submission_id
+        Return:
+             submission
+        """
         submission = db.session.query(CheckpointSubmissionDb).filter_by(id=checkpoint_submission_id).first()
         return submission
 
@@ -465,7 +478,6 @@ class Mentor(Employee):
         student_in_team = db.session.query(TeamDb).filter_by(id_student=student_id).first()
         if student_in_team:
             db.session.delete(student_in_team)
-        # assign_student = db.session.query(TeamDb).filter_by(id_student=student_id, name=team_name).first()
         assigned_student = TeamDb(id_student=student_id, name=team_name)
         db.session.add(assigned_student)
         db.session.commit()
@@ -699,7 +711,8 @@ class Manager(Employee):
         Return:
              None
         """
-        mentor = db.session.query(UserDb).filter_by(id=mentor_id).first()
+        mentor = db.session.query(UserDb)\
+            .filter_by(id=mentor_id).first()
         db.session.delete(mentor)
         db.session.commit()
 
@@ -729,7 +742,8 @@ class Manager(Employee):
         checkpoint_stats_list = []
         cards_statistics = {}
         mentors = []
-        cards = db.session.query(UserDb.name, UserDb.surname, CheckpointSubmissionDb.card).filter_by(id=CheckpointSubmissionDb.id_mentor).all()
+        cards = db.session.query(UserDb.name, UserDb.surname, CheckpointSubmissionDb.card)\
+            .filter_by(id=CheckpointSubmissionDb.id_mentor).all()
         for row in cards:
             name_surname = str(row[0]) + ' ' + str(row[1])
             cards_statistics[name_surname] = [0, 0, 0] #Cards [red,yellow,green] # row[1]- surname change for name,surname or ID_Mentor
@@ -761,7 +775,8 @@ class Manager(Employee):
             list with grade statistics
 
         """
-        grades = db.session.query(UserDb, func.count(SubmissionDb.grade), func.avg(SubmissionDb.grade)).filter_by(id=SubmissionDb.id_mentor).all()
+        grades = db.session.query(UserDb, func.count(SubmissionDb.grade), func.avg(SubmissionDb.grade))\
+            .filter_by(id=SubmissionDb.id_mentor).all()
         return grades
 
 
@@ -777,5 +792,6 @@ class Manager(Employee):
             list with grade statistics
 
         """
-        grades = db.session.query(UserDb, func.count(SubmissionDb.grade), func.avg(SubmissionDb.grade)).filter(UserDb.id == SubmissionDb.id_student, UserDb.id == student_id).all()
+        grades = db.session.query(UserDb, func.count(SubmissionDb.grade), func.avg(SubmissionDb.grade))\
+            .filter(UserDb.id == SubmissionDb.id_student, UserDb.id == student_id).all()
         return grades
