@@ -546,8 +546,6 @@ class Mentor(Employee):
 
         team_list = db.session.query(TeamDb, UserDb).outerjoin(UserDb, UserDb.id == TeamDb.id_student)\
             .order_by(TeamDb.name).all()
-        # team_list = db.session.query(TeamDb).all()
-        print(team_list)
         return team_list
 
 
@@ -564,31 +562,15 @@ class Mentor(Employee):
             .order_by(TeamDb.name).group_by(TeamDb.name).all()
         return team_list
 
-        # team_list = []
-        # data = sqlite3.connect(User.path)
-        # cursor = data.cursor()
-        # cursor.execute("SELECT user.ID, team_name, name, surname FROM teams "
-        #                "LEFT JOIN user ON teams.id_student=user.id group by Team_Name order by team_name")
-        # teams = cursor.fetchall()
-        # for team in teams:
-        #     team_list.append(Team(team[0], team[1], team[2], team[3]))
-        # data.close()
+    def add_to_team(self, student_id, team_name):
 
-
-    def add_to_team(self):
-        pass
-
-
-
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT * FROM teams WHERE ID_Student=?", (student_id,)) # check if student already is in team
-        team_row = cursor.fetchone()
-        if team_row:
-            cursor.execute("DELETE FROM teams WHERE ID_Student=?", (student_id,))
-        cursor.execute("INSERT INTO teams (ID_Student, Team_name) VALUES (?, ?)", (student_id, team_name))
-        data.commit()
-        data.close()
+        student_in_team = db.session.query(TeamDb).filter_by(id_student=student_id).first()
+        if student_in_team:
+            db.session.delete(student_in_team)
+        assign_student = db.session.query(TeamDb).filter_by(id_student=student_id, name=team_name).first()
+        db.session.add(assign_student)
+        db.session.commit()
+        return assign_student
 
     def add_team(self, name):
         """
