@@ -243,30 +243,29 @@ def grade_submission():
         return redirect(url_for("list_submissions"))
     submission_id = request.args["submission_id"]
     submission = g.logged_user.get_submission(submission_id)
-    assignment = g.logged_user.get_assignment(submission.assignment)
+    assignment = g.logged_user.get_assignment(submission.id_assignment)
     return render_template("grade_submission.html", submission=submission, assignment=assignment)
 
 
 @app.route("/list_checkpoints")
 def list_checkpoints():
     """ List all checkpoint assignment from database """
-    checkpoints_for_submission = g.logged_user.get_checkpoints_for_submission()
-    return render_template("list_checkpoints_for_submission.html", checkpoints_for_submission=checkpoints_for_submission)
+    checkpoints = g.logged_user.get_checkpoints_for_submission()
+    return render_template("list_checkpoints_for_submission.html", checkpoints=checkpoints)
 
 
 @app.route("/grade_checkpoint", methods=["GET", "POST"])
 def grade_checkpoint():
     """ Grade checkpoint submissions """
     if request.method == "POST":
-        list_of_notes = []
-        for key, value in request.form.items():
-            list_of_notes.append([key, value])
-            g.logged_user.grade_checkpoint_submission(list_of_notes)
+        submission_id = request.form['submission_id']
+        card = request.form['card']
+        g.logged_user.grade_checkpoint_submission(submission_id, card)
         flash("Checkpoint submissions were graded", "alert alert-success text-centered")
         return redirect(url_for("list_checkpoints"))
-    checkpoint_assignment_id = request.args["checkpoint_assignment_id"]
-    submissions_for_grade = g.logged_user.get_checkpoint_submissions_to_grade(checkpoint_assignment_id)
-    return render_template("grade_checkpoint_submissions.html", submissions_for_grade=submissions_for_grade)
+    checkpoint_submission_id = request.args["checkpoint_submission_id"]
+    submission = g.logged_user.get_student_checkpoint_submission(checkpoint_submission_id)
+    return render_template("grade_checkpoint_submissions.html", submission=submission)
 
 
 @app.route("/view_student_details")
@@ -312,8 +311,10 @@ def edit_assignment():
         max_points = request.form["max_points"]
         delivery_date = request.form["date"]
         content = request.form["content"]
-        g.logged_user.update_assignment(assignment_id, name, type, max_points, delivery_date, content)
-        flash("Assignment was upadated", "alert alert-success text-centered")
+        if g.logged_user.update_assignment(assignment_id, name, type, max_points, delivery_date, content):
+            flash("Assignment was updated", "alert alert-success text-centered")
+        else:
+            flash("Error during updating assignment", "alert alert-fail text-centered")
         return redirect(url_for("list_mentors_assignments"))
     assignment_id = request.args["assignment_id"]
     assignment = g.logged_user.get_assignment(assignment_id)
@@ -338,8 +339,10 @@ def add_new_assignment():
         max_points = request.form["max_points"]
         delivery_date = request.form["date"]
         content = request.form["content"]
-        g.logged_user.add_new_assignment(name, type, max_points, delivery_date, content)
-        return redirect(url_for("list_mentors_assignments"))
+        if g.logged_user.add_new_assignment(name, type, max_points, delivery_date, content):
+            return redirect(url_for("list_mentors_assignments"))
+        else:
+            flash("Adding assignment has failed", "alert alert-fail text-centered")
     return render_template("add_new_assignment.html")
 
 

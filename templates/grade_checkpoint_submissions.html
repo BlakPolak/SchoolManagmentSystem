@@ -1,42 +1,24 @@
 {% extends "base.html" %}
 {% block title %}
-    Grade checkpoint submissions
-{% endblock %}
-{% block navbar %}
-    {{ super() }}
+    Grade submission
 {% endblock %}
 {% block content %}
     {{ super() }}
-        <form method="post">
-            <table class="table">
-                <thead>
-                    <tr><td><h2>Grade checkpoint submissions</h2></td></tr>
-                    <tr>
-                        <th>Checkpoint name</th>
-                        <th>Student name</th>
-                        <th>Student surname</th>
-                        <th>Grade</th>
-                    </tr>
-                </thead>
-                    <tbody>
-                    {% if submissions_for_grade %}
-                    {% for submission in submissions_for_grade %}
-                        <tr>
-                            <td>{{ submission.checkpoint_assignment_name }}</td>
-                            <td>{{ submission.student_name }}</td>
-                            <td>{{ submission.student_surname }}</td>
-                            <td>
-                                <select name="{{ submission.checkpoint_submission_id }}">
-                                    <option>green</option>
-                                    <option>yellow</option>
-                                    <option>red</option>
-                                </select>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    {% endif %}
-                    </tbody>
-            </table>
-        <input class="btn btn-default btn-lg btn-block" type="submit" value="Grade submissions">
-        </form>
+    <form method="post">
+        <table class="table">
+            <tr><td colspan="2"><h2>Checkpoint name: <strong>{{ submission.submissions.name }}</strong></h2></td></tr>
+            <tr><td>Student</td><td>{{ submission.student.name }} {{ submission.student.surname }}</td></tr>
+            <tr>
+                <td>
+                    <select name="card">
+                        <option>green</option>
+                        <option>yellow</option>
+                        <option>red</option>
+                    </select>
+                </td>
+            </tr>
+            <input type="hidden" name="submission_id" value="{{ submission.id }}">
+            <tr><td><button type="submit" class="btn btn-default btn-lg btn-block">Submit</button></td></tr>
+        </table>
+    </form>
 {% endblock %}
