@@ -95,18 +95,19 @@ class User:
                 None: if authentication fails
         """
         user = db.session.query(UserDb).filter_by(login=login, password=password).first()
-        if user.user_type == "student":
-            return Student(user.id, user.name, user.surname, user.gender, user.birth_date, user.email, user.login,
-                           user.password, user.user_type)
-        elif user.user_type == "manager":
-            return Manager(user.id, user.name, user.surname, user.gender, user.birth_date, user.email, user.login,
-                           user.password, user.user_type)
-        elif user.user_type == "employee":
-            return Employee(user.id, user.name, user.surname, user.gender, user.birth_date, user.email, user.login,
-                           user.password, user.user_type)
-        elif user.user_type == "mentor":
-            return Mentor(user.id, user.name, user.surname, user.gender, user.birth_date, user.email, user.login,
-                           user.password, user.user_type)
+        if user:
+            if user.user_type == "student":
+                return Student(user.id, user.name, user.surname, user.gender, user.birth_date, user.email, user.login,
+                               user.password, user.user_type)
+            elif user.user_type == "manager":
+                return Manager(user.id, user.name, user.surname, user.gender, user.birth_date, user.email, user.login,
+                               user.password, user.user_type)
+            elif user.user_type == "employee":
+                return Employee(user.id, user.name, user.surname, user.gender, user.birth_date, user.email, user.login,
+                               user.password, user.user_type)
+            elif user.user_type == "mentor":
+                return Mentor(user.id, user.name, user.surname, user.gender, user.birth_date, user.email, user.login,
+                               user.password, user.user_type)
         else:
             return None
 
@@ -338,6 +339,11 @@ class Mentor(Employee):
                                 email=email, login=login, password=password, user_type="student")
         db.session.add(new_student)
         db.session.commit()
+        assignments_ids = db.session.query(CheckpointAssignmentDb.id).all()
+        for id in assignments_ids:
+            new_submission = CheckpointSubmissionDb(id_student=new_student.id, id_assignment=id[0], card='')
+            db.session.add(new_submission)
+        db.session.commit()
         return new_student
 
     def remove_student(self, student_id):
@@ -505,9 +511,8 @@ class Mentor(Employee):
              None
         """
 
-        team_list = db.session.query(TeamDb, UserDb).join(UserDb, UserDb.id == TeamDb.id_student).all()
-        # team_list = db.session.query(TeamDb).all()
-        print(team_list)
+        team_list = db.session.query(TeamDb, UserDb).outerjoin(UserDb, UserDb.id == TeamDb.id_student)\
+            .order_by(TeamDb.name).all()
         return team_list
 
 
@@ -520,41 +525,34 @@ class Mentor(Employee):
         Return:
              None
         """
-        team_list = []
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        # cursor.execute("SELECT user.id, team_name, name, surname FROM teams "
-        #                "LEFT JOIN user ON teams.id_student=user.id ORDER BY team_name")
-        cursor.execute("SELECT user.ID, team_name, name, surname FROM teams "
-                       "LEFT JOIN user ON teams.id_student=user.id group by Team_Name order by team_name")
-        teams = cursor.fetchall()
-        for team in teams:
-            team_list.append(Team(team[0], team[1], team[2], team[3]))
-        data.close()
+        team_list = db.session.query(TeamDb, UserDb).join(UserDb, UserDb.id == TeamDb.id_student)\
+            .order_by(TeamDb.name).group_by(TeamDb.name).all()
         return team_list
 
     def add_to_team(self, student_id, team_name):
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT * FROM teams WHERE ID_Student=?", (student_id,)) # check if student already is in team
-        team_row = cursor.fetchone()
-        if team_row:
-            cursor.execute("DELETE FROM teams WHERE ID_Student=?", (student_id,))
-        cursor.execute("INSERT INTO teams (ID_Student, Team_name) VALUES (?, ?)", (student_id, team_name))
-        data.commit()
-        data.close()
 
-    def add_team(self, new_team):
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT * FROM teams WHERE Team_Name=?", (new_team,)) # check if student already is in team
-        team_row = cursor.fetchone()
-        if team_row:
-            data.close()
-            return None
-        cursor.execute("INSERT INTO teams (Team_name, ID_Student) VALUES (?, ?)", (new_team, "<empty>"))
-        data.commit()
-        data.close()
+        student_in_team = db.session.query(TeamDb).filter_by(id_student=student_id).first()
+        if student_in_team:
+            db.session.delete(student_in_team)
+        assign_student = db.session.query(TeamDb).filter_by(id_student=student_id, name=team_name).first()
+        db.session.add(assign_student)
+        db.session.commit()
+        return assign_student
+
+    def add_team(self, name):
+        """
+         Method allows mentor to add new team
+
+         Args:
+             name
+         Return:
+             None
+         """
+
+        new_team = TeamDb(name=name)
+        db.session.add(new_team)
+        db.session.commit()
+        return new_team
 
     def remove_team(self, team_name):
         """
@@ -565,11 +563,11 @@ class Mentor(Employee):
         Return:
             None
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("delete FROM teams WHERE Team_Name=?", (team_name,))
-        data.commit()
-        data.close()
+
+        team_name = db.session.query(TeamDb).filter_by(name=team_name).first()
+        db.session.delete(team_name)
+        db.session.commit()
+
 
     def get_assignments(self):
         """
