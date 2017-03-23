@@ -257,19 +257,11 @@ class Student(User):
             percent of attendance
 
         """
-        student_id = self._id
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT COUNT(Presence) FROM `Attendance` WHERE ID_Student=?"
-                       "AND `Presence`= 0", (student_id,))
-        presence = cursor.fetchall()
-        number_of_presence = float(presence[0][0])
-        cursor.execute("SELECT COUNT(Presence) FROM `Attendance`")
-        number_of_days = cursor.fetchall()
-        days = float(number_of_days[0][0])
-        attendance_in_percent = (number_of_presence / days) * 100
-        data.commit()
-        data.close()
+        presence = db.session.query(func.count(AttendanceDb.presence)).filter(AttendanceDb.id_student == self._id, AttendanceDb.presence == 1).all()
+        days = db.session.query(func.count(AttendanceDb.presence)).filter(AttendanceDb.id_student == self._id).all()
+        presence = presence[0][0]
+        days = days[0][0]
+        attendance_in_percent = (presence/days)*100
         return round(attendance_in_percent)
 
 
