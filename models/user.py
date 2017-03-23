@@ -95,18 +95,19 @@ class User:
                 None: if authentication fails
         """
         user = db.session.query(UserDb).filter_by(login=login, password=password).first()
-        if user.user_type == "student":
-            return Student(user.id, user.name, user.surname, user.gender, user.birth_date, user.email, user.login,
-                           user.password, user.user_type)
-        elif user.user_type == "manager":
-            return Manager(user.id, user.name, user.surname, user.gender, user.birth_date, user.email, user.login,
-                           user.password, user.user_type)
-        elif user.user_type == "employee":
-            return Employee(user.id, user.name, user.surname, user.gender, user.birth_date, user.email, user.login,
-                           user.password, user.user_type)
-        elif user.user_type == "mentor":
-            return Mentor(user.id, user.name, user.surname, user.gender, user.birth_date, user.email, user.login,
-                           user.password, user.user_type)
+        if user:
+            if user.user_type == "student":
+                return Student(user.id, user.name, user.surname, user.gender, user.birth_date, user.email, user.login,
+                               user.password, user.user_type)
+            elif user.user_type == "manager":
+                return Manager(user.id, user.name, user.surname, user.gender, user.birth_date, user.email, user.login,
+                               user.password, user.user_type)
+            elif user.user_type == "employee":
+                return Employee(user.id, user.name, user.surname, user.gender, user.birth_date, user.email, user.login,
+                               user.password, user.user_type)
+            elif user.user_type == "mentor":
+                return Mentor(user.id, user.name, user.surname, user.gender, user.birth_date, user.email, user.login,
+                               user.password, user.user_type)
         else:
             return None
 
@@ -358,6 +359,11 @@ class Mentor(Employee):
         new_student = UserDb(name=name, surname=surname, gender=gender, birth_date=birthdate,
                                 email=email, login=login, password=password, user_type="student")
         db.session.add(new_student)
+        db.session.commit()
+        assignments_ids = db.session.query(CheckpointAssignmentDb.id).all()
+        for id in assignments_ids:
+            new_submission = CheckpointSubmissionDb(id_student=new_student.id, id_assignment=id[0], card='')
+            db.session.add(new_submission)
         db.session.commit()
         return new_student
 

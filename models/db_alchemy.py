@@ -43,7 +43,7 @@ class SubmissionDb(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_student = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
     id_assignment = db.Column(db.Integer, db.ForeignKey('Assignment.id'), nullable=False)
-    id_mentor = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
+    id_mentor = db.Column(db.Integer, db.ForeignKey('User.id'))
     result = db.Column(db.String(200))
     grade = db.Column(db.Integer)
     date = db.Column(db.String(10))
