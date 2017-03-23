@@ -27,7 +27,7 @@
                             <td>-</td>
                             <td>-</td>
                             <td>-</td>
-                            <td><a class="btn btn-default" href="{{ url_for("remove_team", team_name=team[0].name) }}" role="button">Remove</a></td>
+                            <td><a class="btn btn-default" href="{{ url_for("remove_team", team_name=team[0].name) }}" role="button">Remove team</a></td>
                         </tr>
                         {% else %}
                         <tr>
@@ -35,7 +35,7 @@
                             <td>{{ team[1].id }}</td>
                             <td>{{ team[1].name }}</td>
                             <td>{{ team[1].surname }}</td>
-                            <td><a class="btn btn-default" href="{{ url_for("remove_team", team_name=team[0].name) }}" role="button">Remove</a></td>
+                            <td><a class="btn btn-default" href="{{ url_for("remove_student_from_team", student_id=team[1].id) }}" role="button">Remove student from team</a></td>
                         </tr>
                         {% endif %}
                     {% endfor %}

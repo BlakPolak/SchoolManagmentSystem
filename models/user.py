@@ -15,6 +15,7 @@ from models.db_alchemy import *
 from sqlalchemy.sql import func
 from main import db
 from sqlalchemy.sql import func
+from sqlalchemy import and_
 
 
 
@@ -123,8 +124,6 @@ class Employee(User):
         return student
 
 
-
-
 class Student(User):
     """Class creates object student"""
     def __init__(self, _id, name, surname, gender, birth_date, email, login, password, user_type):
@@ -151,7 +150,9 @@ class Student(User):
             table submitted assignment with grades
 
         """
-        student_all_grades = db.session.query(AssignmentDb, SubmissionDb).join(SubmissionDb, SubmissionDb.id_assignment == AssignmentDb.id).filter(SubmissionDb.id_student == self._id).all()
+        student_all_grades = db.session.query(AssignmentDb, SubmissionDb)\
+            .join(SubmissionDb, SubmissionDb.id_assignment == AssignmentDb.id)\
+            .filter(SubmissionDb.id_student == self._id).all()
         return student_all_grades
 
     def list_assignments_to_submit(self):
@@ -162,21 +163,11 @@ class Student(User):
             list not submitted assignment
 
         """
-        assignments = db.session.query(SubmissionDb).filter(self._id.notin_(SubmissionDb.id_student), (SubmissionDb.result == '') | (SubmissionDb.result.is_(None))).all()
+        assignments = db.session.query(AssignmentDb)\
+            .outerjoin(SubmissionDb)\
+            .filter(AssignmentDb.type == 'individual')\
+            .filter(SubmissionDb.id_assignment==None).all()
         return assignments
-
-    # def submit_assignment(self, result, id_assignment):
-    #     """
-    #     Method allows student to submit assignment
-    #
-    #     Args:
-    #         assignment, result
-    #
-    #     """
-    #
-    #     submission = SubmissionDb(id_student=self._id, result=result, id_assignment=id_assignment)
-    #     db.session.add(submission)
-    #     db.session.commit()
 
     def submit_assignment(self, result, id_assignment):
         """
@@ -187,11 +178,11 @@ class Student(User):
 
         """
 
-        submission = db.session.query(SubmissionDb).filter_by(id_student=self._id, id_assignment=id_assignment).first()
+        submission = db.session.query(SubmissionDb)\
+            .filter_by(id_student=self._id, id_assignment=id_assignment).first()
         submission.result = result
         db.session.add(submission)
         db.session.commit()
-
 
     def list_group_assignment(self):
         """
@@ -201,23 +192,10 @@ class Student(User):
             list assignment for group
 
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("select * from assignment where ID not in "
-                       "(select id_assignment from submission where id_student=?) And type='group';", (self._id,))
-        assignments = cursor.fetchall()
-        group_assignments_to_submit = []
-        for row in assignments:
-            assignment_id = row[0]
-            assignment_name = row[1]
-            assignment_type = row[2]
-            assignment_max_points = row[3]
-            assignment_delivery_date = row[4]
-            assignment_content = row[5]
-            assignment = Assignment(assignment_id, assignment_name, assignment_type, assignment_max_points,
-                                    assignment_delivery_date, assignment_content)
-            group_assignments_to_submit.append(assignment)
-        data.close()
+        group_assignments_to_submit = db.session.query(AssignmentDb) \
+            .outerjoin(SubmissionDb) \
+            .filter(AssignmentDb.type == 'group') \
+            .filter(SubmissionDb.id_assignment == None).all()
         return group_assignments_to_submit
 
     def find_student_team(self):
@@ -228,7 +206,8 @@ class Student(User):
             team name as list
 
         """
-        team = db.session.query(TeamDb).filter_by(id_student=self._id).first()
+        team = db.session.query(TeamDb)\
+            .filter_by(id_student=self._id).first()
         return team
 
     def find_students_teammates(self):
@@ -239,7 +218,8 @@ class Student(User):
             list student teammates
 
         """
-        teammates_list = db.session.query(TeamDb).filter_by(name=self.find_student_team().name).all()
+        teammates_list = db.session.query(TeamDb)\
+            .filter_by(name=self.find_student_team().name).all()
         return teammates_list
 
     def add_group_assignment(self, id_assignment, result):
@@ -264,19 +244,11 @@ class Student(User):
             percent of attendance
 
         """
-        student_id = self._id
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT COUNT(Presence) FROM `Attendance` WHERE ID_Student=?"
-                       "AND `Presence`= 0", (student_id,))
-        presence = cursor.fetchall()
-        number_of_presence = float(presence[0][0])
-        cursor.execute("SELECT COUNT(Presence) FROM `Attendance`")
-        number_of_days = cursor.fetchall()
-        days = float(number_of_days[0][0])
-        attendance_in_percent = (number_of_presence / days) * 100
-        data.commit()
-        data.close()
+        presence = db.session.query(func.count(AttendanceDb.presence)).filter(AttendanceDb.id_student == self._id, AttendanceDb.presence == 1).all()
+        days = db.session.query(func.count(AttendanceDb.presence)).filter(AttendanceDb.id_student == self._id).all()
+        presence = presence[0][0]
+        days = days[0][0]
+        attendance_in_percent = (presence/days)*100
         return round(attendance_in_percent)
 
 
@@ -430,32 +402,6 @@ class Mentor(Employee):
         return submission
 
 
-    def get_checkpoint_submissions_to_grade(self, checkpoint_assignment_id):
-        """
-        Method allows mentor to get checkpoint submmision to grade
-
-        Args:
-            checkpoint assignment id
-        Return:
-             submission list
-        """
-        submission_list = []
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("select Checkpoint_submittion.id, Checkpoint_assignment.name, user.Name, user.Surname "
-                       "from Checkpoint_submittion "
-                       "inner join User on user.ID=Checkpoint_submittion.ID_Student "
-                       "inner join Checkpoint_assignment on Checkpoint_assignment.ID=Checkpoint_submittion.ID_Assignment"
-                       " where (checkpoint_submittion.card='' or checkpoint_submittion.card is null) "
-                       "and checkpoint_submittion.id_assignment=?", (checkpoint_assignment_id,))
-        rows = cursor.fetchall()
-        if rows:
-            for row in rows:
-                submission_list.append(GradeableCheckpointSubmission(row[0], row[1], row[2], row[3]))
-        data.close()
-        return submission_list
-
-
     def grade_checkpoint_submission(self, submission_id, card):
         """
         Method allows mentor to grade checkpoint submission
@@ -468,8 +414,6 @@ class Mentor(Employee):
         submission = db.session.query(CheckpointSubmissionDb).filter_by(id=submission_id).first()
         submission.card = card
         db.session.commit()
-
-
 
     def grade_submission(self, submission_id, grade):
         """
@@ -513,7 +457,14 @@ class Mentor(Employee):
         return team_list
 
     def add_to_team(self, student_id, team_name):
+        """
+        Method allows mentor assign student to team
 
+        Args:
+            None
+        Return:
+             None
+        """
         student_in_team = db.session.query(TeamDb).filter_by(id_student=student_id).first()
         if student_in_team:
             db.session.delete(student_in_team)
@@ -538,6 +489,8 @@ class Mentor(Employee):
         db.session.commit()
         return new_team
 
+
+
     def remove_team(self, team_name):
         """
         Method allows mentor to remove team
@@ -548,8 +501,20 @@ class Mentor(Employee):
             None
         """
 
-        team_name = db.session.query(TeamDb).filter_by(name=team_name).first()
-        db.session.delete(team_name)
+        db.session.query(TeamDb).filter_by(name=team_name).delete()
+        db.session.commit()
+
+
+    def remove_student_from_team(self, student_id):
+        """
+        Method allows mentor to remove team
+
+        Args:
+            team name
+        Return:
+            None
+        """
+        db.session.query(TeamDb).filter_by(id_student=student_id).delete()
         db.session.commit()
 
 

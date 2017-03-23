@@ -20,9 +20,9 @@
 
                     {% for student in list_of_students %}
                         <tr>
-                            <td>{{ student._id }}</td>
+                            <td>{{ student.id }}</td>
                             <td>{{ student.name }} {{ student.surname }}</td>
-                            <td><a class="btn btn-default" href="{{ url_for ('student_details_employee', student_id=student._id) }}" role="button"> Details</a></td>
+                            <td><a class="btn btn-default" href="{{ url_for ('student_details_employee', student_id=student.id) }}" role="button"> Details</a></td>
                         </tr>
                     {% endfor %}
                   </tbody>

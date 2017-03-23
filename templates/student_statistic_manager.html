@@ -24,8 +24,11 @@
 
                             <tr>
                                 <td> Number of Grades: {{ stats[0][1] }}</td>
-                                <td> Average Grade: {{ stats[0][2]}}</td>
-
+                                {% if stats[0][2] == None %}
+                                    <td>Average Grade: {{ 'There is no grades to average'}}</td>
+                                {% else %}
+                                    <td>Average Grade: {{ stats[0][2]|round(2) }}</td>
+                                {% endif %}
                             </tr>
 
                         </tbody>
