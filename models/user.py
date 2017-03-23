@@ -801,24 +801,8 @@ class Mentor(Employee):
         print()
         return student_statistics
 
-    def edit_mentor(self):
-        """
-        Method allows manager to edit mentor specific data
-
-        Return:
-             None
-        """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("UPDATE `User` SET `Name`=?, `Surname`=?, `Gender`=?, "
-                       "`Birth_date`=?,`Email`=?, `Login`=?, `Password`=?"
-                       " WHERE `ID`=?",
-                       (self.name, self.surname, self.gender, self.birth_date, self.email, self.login, self.password, self._id))
-        data.commit()
-        data.close()
-
-    @classmethod
-    def get_mentor_by_id(cls, id):
+    @staticmethod
+    def get_mentor_by_id(id):
         """
         Method return mentor by id
 
@@ -827,13 +811,10 @@ class Mentor(Employee):
         Return:
              object Mentor
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT * FROM `User` WHERE ID = ?;", (id,))
-        mentor = cursor.fetchone()  # jak nie będzie działało to może fetchall i wtedy row = mentor[0]
-        if mentor:
-            return cls(mentor[0], mentor[1], mentor[2], mentor[3], mentor[4],
-                       mentor[5], mentor[6], mentor[7], mentor[8])
+
+        mentor = db.session.query(UserDb).filter_by(id=id).first()
+        return mentor
+
 
 
 class Manager(Employee):

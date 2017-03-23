@@ -11,7 +11,7 @@
             <h2>Edit mentors data</h2>
             <hr>
         </div>
-        <form name="edit_mentor"  action="/edit_mentor/{{mentor._id}}" method="POST">
+        <form name="edit_mentor"  action="/edit_mentor/{{mentor.id}}" method="POST">
              <div class="form-group">
                 <label>Name</label>
                 <input type="text" name = "name" class="form-control" value="{{ mentor.name }}" required>
