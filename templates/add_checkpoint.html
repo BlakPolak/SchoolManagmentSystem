@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}
+    Add new checkpoint
+{% endblock %}
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+    {{ super() }}
+    <form method="post">
+    <table class="table">
+        <tr><td>
+        <h2>Add new checkpoint</h2>
+        </td>
+        </tr>
+        <tr>
+            <td>
+             <label>Name
+                 <input type="text" name="name" size="35" class="form-control" placeholder="Checkpoint name" required>
+             </label>
+            </td>
+        <tr>
+            <td>
+             <label>Assignment
+                 <input type="text" name="assignment" size="35" class="form-control" placeholder="Checkpoint assignment" required>
+             </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input class="btn btn-default btn-lg btn-block" type="submit" value="Add Checkpoint">
+            </td>
+        </tr>
+    </table>
+    </form>
+{% endblock %}

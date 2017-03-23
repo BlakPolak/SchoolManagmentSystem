@@ -162,27 +162,7 @@ class Student(User):
             list not submitted assignment
 
         """
-        assignments = db.session.query(AssignmentDb).filter(AssignmentDb.id == SubmissionDb.id_assignment,
-                                                            AssignmentDb.type == 'individual',
-                                                            (SubmissionDb.result == '') | (SubmissionDb.result.is_(None))).all()
-        print()
-        # data = sqlite3.connect(User.path)
-        # cursor = data.cursor()
-        # db.session.query()
-        # cursor.execute("select * from assignment where ID not in "
-        #                "(select id_assignment from submission where id_student=?) AND type='individual';", (self._id,))
-        # assignments = cursor.fetchall()
-        # assignments_to_submit = []
-        # for row in assignments:
-        #     assignment_id = row[0]
-        #     assignment_name = row[1]
-        #     assignment_type = row[2]
-        #     assignment_max_points = row[3]
-        #     assignment_delivery_date = row[4]
-        #     assignment_content = row[5]
-        #     assignment = Assignment(assignment_id, assignment_name, assignment_type, assignment_max_points, assignment_delivery_date, assignment_content)
-        #     assignments_to_submit.append(assignment)
-        # data.close()
+        assignments = db.session.query(SubmissionDb).filter(self._id.notin_(SubmissionDb.id_student), (SubmissionDb.result == '') | (SubmissionDb.result.is_(None))).all()
         return assignments
 
     # def submit_assignment(self, result, id_assignment):
@@ -435,6 +415,16 @@ class Mentor(Employee):
         submission = db.session.query(SubmissionDb).filter_by(id=submission_id).first()
         return submission
 
+    def add_checkpoint(self, name, assignment):
+        new_checkpoint = CheckpointAssignmentDb(name=name, assignment=assignment)
+        db.session.add(new_checkpoint)
+        db.session.commit()
+        students = db.session.query(UserDb).filter_by(user_type='student').all()
+        for student in students:
+            new_submission = CheckpointSubmissionDb(id_assignment=new_checkpoint.id, id_student=student.id)
+            db.session.add(new_submission)
+        db.session.commit()
+
     def get_student_checkpoint_submission(self, checkpoint_submission_id):
         submission = db.session.query(CheckpointSubmissionDb).filter_by(id=checkpoint_submission_id).first()
         return submission
@@ -643,7 +633,8 @@ class Mentor(Employee):
         Return:
              list of checkpoint submissions
         """
-        submissions = db.session.query(CheckpointSubmissionDb).filter_by(card='').all()
+        submissions = db.session.query(CheckpointSubmissionDb).\
+            filter((CheckpointSubmissionDb.card == '') | CheckpointSubmissionDb.card.is_(None)).all()
         return submissions
 
 
