@@ -15,7 +15,7 @@ class AttendanceDb(db.Model):
     __tablename__ = 'Attendance'
 
     id = db.Column(db.Integer, primary_key=True)
-    id_student = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    id_student = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
     date = db.Column(db.String(10), nullable=False)
     presence = db.Column(db.String(1), nullable=False)
 
@@ -80,3 +80,4 @@ class UserDb(db.Model):
     mentor_submission = db.relationship('SubmissionDb', backref='mentor_submission_ref', lazy="dynamic",
                              foreign_keys='SubmissionDb.id_mentor')
     teams = db.relationship('TeamDb', backref='teams', cascade='all, delete', lazy='dynamic')
+    attendance = db.relationship('AttendanceDb', backref='attendance', lazy='dynamic')

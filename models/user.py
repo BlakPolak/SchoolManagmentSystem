@@ -385,7 +385,6 @@ class Mentor(Employee):
             True if attendance checked first time today
             False if attendance already checked today
         """
-        data = sqlite3.connect(User.path)
         for index, item in enumerate(attendance_list):
             if item[1] == "present":
                 attendance_list[index][1] = 1
@@ -393,15 +392,14 @@ class Mentor(Employee):
                 attendance_list[index][1] = 0
             else:
                 attendance_list[index][1] = 2
-        cursor = data.cursor()
-        cursor.execute("select * from Attendance where date=?", (str(datetime.date.today()),))
-        rows = cursor.fetchall()
-        if len(rows) > 0:
+        today = datetime.date.today()
+        todays_attendance = db.session.query(AttendanceDb).filter_by(date=today).all()
+        if todays_attendance:
             return False
         for row in attendance_list:
-            cursor.execute("insert into Attendance (ID_Student, Date, Presence) values(?, ?, ?)", (row[0], str(datetime.date.today()), row[1]))
-        data.commit()
-        data.close()
+            att = AttendanceDb(id_student=row[0], date=today, presence=row[1])
+            db.session.add(att)
+        db.session.commit()
         return True
 
 

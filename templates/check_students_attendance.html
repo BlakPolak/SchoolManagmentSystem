@@ -25,13 +25,13 @@
                     <tbody>
                     {% for student in list_of_students %}
                         <tr>
-                            <td>{{ student._id }}</td>
+                            <td>{{ student.id }}</td>
                             <td>{{ student.name }} {{ student.surname }}</td>
                             <td>
                                 <label>Status<br>
-                                    <input type="radio" name="{{ student._id }}" value="present" checked="checked"> Present<br>
-                                    <input type="radio" name="{{ student._id }}" value="absent"> Absent<br>
-                                    <input type="radio" name="{{ student._id }}" value="late"> Late
+                                    <input type="radio" name="{{ student.id }}" value="present" checked="checked"> Present<br>
+                                    <input type="radio" name="{{ student.id }}" value="absent"> Absent<br>
+                                    <input type="radio" name="{{ student.id }}" value="late"> Late
                                 </label>
                             </td>
                         </tr>
