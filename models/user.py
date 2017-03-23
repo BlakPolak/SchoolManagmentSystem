@@ -177,10 +177,7 @@ class Student(User):
             assignment, result
 
         """
-
-        submission = db.session.query(SubmissionDb)\
-            .filter_by(id_student=self._id, id_assignment=id_assignment).first()
-        submission.result = result
+        submission = SubmissionDb(id_student=self._id, result=result, id_assignment=id_assignment)
         db.session.add(submission)
         db.session.commit()
 
