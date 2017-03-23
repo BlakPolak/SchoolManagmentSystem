@@ -192,23 +192,10 @@ class Student(User):
             list assignment for group
 
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("select * from assignment where ID not in "
-                       "(select id_assignment from submission where id_student=?) And type='group';", (self._id,))
-        assignments = cursor.fetchall()
-        group_assignments_to_submit = []
-        for row in assignments:
-            assignment_id = row[0]
-            assignment_name = row[1]
-            assignment_type = row[2]
-            assignment_max_points = row[3]
-            assignment_delivery_date = row[4]
-            assignment_content = row[5]
-            assignment = Assignment(assignment_id, assignment_name, assignment_type, assignment_max_points,
-                                    assignment_delivery_date, assignment_content)
-            group_assignments_to_submit.append(assignment)
-        data.close()
+        group_assignments_to_submit = db.session.query(AssignmentDb) \
+            .outerjoin(SubmissionDb) \
+            .filter(AssignmentDb.type == 'group') \
+            .filter(SubmissionDb.id_assignment == None).all()
         return group_assignments_to_submit
 
     def find_student_team(self):
