@@ -41,8 +41,9 @@
                     {% endfor %}
                     <tr><td colspan="8"><a class="btn btn-default btn-lg btn-block" href="{{ url_for("add_new_assignment") }}" role="button">Add new assignment</a></td></tr>
                     </tbody>
-                    {% else %}
+                {% else %}
                     <tr><td><h2>No assignments to display</h2></td></tr>
+                    <tr><td colspan="8"><a class="btn btn-default btn-lg btn-block" href="{{ url_for("add_new_assignment") }}" role="button">Add new assignment</a></td></tr>
                 {% endif %}
             </table>
         </form>

@@ -220,7 +220,17 @@ def remove_team():
     """ Remove selected by id team from database """
     team_name = request.args["team_name"]
     g.logged_user.remove_team(team_name)
-    flash("Team was removed", "alert alert-success text-centered")
+    flash("Team removed!", "alert alert-success text-centered")
+    return redirect(url_for("list_teams"))
+
+
+@app.route("/remove_student_from_team")
+def remove_student_from_team():
+    """ Remove selected by id team from database """
+    # team_name = request.args["team_name"]
+    student_id = request.args["student_id"]
+    g.logged_user.remove_student_from_team(student_id)
+    flash("Student removed from team!", "alert alert-success text-centered")
     return redirect(url_for("list_teams"))
 
 
