@@ -57,33 +57,6 @@ class User:
         self.password = password  #self.check_if_correct(password, str)
         self.user_type = user_type
 
-    # @classmethod
-    # def get_user(cls, login, password):
-    #     """ On successful authentication returns User or Manager object
-    #         Args:
-    #             login (str): login of the user
-    #             password (str): password of the user
-    #         Returns:
-    #             User (obj): if authentication passed
-    #             None: if authentication fails
-    #     """
-    #     conn = sqlite3.connect(User.path)
-    #     cursor = conn.execute("SELECT * FROM user")
-    #     for row in cursor.fetchall():
-    #         if row[6] == login and row[7] == password:
-    #             conn.close()
-    #             if row[8] == "manager":
-    #                 return Manager(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
-    #             elif row[8] == "student":
-    #                 return Student(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
-    #             elif row[8] == "employee":
-    #                 return Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
-    #             elif row[8] == "mentor":
-    #                 return Mentor(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
-    #     conn.close()
-    #     return None
-
-
     @classmethod
     def get_user(cls, login, password):
         """ On successful authentication returns User or Manager object
@@ -550,7 +523,7 @@ class Mentor(Employee):
              None
          """
 
-        new_team = TeamDb(name=name)
+        new_team = TeamDb(name=name, id_student='')
         db.session.add(new_team)
         db.session.commit()
         return new_team
@@ -651,94 +624,7 @@ class Mentor(Employee):
              list of checkpoint submissions
         """
         submissions = db.session.query(CheckpointSubmissionDb).filter_by(card='').all()
-        # a = submissions[0].student
-
-        # list_of_checkpoint_submissions = []
-        # data = sqlite3.connect(User.path)
-        # cursor = data.cursor()
-        # cursor.execute("select user.id from user where user.id not in (select id_student from checkpoint_submittion) and user.user_type='student'")
-        # students_ids_without_submissions = cursor.fetchall()
-        # cursor.execute("select id from Checkpoint_assignment")
-        # assignments = cursor.fetchall()
-        # for student_id in students_ids_without_submissions:
-        #     for assignment in assignments:
-        #         cursor.execute("insert into Checkpoint_submittion (ID_Student, ID_Assignment) values (?, ?)", (student_id[0], assignment[0]))
-        # data.commit()
-        # cursor.execute("SELECT * FROM Checkpoint_assignment"
-        #                " where Checkpoint_assignment.id in (select ID_Assignment from Checkpoint_submittion"
-        #                " where card='' or card is null group by ID_Assignment)")
-        #
-        # rows = cursor.fetchall()
-        # if rows:
-        #     for row in rows:
-        #         list_of_checkpoint_submissions.append(CheckpointAssignment(row[0], row[1], row[2]))
         return submissions
-
-    # def get_submissions_for_checkpoint(self):
-    #     """
-    #     Method allows mentor to get submissions for checkpoints
-    #
-    #     Args:
-    #         None
-    #     Return:
-    #          list of checkpoint submissions
-    #     """
-    #     list_of_checkpoint_submissions = []
-    #     data = sqlite3.connect(User.path)
-    #     cursor = data.cursor()
-    #     cursor.execute("SELECT * FROM Checkpoint_submittion, Checkpoint_assignment"
-    #                    " where Checkpoint_submittion.ID_Assignment in (select ID_Assignment from Checkpoint_submittion"
-    #                    " where card='' or card is null)")
-    #
-    #     rows = cursor.fetchall()
-    #     if rows:
-    #         for row in rows:
-    #             list_of_checkpoint_submissions.append(CheckpointAssignment(row[0], row[1], row[2]))
-    #     return list_of_checkpoint_submissions
-
-    #
-    # def get_checkpoint_assignments(self):
-    #     """
-    #     Method allows mentor to list checkpoint assignments
-    #
-    #     Args:
-    #         None
-    #     Return:
-    #          None
-    #     """
-    #     checkpoint_assignments_list = []
-    #     data = sqlite3.connect(User.path)
-    #     cursor = data.cursor()
-    #     cursor.execute("SELECT * FROM Checkpoint_assignment")
-    #     assignments = cursor.fetchall()
-    #     n = 1
-    #     for assignment in assignments:
-    #         if assignment[2] == None:
-    #             checkpoint_assignments_list.append([str(n) + ".", assignment[1], ''])
-    #
-    #         else:
-    #             checkpoint_assignments_list.append([str(n) + ".", assignment[1], assignment[2]])
-    #         n += 1
-    #     data.close()
-    #     return checkpoint_assignments_list
-
-    # def get_checkpoint_id(self):
-    #     """
-    #     Returns id of checkpoint
-    #
-    #     Args:
-    #         None
-    #     Return:
-    #          id of checkpoint
-    #     """
-    #     choosed_checkpoint = ui.Ui.get_inputs([""], "Choose checkpoint to grade student")
-    #     data = sqlite3.connect(User.path)
-    #     cursor = data.cursor()
-    #     cursor.execute("SELECT * FROM Checkpoint_assignment")
-    #     checkpoint = cursor.fetchall()
-    #     checkpoint_id = checkpoint[int(choosed_checkpoint[0]) - 1][0]
-    #     data.close()
-    #     return checkpoint_id
 
 
     def check_student_performance(self, student_id, date_from, date_to):
