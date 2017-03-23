@@ -15,7 +15,7 @@ class AttendanceDb(db.Model):
     __tablename__ = 'Attendance'
 
     id = db.Column(db.Integer, primary_key=True)
-    id_student = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    id_student = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
     date = db.Column(db.String(10), nullable=False)
     presence = db.Column(db.String(1), nullable=False)
 
@@ -25,6 +25,7 @@ class CheckpointAssignmentDb(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     assignment = db.Column(db.String(80))
+    submissions = db.relationship('CheckpointSubmissionDb', backref='submissions', lazy='dynamic')
 
 class CheckpointSubmissionDb(db.Model):
     __tablename__ = 'Checkpoint_submission'
@@ -32,9 +33,10 @@ class CheckpointSubmissionDb(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_student = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
     id_mentor = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
-    id_assignment = db.Column(db.Integer, db.ForeignKey('Assignment.id'))
+    id_assignment = db.Column(db.Integer, db.ForeignKey('Checkpoint_assignment.id'))
     date = db.Column(db.String(10))
     card = db.Column(db.String(10))
+
 
 class SubmissionDb(db.Model):
     __tablename__ = 'Submission'
@@ -66,15 +68,16 @@ class UserDb(db.Model):
     password = db.Column(db.String(30), nullable=False, unique=True)
     user_type = db.Column(db.String(30), nullable=False)
 
-    student_checkpoint_submission = db.relationship('CheckpointSubmissionDb', backref='student_checkpoint_submission_ref', lazy="dynamic",
-                                                    cascade='all, delete', foreign_keys='CheckpointSubmissionDb.id_student')
+    # student_checkpoint_submission = db.relationship('CheckpointSubmissionDb', backref='student_checkpoint_submission_ref', lazy="dynamic",
+    #                                                 cascade='all, delete', foreign_keys='CheckpointSubmissionDb.id_student')
 
-    student_checkpoint_submission = db.relationship('CheckpointSubmissionDb', backref='student_checkpoint_submission_ref', cascade='all, delete', lazy="dynamic",
+    student_checkpoint_submission = db.relationship('CheckpointSubmissionDb', backref='student', cascade='all, delete', lazy="dynamic",
                               foreign_keys='CheckpointSubmissionDb.id_student')
-    mentor_checkpoint_submission = db.relationship('CheckpointSubmissionDb', backref='mentor_checkpoint_submission_ref', lazy="dynamic",
+    mentor_checkpoint_submission = db.relationship('CheckpointSubmissionDb', backref='mentor', lazy="dynamic",
                              foreign_keys='CheckpointSubmissionDb.id_mentor')
     student_submission = db.relationship('SubmissionDb', backref='student_submission_ref', cascade='all, delete', lazy="dynamic",
                               foreign_keys='SubmissionDb.id_student')
     mentor_submission = db.relationship('SubmissionDb', backref='mentor_submission_ref', lazy="dynamic",
                              foreign_keys='SubmissionDb.id_mentor')
     teams = db.relationship('TeamDb', backref='teams', cascade='all, delete', lazy='dynamic')
+    attendance = db.relationship('AttendanceDb', backref='attendance', lazy='dynamic')

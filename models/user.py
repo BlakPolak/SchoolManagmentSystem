@@ -364,7 +364,6 @@ class Mentor(Employee):
             True if attendance checked first time today
             False if attendance already checked today
         """
-        data = sqlite3.connect(User.path)
         for index, item in enumerate(attendance_list):
             if item[1] == "present":
                 attendance_list[index][1] = 1
@@ -372,15 +371,14 @@ class Mentor(Employee):
                 attendance_list[index][1] = 0
             else:
                 attendance_list[index][1] = 2
-        cursor = data.cursor()
-        cursor.execute("select * from Attendance where date=?", (str(datetime.date.today()),))
-        rows = cursor.fetchall()
-        if len(rows) > 0:
+        today = datetime.date.today()
+        todays_attendance = db.session.query(AttendanceDb).filter_by(date=today).all()
+        if todays_attendance:
             return False
         for row in attendance_list:
-            cursor.execute("insert into Attendance (ID_Student, Date, Presence) values(?, ?, ?)", (row[0], str(datetime.date.today()), row[1]))
-        data.commit()
-        data.close()
+            att = AttendanceDb(id_student=row[0], date=today, presence=row[1])
+            db.session.add(att)
+        db.session.commit()
         return True
 
 
@@ -416,21 +414,14 @@ class Mentor(Employee):
              List of lists with submissions to grade
         """
         return_list = []
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        submissions_not_graded = cursor.execute(
-                            "SELECT Submission.id, Assignment.ID, Assignment.Name, Assignment.delivery_date, User.Name, User.Surname, Submission.Submittion_date "
-                            "FROM Submission "
-                            "LEFT JOIN Assignment ON Assignment.ID=Submission.ID_Assignment "
-                            "INNER JOIN User ON user.ID=Submission.ID_Student "
-                            "WHERE Submission.Grade IS NULL OR Submission.Grade=''").fetchall()
-
-        if len(submissions_not_graded) == 0:
-            return None
-        for submission in submissions_not_graded:
+        submissions = db.session.query(SubmissionDb.id, AssignmentDb.id, AssignmentDb.name, AssignmentDb.delivery_date,
+                                       UserDb.name, UserDb.surname, SubmissionDb.date).filter(
+                                        AssignmentDb.id == SubmissionDb.id_assignment, UserDb.id == SubmissionDb.id_student,
+                                        (SubmissionDb.grade == "") | (SubmissionDb.grade.is_(None))
+                                        ).all()
+        for submission in submissions:
             return_list.append(GradeableSubmissions(submission[1], submission[2], submission[3],
                                 submission[4], submission[5], submission[6], submission[0]))
-        data.close()
         return return_list
 
     def get_submission(self, submission_id):
@@ -442,13 +433,11 @@ class Mentor(Employee):
         Return:
             one submission
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("select * from Submission where ID=?", (submission_id,))
-        row = cursor.fetchone()
-        if row:
-            submission = Submission(row[2], row[1], row[5], row[3], row[4], row[0])
-        data.close()
+        submission = db.session.query(SubmissionDb).filter_by(id=submission_id).first()
+        return submission
+
+    def get_student_checkpoint_submission(self, checkpoint_submission_id):
+        submission = db.session.query(CheckpointSubmissionDb).filter_by(id=checkpoint_submission_id).first()
         return submission
 
 
@@ -478,7 +467,7 @@ class Mentor(Employee):
         return submission_list
 
 
-    def grade_checkpoint_submission(self, list_of_notes):
+    def grade_checkpoint_submission(self, submission_id, card):
         """
         Method allows mentor to grade checkpoint submission
 
@@ -487,19 +476,13 @@ class Mentor(Employee):
         Return:
              submission list
         """
-        submission_list = []
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        for row in list_of_notes:
-            cursor.execute("update Checkpoint_submittion set card=?, Date=?, ID_Mentor=? "
-                           "where id=?", (row[1], str(datetime.date.today()), self._id, row[0]))
-        data.commit()
-        data.close()
-        return submission_list
+        submission = db.session.query(CheckpointSubmissionDb).filter_by(id=submission_id).first()
+        submission.card = card
+        db.session.commit()
 
 
 
-    def grade_submission(self, assignment_id, grade):
+    def grade_submission(self, submission_id, grade):
         """
         Method allows mentor grade students submitted assignment
 
@@ -508,11 +491,9 @@ class Mentor(Employee):
         Return:
              None
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("UPDATE Submission SET Grade=? WHERE ID=?", (grade, assignment_id))
-        data.commit()
-        data.close()
+        submission = self.get_submission(submission_id)
+        submission.grade = grade
+        db.session.commit()
 
     def get_teams(self):
         """
@@ -600,14 +581,7 @@ class Mentor(Employee):
           list of assignments
         """
 
-        list_of_assignments = []
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("select * from Assignment")
-        for row in cursor.fetchall():
-            new_assignment = Assignment(row[0], row[1], row[2], row[3], row[4], row[5])
-            list_of_assignments.append(new_assignment)
-        data.close()
+        list_of_assignments = db.session.query(AssignmentDb).all()
         return list_of_assignments
 
     def get_assignment(self, assignment_id):
@@ -619,13 +593,7 @@ class Mentor(Employee):
         Return:
           assignment
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("select * from Assignment where ID=?", (assignment_id,))
-        row = cursor.fetchone()
-        if row:
-            assignment = Assignment(row[0], row[1], row[2], row[3], row[4], row[5])
-        data.close()
+        assignment = db.session.query(AssignmentDb).filter_by(id=assignment_id).first()
         return assignment
 
     def remove_assignment(self, assignment_id):
@@ -637,11 +605,7 @@ class Mentor(Employee):
         Return:
             None
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("delete from  Assignment where ID=?", (assignment_id,))
-        data.commit()
-        data.close()
+        db.session.query(AssignmentDb).filter_by(id=assignment_id).delete()
 
 
     def update_assignment(self, assignment_id, name, type, max_points, delivery_date, content):
@@ -653,12 +617,15 @@ class Mentor(Employee):
          Return:
              None
          """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("update Assignment set Name=?, Type=?, Max_points=?, Delivery_date=?, "
-                       " Content=? where ID=?", (name, type, max_points, delivery_date, content, assignment_id))
-        data.commit()
-        data.close()
+
+        assignment = self.get_assignment(assignment_id)
+        assignment.name = name
+        assignment.type = type
+        assignment.max_points = max_points
+        assignment.delivery_date = delivery_date
+        assignment.content = content
+        db.session.commit()
+        return assignment
 
 
     def add_new_assignment(self, name, type, max_points, delivery_date, content):
@@ -670,13 +637,10 @@ class Mentor(Employee):
         Return:
             None
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("insert into Assignment (Name, Type, Max_points, Delivery_date, "
-                       " Content) values(?, ?, ?, ?, ?)", (name, type, max_points, delivery_date, content))
-        data.commit()
-        data.close()
-
+        new_assignment = AssignmentDb(name=name, type=type, max_points=max_points, delivery_date=delivery_date, content=content)
+        db.session.add(new_assignment)
+        db.session.commit()
+        return new_assignment
 
     def get_checkpoints_for_submission(self):
         """
@@ -687,26 +651,29 @@ class Mentor(Employee):
         Return:
              list of checkpoint submissions
         """
-        list_of_checkpoint_submissions = []
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("select user.id from user where user.id not in (select id_student from checkpoint_submittion) and user.user_type='student'")
-        students_ids_without_submissions = cursor.fetchall()
-        cursor.execute("select id from Checkpoint_assignment")
-        assignments = cursor.fetchall()
-        for student_id in students_ids_without_submissions:
-            for assignment in assignments:
-                cursor.execute("insert into Checkpoint_submittion (ID_Student, ID_Assignment) values (?, ?)", (student_id[0], assignment[0]))
-        data.commit()
-        cursor.execute("SELECT * FROM Checkpoint_assignment"
-                       " where Checkpoint_assignment.id in (select ID_Assignment from Checkpoint_submittion"
-                       " where card='' or card is null group by ID_Assignment)")
+        submissions = db.session.query(CheckpointSubmissionDb).filter_by(card='').all()
+        # a = submissions[0].student
 
-        rows = cursor.fetchall()
-        if rows:
-            for row in rows:
-                list_of_checkpoint_submissions.append(CheckpointAssignment(row[0], row[1], row[2]))
-        return list_of_checkpoint_submissions
+        # list_of_checkpoint_submissions = []
+        # data = sqlite3.connect(User.path)
+        # cursor = data.cursor()
+        # cursor.execute("select user.id from user where user.id not in (select id_student from checkpoint_submittion) and user.user_type='student'")
+        # students_ids_without_submissions = cursor.fetchall()
+        # cursor.execute("select id from Checkpoint_assignment")
+        # assignments = cursor.fetchall()
+        # for student_id in students_ids_without_submissions:
+        #     for assignment in assignments:
+        #         cursor.execute("insert into Checkpoint_submittion (ID_Student, ID_Assignment) values (?, ?)", (student_id[0], assignment[0]))
+        # data.commit()
+        # cursor.execute("SELECT * FROM Checkpoint_assignment"
+        #                " where Checkpoint_assignment.id in (select ID_Assignment from Checkpoint_submittion"
+        #                " where card='' or card is null group by ID_Assignment)")
+        #
+        # rows = cursor.fetchall()
+        # if rows:
+        #     for row in rows:
+        #         list_of_checkpoint_submissions.append(CheckpointAssignment(row[0], row[1], row[2]))
+        return submissions
 
     # def get_submissions_for_checkpoint(self):
     #     """
@@ -807,24 +774,8 @@ class Mentor(Employee):
         print()
         return student_statistics
 
-    def edit_mentor(self):
-        """
-        Method allows manager to edit mentor specific data
-
-        Return:
-             None
-        """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("UPDATE `User` SET `Name`=?, `Surname`=?, `Gender`=?, "
-                       "`Birth_date`=?,`Email`=?, `Login`=?, `Password`=?"
-                       " WHERE `ID`=?",
-                       (self.name, self.surname, self.gender, self.birth_date, self.email, self.login, self.password, self._id))
-        data.commit()
-        data.close()
-
-    @classmethod
-    def get_mentor_by_id(cls, id):
+    @staticmethod
+    def get_mentor_by_id(id):
         """
         Method return mentor by id
 
@@ -833,13 +784,10 @@ class Mentor(Employee):
         Return:
              object Mentor
         """
-        data = sqlite3.connect(User.path)
-        cursor = data.cursor()
-        cursor.execute("SELECT * FROM `User` WHERE ID = ?;", (id,))
-        mentor = cursor.fetchone()  # jak nie będzie działało to może fetchall i wtedy row = mentor[0]
-        if mentor:
-            return cls(mentor[0], mentor[1], mentor[2], mentor[3], mentor[4],
-                       mentor[5], mentor[6], mentor[7], mentor[8])
+
+        mentor = db.session.query(UserDb).filter_by(id=id).first()
+        return mentor
+
 
 
 class Manager(Employee):

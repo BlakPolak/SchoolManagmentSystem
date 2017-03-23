@@ -8,21 +8,23 @@
 {% block content %}
     {{ super() }}
             <table class="table">
+                {% if checkpoints %}
                 <thead>
                     <tr><td><h2>List of checkpoints submissions</h2></td></tr>
                     <tr>
                         <th>Name of checkpoint</th>
                         <th>Assignment</th>
+                        <th>Student</th>
                         <th>Grade</th>
                     </tr>
                 </thead>
                     <tbody>
-                    {% if checkpoints_for_submission %}
-                    {% for submission in checkpoints_for_submission %}
+                    {% for checkpoint in checkpoints %}
                         <tr>
-                            <td>{{ submission.name }}</td>
-                            <td>{{ submission.assignment }}</td>
-                            <td><a class="btn btn-default" href="{{ url_for("grade_checkpoint", checkpoint_assignment_id=submission.id) }}" role="button">Grade students</a></td>
+                            <td>{{ checkpoint.submissions.name }}</td>
+                            <td>{{ checkpoint.submissions.assignment }}</td>
+                            <td>{{ checkpoint.student.name }} {{ checkpoint.student.surname }}</td>
+                            <td><a class="btn btn-default" href="{{ url_for("grade_checkpoint", checkpoint_submission_id=checkpoint.id) }}" role="button">Grade student</a></td>
                         </tr>
                     {% endfor %}
                     {% else %}
