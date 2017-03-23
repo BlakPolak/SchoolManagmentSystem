@@ -209,9 +209,12 @@ def add_new_team():
     """ Add new team name to database """
     if request.method == "POST":
         new_team = request.form["name"]
-        g.logged_user.add_team(new_team)
-        flash("Team was added", "alert alert-success text-centered")
-        return redirect(url_for("list_teams"))
+        if g.logged_user.add_team(new_team):
+            flash("Team was added", "alert alert-success text-centered")
+            return redirect(url_for("list_teams"))
+        else:
+            flash("Team already exist", "alert alert-fail text-centered")
+            return redirect(url_for('list_teams'))
     return render_template("add_new_team.html")
 
 

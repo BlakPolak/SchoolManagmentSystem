@@ -177,10 +177,7 @@ class Student(User):
             assignment, result
 
         """
-
-        submission = db.session.query(SubmissionDb)\
-            .filter_by(id_student=self._id, id_assignment=id_assignment).first()
-        submission.result = result
+        submission = SubmissionDb(id_student=self._id, result=result, id_assignment=id_assignment)
         db.session.add(submission)
         db.session.commit()
 
@@ -483,11 +480,13 @@ class Mentor(Employee):
          Return:
              None
          """
-
-        new_team = TeamDb(name=name, id_student='')
-        db.session.add(new_team)
-        db.session.commit()
-        return new_team
+        team = db.session.query(TeamDb).filter_by(name=name).all()
+        if not team:
+            new_team = TeamDb(name=name, id_student='')
+            db.session.add(new_team)
+            db.session.commit()
+            return new_team
+        return None
 
 
 
