@@ -32,7 +32,7 @@
                             <td>{{ statistic[0].name }}</td>
                             <td>{{ statistic[0].surname }}</td>
                             <td>{{ statistic[1]}}</td>
-                            <td>{{ statistic[2] }}</td>
+                            <td>{{ statistic[2]|round(2) }}</td>
                         </tr>
                     {% endfor %}
                     {% endif %}
