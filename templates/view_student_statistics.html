@@ -22,7 +22,7 @@
                     <tr>
                         <td>{{ student_statistics.student_name }}</td>
                         <td>{{ student_statistics.student_surname }}</td>
-                        <td>{{ student_statistics.avg_days }}</td>
+                        <td>{{ student_statistics.avg_days|round(2) }}</td>
                         <td>{{ student_statistics.grades_avg }}</td>
                         <td>{{ student_statistics.yellow_cards }}</td>
                         <td>{{ student_statistics.red_cards }}</td>

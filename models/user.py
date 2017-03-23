@@ -613,8 +613,16 @@ class Mentor(Employee):
         """
 
         student = db.session.query(UserDb).filter_by(id=student_id).first()
-        avg_days = db.session.query(func.avg(AttendanceDb.presence)).\
-            filter(AttendanceDb.id_student==student_id, AttendanceDb.date.between(date_from, date_to)).all()[0][0]
+        presence_days = db.session.query(func.count(AttendanceDb.presence)).filter(AttendanceDb.id_student == student_id,
+                                                              (AttendanceDb.presence == '1') | (AttendanceDb.presence == '2')).all()[0][0]
+
+        all_days = db.session.query(func.count(AttendanceDb.presence)).filter(AttendanceDb.id_student == student_id).all()[0][0]
+        if all_days:
+            avg_days = round((presence_days/all_days)*100, 2)
+        else:
+            all_days = 1
+            avg_days = round((presence_days / all_days) * 100, 2)
+
         avg_grades = db.session.query(func.avg(SubmissionDb.grade)).\
             filter(SubmissionDb.id_student==student_id, SubmissionDb.date.between(date_from, date_to)).all()[0][0]
         cards = db.session.query(CheckpointSubmissionDb.card).\
@@ -631,7 +639,6 @@ class Mentor(Employee):
                 green_cards += 1
         student_statistics = StudentStatistic(student.id, student.name, student.surname, avg_days,
                                       avg_grades, yellow_cards, red_cards, green_cards)
-        print()
         return student_statistics
 
     @staticmethod
