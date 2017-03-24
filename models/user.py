@@ -182,20 +182,6 @@ class Student(User):
         db.session.add(submission)
         db.session.commit()
 
-    def list_group_assignment(self):
-        """
-        Method returns list of all group submission
-
-        Return:
-            list assignment for group
-
-        """
-        group_assignments_to_submit = db.session.query(AssignmentDb) \
-            .outerjoin(SubmissionDb) \
-            .filter(AssignmentDb.type == 'group') \
-            .filter(SubmissionDb.id_assignment == None).all()
-        return group_assignments_to_submit
-
     def find_student_team(self):
         """
         Method returns team name for logged student
@@ -208,6 +194,23 @@ class Student(User):
             .filter_by(id_student=self._id).first()
         return team
 
+    def list_group_assignment(self):
+        """
+        Method returns list of all group submission
+
+        Return:
+            list assignment for group
+
+        """
+        if self.find_student_team():
+            group_assignments_to_submit = db.session.query(AssignmentDb) \
+                .outerjoin(SubmissionDb) \
+                .filter(AssignmentDb.type == 'group') \
+                .filter(SubmissionDb.id_assignment == None).all()
+            return group_assignments_to_submit
+        return []
+
+
     def find_students_teammates(self):
         """
         Method returns all students from the same team
@@ -216,9 +219,10 @@ class Student(User):
             list student teammates
 
         """
-        teammates_list = db.session.query(TeamDb)\
-            .filter_by(name=self.find_student_team().name).all()
-        return teammates_list
+        if self.find_student_team():
+            teammates_list = db.session.query(TeamDb)\
+                .filter_by(name=self.find_student_team().name).all()
+            return teammates_list
 
     def add_group_assignment(self, id_assignment, result):
         """
@@ -228,11 +232,12 @@ class Student(User):
             teammates.py, group_submission
 
         """
-        submission_date = datetime.date.today()
-        for teammate in self.find_students_teammates():
-            submission = SubmissionDb(id_student=teammate.id_student, result=result, id_assignment=id_assignment, date=submission_date)
-            db.session.add(submission)
-            db.session.commit()
+        if self.find_students_teammates():
+            submission_date = datetime.date.today()
+            for teammate in self.find_students_teammates():
+                submission = SubmissionDb(id_student=teammate.id_student, result=result, id_assignment=id_assignment, date=submission_date)
+                db.session.add(submission)
+                db.session.commit()
 
     def check_my_attendance(self):
         """
