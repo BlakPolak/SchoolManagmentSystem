@@ -177,7 +177,8 @@ class Student(User):
             assignment, result
 
         """
-        submission = SubmissionDb(id_student=self._id, result=result, id_assignment=id_assignment)
+        today = datetime.date.today()
+        submission = SubmissionDb(id_student=self._id, result=result, id_assignment=id_assignment, date=today)
         db.session.add(submission)
         db.session.commit()
 
