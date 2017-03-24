@@ -182,6 +182,12 @@ class Student(User):
         db.session.add(submission)
         db.session.commit()
 
+    def student_has_team(self):
+        is_ = db.session.query(TeamDb).filter(self._id == TeamDb.id_student).first()
+        if is_:
+            return True
+        return False
+
     def list_group_assignment(self):
         """
         Method returns list of all group submission
@@ -190,11 +196,13 @@ class Student(User):
             list assignment for group
 
         """
-        group_assignments_to_submit = db.session.query(AssignmentDb) \
-            .outerjoin(SubmissionDb) \
-            .filter(AssignmentDb.type == 'group') \
-            .filter(SubmissionDb.id_assignment == None).all()
-        return group_assignments_to_submit
+        if self.student_has_team():
+            group_assignments_to_submit = db.session.query(AssignmentDb) \
+                .outerjoin(SubmissionDb) \
+                .filter(AssignmentDb.type == 'group') \
+                .filter(SubmissionDb.id_assignment == None).all()
+            return group_assignments_to_submit
+        return None
 
     def find_student_team(self):
         """

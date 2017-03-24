@@ -73,7 +73,12 @@ def list_assignment():
 @app.route("/list_group_assignment")
 def list_group_assignment():
     """Shows list of group assignment stored in the database"""
-    return render_template("list_group_assignment.html", group_assignment=g.logged_user.list_group_assignment(), logged_user=g.logged_user)
+    group_assignment = g.logged_user.list_group_assignment()
+    if group_assignment:
+        return render_template("list_group_assignment.html", group_assignment=g.logged_user.list_group_assignment(),
+                           logged_user=g.logged_user)
+    flash("You have no group assignments", "alert alert-success text-centered")
+    return redirect(url_for('student'))
 
 
 @app.route("/submit_assignment/<assignment_id>", methods=["POST", "GET"])
@@ -97,8 +102,11 @@ def submit_group_assignment(assignment_id):
         id_assignment = assignment_id
         g.logged_user.add_group_assignment(id_assignment, result)
         return redirect(url_for("list_group_assignment"))
-    return render_template("submit_group_assignment.html", group_assignment=g.logged_user.list_group_assignment(),
+    group_assignment = g.logged_user.list_group_assignment()
+    if group_assignment:
+        return render_template("submit_group_assignment.html", group_assignment=g.logged_user.list_group_assignment(),
                            logged_user=g.logged_user, assignment=assignment)
+    return redirect(url_for('student'))
 
 
 @app.route("/employee")
