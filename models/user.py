@@ -251,8 +251,13 @@ class Student(User):
         days = db.session.query(func.count(AttendanceDb.presence)).filter(AttendanceDb.id_student == self._id).all()
         presence = presence[0][0]
         days = days[0][0]
-        attendance_in_percent = (presence/days)*100
-        return round(attendance_in_percent)
+        if days == 0:
+            days = 1
+            attendance_in_percent = (presence / days) * 100
+            return round(attendance_in_percent)
+        else:
+            attendance_in_percent = (presence / days) * 100
+            return round(attendance_in_percent)
 
 
 class Mentor(Employee):
